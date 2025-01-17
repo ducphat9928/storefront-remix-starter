@@ -67,6 +67,12 @@ export default function ProductSlug() {
   if (!product) {
     return <div>{t('product.notFound')}</div>;
   }
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const truncatedDescription =
+    product.description.length > 300
+      ? product.description.slice(0, 300) + '...'
+      : product.description;
 
   const findVariantById = (id: string) =>
     product.variants.find((v) => v.id === id);
@@ -94,15 +100,13 @@ export default function ProductSlug() {
 
   return (
     <div>
-      <div className="max-w-6xl mx-auto px-4">
-        <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-          {product.name}
-        </h2>
+      <div className="max-w-7xl mx-auto p-4">
         <Breadcrumbs
           items={
             product.collections[product.collections.length - 1]?.breadcrumbs ??
             []
           }
+          nameProduct={product.name}
         ></Breadcrumbs>
         <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start mt-4 md:mt-12">
           {/* Image gallery */}
@@ -138,7 +142,7 @@ export default function ProductSlug() {
                       className="rounded-lg select-none h-24 w-full object-cover"
                       src={
                         asset.preview +
-                        '?preset=full' /* not ideal, but technically prevents loading 2 seperate images */
+                        '?preset=full' /* not ideal, but technically prevents loading 2 separate images */
                       }
                     />
                   </div>
@@ -149,19 +153,13 @@ export default function ProductSlug() {
 
           {/* Product info */}
           <div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
-            <div className="">
+            <div>
               <h3 className="sr-only">{t('product.description')}</h3>
-
-              <div
-                className="text-base text-gray-700"
-                dangerouslySetInnerHTML={{
-                  __html: product.description,
-                }}
-              />
+              <h5 className="text-3xl text-gray-900 mr-4">{product.name}</h5>
             </div>
             <activeOrderFetcher.Form method="post" action="/api/active-order">
               <input type="hidden" name="action" value="addItemToOrder" />
-              {1 < product.variants.length ? (
+              {product.variants.length > 1 ? (
                 <div className="mt-4">
                   <label
                     htmlFor="option"
@@ -176,7 +174,6 @@ export default function ProductSlug() {
                     name="variantId"
                     onChange={(e) => {
                       setSelectedVariantId(e.target.value);
-
                       const variant = findVariantById(e.target.value);
                       if (variant) {
                         setFeaturedAsset(variant!.featuredAsset);
@@ -195,7 +192,7 @@ export default function ProductSlug() {
                   type="hidden"
                   name="variantId"
                   value={selectedVariantId}
-                ></input>
+                />
               )}
 
               <div className="mt-10 flex flex-col sm:flex-row sm:items-center">
@@ -203,7 +200,7 @@ export default function ProductSlug() {
                   <Price
                     priceWithTax={selectedVariant?.priceWithTax}
                     currencyCode={selectedVariant?.currencyCode}
-                  ></Price>
+                  />
                 </p>
                 <div className="flex sm:flex-col1 align-baseline">
                   <button
@@ -215,9 +212,7 @@ export default function ProductSlug() {
                         ? 'bg-primary-600 hover:bg-primary-700'
                         : 'bg-green-600 active:bg-green-700 hover:bg-green-700'
                     }
-                                     transition-colors border border-transparent rounded-md py-3 px-8 flex items-center
-                                      justify-center text-base font-medium text-white focus:outline-none
-                                      focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
+              transition-colors border border-transparent rounded-md py-3 px-8 flex items-center justify-center text-base font-medium text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-primary-500 sm:w-full`}
                     disabled={activeOrderFetcher.state !== 'idle'}
                   >
                     {qtyInCart ? (
@@ -230,22 +225,19 @@ export default function ProductSlug() {
                     )}
                   </button>
 
-                  <button
-                    type="button"
-                    className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
-                  >
-                    <HeartIcon
-                      className="h-6 w-6 flex-shrink-0"
-                      aria-hidden="true"
-                    />
-                    <span className="sr-only">
-                      {t('product.addToFavorites')}
-                    </span>
-                  </button>
+                  {/* <button
+              type="button"
+              className="ml-4 py-3 px-3 rounded-md flex items-center justify-center text-gray-400 hover:bg-gray-100 hover:text-gray-500"
+            >
+              <HeartIcon
+                className="h-6 w-6 flex-shrink-0"
+                aria-hidden="true"
+              />
+              <span className="sr-only">{t('product.addToFavorites')}</span>
+            </button> */}
                 </div>
               </div>
               <div className="mt-2 flex items-center space-x-2">
-                <span className="text-gray-500">{selectedVariant?.sku}</span>
                 <StockLevelLabel stockLevel={selectedVariant?.stockLevel} />
               </div>
               {addItemToOrderError && (
@@ -268,9 +260,92 @@ export default function ProductSlug() {
           </div>
         </div>
       </div>
-      <div className="mt-24">
-        <TopReviews></TopReviews>
+      <div className="max-w-7xl mx-auto p-4">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">
+          {t('product.description')}
+        </h3>
+        <div>
+          <div
+            className={`text-base text-gray-700 ${
+              isExpanded ? '' : 'truncate'
+            }`}
+            style={{
+              WebkitLineClamp: isExpanded ? 'unset' : 4,
+              display: '-webkit-box',
+              WebkitBoxOrient: 'vertical',
+            }}
+            dangerouslySetInnerHTML={{
+              __html: isExpanded ? truncatedDescription : product.description,
+            }}
+          />
+          <button
+            onClick={() => setIsExpanded(!isExpanded)}
+            className="text-blue-500 mt-2"
+          >
+            {isExpanded ? t('product.seeLess') : t('product.seeMore')}
+          </button>
+        </div>
       </div>
+
+      <div className="max-w-7xl mx-auto p-4 mt-10">
+        <h3 className="text-xl font-bold text-gray-900 mb-4">
+          {t('product.details')}
+        </h3>
+        <div className="space-y-4">
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-700">
+              {t('product.category')}
+            </span>
+            <span className="text-gray-500">Shopee</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-700">
+              {t('product.subcategory')}
+            </span>
+            <span className="text-gray-500">Nhà Cửa & Đời Sống</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-700">
+              {t('product.roomItem')}
+            </span>
+            <span className="text-gray-500">Đồ dùng phòng ăn</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-700">
+              {t('product.productType')}
+            </span>
+            <span className="text-gray-500">Bát</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-700">
+              {t('product.stock')}
+            </span>
+            <span className="text-gray-500">8673</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-700">
+              {t('product.brand')}
+            </span>
+            <span className="text-gray-500">Donghwa</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-700">
+              {t('product.origin')}
+            </span>
+            <span className="text-gray-500">Việt Nam</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <span className="font-medium text-gray-700">
+              {t('product.packaging')}
+            </span>
+            <span className="text-gray-500">Kiểu đóng gói</span>
+          </div>
+        </div>
+      </div>
+
+      {/* <div className="mt-24">
+        <TopReviews></TopReviews>
+      </div> */}
     </div>
   );
 }
@@ -279,7 +354,7 @@ export function CatchBoundary() {
   const { t } = useTranslation();
 
   return (
-    <div className="max-w-6xl mx-auto px-4">
+    <div className="max-w-6xl mx-auto px-2 pt-5">
       <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
         {t('product.notFound')}
       </h2>

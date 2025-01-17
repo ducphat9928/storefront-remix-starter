@@ -55,10 +55,10 @@ html {
 */
 
 body {
+  font-family: 'Helvetica', sans-serif !important;
   margin: 0;
-  /* 1 */
+  padding: 0;
   line-height: inherit;
-  /* 2 */
 }
 
 /*

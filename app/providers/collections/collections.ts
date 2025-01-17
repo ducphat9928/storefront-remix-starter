@@ -16,6 +16,17 @@ gql`
   query collections($options: CollectionListOptions) {
     collections(options: $options) {
       items {
+        productVariants {
+          items {
+            price
+            product {
+              name
+              featuredAsset {
+                preview
+              }
+            }
+          }
+        }
         id
         name
         slug

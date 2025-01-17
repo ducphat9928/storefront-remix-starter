@@ -1,11 +1,7 @@
 import { Link } from '@remix-run/react';
-import { CollectionsQuery } from '~/generated/graphql';
+import { CollectionsQuery, ProductQuery } from '~/generated/graphql';
 
-export function CollectionCard({
-  collection,
-}: {
-  collection: CollectionsQuery['collections']['items'][number];
-}) {
+export function CollectionCard({ collection }: { collection: any }) {
   return (
     <Link
       to={'/collections/' + collection.slug}
