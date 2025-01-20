@@ -3953,6 +3953,7 @@ export type CollectionsQuery = {
           product: {
             __typename?: 'Product';
             name: string;
+            slug: string;
             featuredAsset?: { __typename?: 'Asset'; preview: string } | null;
           };
         }>;
@@ -5475,6 +5476,7 @@ export const CollectionsDocument = gql`
             price
             product {
               name
+              slug
               featuredAsset {
                 preview
               }

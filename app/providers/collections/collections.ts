@@ -21,6 +21,7 @@ gql`
             price
             product {
               name
+              slug
               featuredAsset {
                 preview
               }

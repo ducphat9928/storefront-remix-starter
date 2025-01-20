@@ -23,7 +23,7 @@ export function Header({
     <header
       className={classNames(
         isScrollingUp ? 'sticky top-0 z-10 animate-dropIn' : '',
-        'bg-gradient-to-r from-green-500 to-green-700 shadow-xl transform hover:scale-105',
+        'bg-green-500 shadow-xl transform hover:scale-105',
       )}
     >
       <div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">

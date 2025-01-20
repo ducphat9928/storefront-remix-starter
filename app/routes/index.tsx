@@ -5,6 +5,7 @@ import { BookOpenIcon } from '@heroicons/react/24/solid';
 import { LoaderArgs } from '@remix-run/server-runtime';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
+import { Link } from '@remix-run/react';
 
 export async function loader({ request }: LoaderArgs) {
   const collections = await getCollections(request, { take: 20 });
@@ -134,19 +135,25 @@ export default function Index() {
             {/* Product Grid */}
             <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
               {collection.productVariants.items.map((variant) => (
-                <div className="rounded-lg bg-white shadow-[0px_1px_11px_0px_rgba(0,_0,_0,_0.08)] p-2">
-                  <img
-                    className="w-full h-40 object-cover rounded-md"
-                    src={variant.product?.featuredAsset?.preview}
-                    alt={variant.product.name}
-                  />
-                  <h3 className="mt-4 text-xl font-semibold text-red-600">
-                    {variant.price} <span className="text-sm">₫</span>
-                  </h3>
-                  <span className="text-gray-400 mt-2 text-sm">
-                    ({t('common.price')}: {variant.price} VND)
-                  </span>
-                </div>
+                <Link
+                  className="flex flex-col"
+                  prefetch="intent"
+                  to={`/products/${variant.product.slug}`}
+                >
+                  <div className="rounded-lg bg-white shadow-[0px_1px_11px_0px_rgba(0,_0,_0,_0.08)] p-2">
+                    <img
+                      className="w-full h-40 object-cover rounded-md"
+                      src={variant.product?.featuredAsset?.preview}
+                      alt={variant.product.name}
+                    />
+                    <h3 className="mt-4 text-xl font-semibold text-red-600">
+                      {variant.price} <span className="text-sm">₫</span>
+                    </h3>
+                    <span className="text-gray-400 mt-2 text-sm">
+                      ({t('common.price')}: {variant.price} VND)
+                    </span>
+                  </div>
+                </Link>
               ))}
             </div>
 
