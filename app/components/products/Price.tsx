@@ -29,8 +29,11 @@ export function Price({
 }
 
 export function formatPrice(value: number, currency: CurrencyCode) {
+  const wholeNumberValue = Math.floor(value / 100);
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency,
-  }).format(value / 100);
+    minimumFractionDigits: 0,
+    maximumFractionDigits: 0,
+  }).format(wholeNumberValue);
 }

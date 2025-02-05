@@ -30,6 +30,7 @@
     "home": "Home",
     "logoAlt": "Vendure logo",
     "search": "Search",
+    "searchText": "",
     "goHome": "Go home"
   },
   "address": {

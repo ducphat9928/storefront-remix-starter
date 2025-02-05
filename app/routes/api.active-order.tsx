@@ -123,6 +123,7 @@ export async function action({ request, params }: DataFunctionArgs) {
       break;
     }
     case 'addItemToOrder': {
+      console.log(body);
       const variantId = body.get('variantId')?.toString();
       const quantity = Number(body.get('quantity')?.toString() ?? 1);
       if (!variantId || !(quantity > 0)) {

@@ -92,7 +92,7 @@ export default function CollectionSlug() {
         />
       </div>
 
-      <Breadcrumbs items={collection.breadcrumbs}></Breadcrumbs>
+      <Breadcrumbs items={collection.breadcrumbs} nameProduct=""></Breadcrumbs>
       {collection.children?.length ? (
         <div className="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
           <h2 className="text-2xl font-light text-gray-900">

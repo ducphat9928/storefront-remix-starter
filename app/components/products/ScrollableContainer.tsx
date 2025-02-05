@@ -3,7 +3,6 @@ import React, { ReactNode, useRef, RefObject, useEffect } from 'react';
 export function ScrollableContainer({ children }: { children: ReactNode[] }) {
   const spanRef: RefObject<HTMLSpanElement> | undefined = useRef(null);
 
-  // kindly inspired from https://htmldom.dev/drag-to-scroll/
   let pos = {
     top: 0,
     left: 0,
@@ -63,7 +62,7 @@ export function ScrollableContainer({ children }: { children: ReactNode[] }) {
 
   return (
     <span
-      className="py-2 mt-2 flex flex-row flex-nowrap space-x-4 md:overflow-x-hidden overflow-x-auto cursor-grab touch-pan-x"
+      className="py-2 mt-2 flex flex-row flex-nowrap space-x-4 md:overflow-x-hidden overflow-x-auto cursor-grab touch-pan-x w-[90%] mx-auto justify-center"
       ref={spanRef}
       onMouseDown={mouseDownHandler}
       onClickCapture={(e) => {

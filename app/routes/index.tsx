@@ -40,7 +40,7 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="bg-white min-h-screen overflow-hidden p-20">
+    <div className="bg-white min-h-screen overflow-hidden pb-20 pl-20 pr-20">
       <div className="relative bg-gray-900">
         <div
           className="absolute inset-0 h-full w-full flex transition-transform duration-1000 ease-in-out"
@@ -67,7 +67,7 @@ export default function Index() {
         </div>
 
         <div className="relative flex flex-col items-center text-center text-white py-32 px-6 sm:py-48 lg:px-0">
-          <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl bg-gradient-to-r from-yellow-500 to-red-500 bg-clip-text text-transparent">
+          {/* <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl bg-gradient-to-r from-yellow-500 to-red-500 bg-clip-text text-transparent">
             {t('vendure.title')}
           </h1>
           <p className="mt-6 text-lg sm:text-xl max-w-3xl">
@@ -85,8 +85,8 @@ export default function Index() {
             >
               Remix
             </a>
-          </p>
-          <p className="mt-4 text-gray-300 flex items-center gap-2">
+          </p> */}
+          {/* <p className="mt-4 text-gray-300 flex items-center gap-2">
             <BookOpenIcon className="w-5 h-5" />
             <span>{t('common.readMore')}</span>
             <a
@@ -95,7 +95,7 @@ export default function Index() {
             >
               {t('vendure.link')}
             </a>
-          </p>
+          </p> */}
 
           <div className="absolute left-0 right-0 flex justify-between items-center px-6 py-4">
             <button
@@ -132,10 +132,17 @@ export default function Index() {
               ></div>
             </div>
 
-            {/* Product Grid */}
             <div className="mt-12 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8">
-              {collection.productVariants.items.map((variant) => (
+              {Array.from(
+                new Map(
+                  collection.productVariants.items.map((variant) => [
+                    variant.product.slug,
+                    variant,
+                  ]),
+                ).values(),
+              ).map((variant) => (
                 <Link
+                  key={variant.product.slug}
                   className="flex flex-col"
                   prefetch="intent"
                   to={`/products/${variant.product.slug}`}
@@ -146,25 +153,28 @@ export default function Index() {
                       src={variant.product?.featuredAsset?.preview}
                       alt={variant.product.name}
                     />
-                    <h3 className="mt-4 text-xl font-semibold text-red-600">
-                      {variant.price} <span className="text-sm">₫</span>
+                    <h3 className="mt-2 text-[11px] font-bold max-h-[20px] min-h-[20px] min-w-[10px] uppercase text-[var(--color3E)] leading-[20px] overflow-hidden text-ellipsis line-clamp-1">
+                      {variant.product.name}
                     </h3>
-                    <span className="text-gray-400 mt-2 text-sm">
-                      ({t('common.price')}: {variant.price} VND)
-                    </span>
+                    <h2 className="mt-2 text-[20px] font-[var(--fontBold)] leading-[22px] text-[var(--color3E)] whitespace-nowrap">
+                      {variant.price} <span className="text-sm">₫</span>
+                    </h2>
                   </div>
                 </Link>
               ))}
             </div>
-
             <div className="mt-10 text-center">
-              <a
-                href="~/routes/__cart/index"
-                className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-500"
+              <Link
+                to={'/collections/' + collection.slug}
+                prefetch="intent"
+                key={collection.id}
+                className="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto"
               >
-                {t('common.browseCategories')}{' '}
-                <span aria-hidden="true">&rarr;</span>
-              </a>
+                <p className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-500">
+                  Xem thêm
+                  <span aria-hidden="true">&rarr;</span>
+                </p>
+              </Link>
             </div>
           </div>
         </section>

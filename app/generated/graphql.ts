@@ -4955,6 +4955,7 @@ export type DetailedProductFragment = {
   id: string;
   name: string;
   description: string;
+  slug: string;
   collections: Array<{
     __typename?: 'Collection';
     id: string;
@@ -4989,6 +4990,7 @@ export type DetailedProductFragment = {
       id: string;
       preview: string;
     } | null;
+    assets: Array<{ __typename?: 'Asset'; id: string; preview: string }>;
   }>;
 };
 
@@ -5004,6 +5006,7 @@ export type ProductQuery = {
     id: string;
     name: string;
     description: string;
+    slug: string;
     collections: Array<{
       __typename?: 'Collection';
       id: string;
@@ -5042,6 +5045,7 @@ export type ProductQuery = {
         id: string;
         preview: string;
       } | null;
+      assets: Array<{ __typename?: 'Asset'; id: string; preview: string }>;
     }>;
   } | null;
 };
@@ -5071,6 +5075,22 @@ export type SearchQuery = {
   search: {
     __typename?: 'SearchResponse';
     totalItems: number;
+    collections: Array<{
+      __typename?: 'CollectionResult';
+      collection: {
+        __typename?: 'Collection';
+        productVariants: {
+          __typename?: 'ProductVariantList';
+          items: Array<{
+            __typename?: 'ProductVariant';
+            name: string;
+            priceWithTax: number;
+            featuredAsset?: { __typename?: 'Asset'; preview: string } | null;
+            product: { __typename?: 'Product'; id: string; slug: string };
+          }>;
+        };
+      };
+    }>;
     items: Array<{
       __typename?: 'SearchResult';
       productId: string;
@@ -5197,6 +5217,7 @@ export const DetailedProductFragmentDoc = gql`
     id
     name
     description
+    slug
     collections {
       id
       slug
@@ -5233,6 +5254,10 @@ export const DetailedProductFragmentDoc = gql`
       sku
       stockLevel
       featuredAsset {
+        id
+        preview
+      }
+      assets {
         id
         preview
       }
@@ -5725,6 +5750,23 @@ export const SearchDocument = gql`
   query search($input: SearchInput!) {
     search(input: $input) {
       totalItems
+      collections {
+        collection {
+          productVariants {
+            items {
+              name
+              priceWithTax
+              featuredAsset {
+                preview
+              }
+              product {
+                id
+                slug
+              }
+            }
+          }
+        }
+      }
       items {
         ...ListedProduct
       }

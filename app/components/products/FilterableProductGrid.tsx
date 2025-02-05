@@ -54,7 +54,7 @@ export function FilterableProductGrid({
             ))}
           </div>
 
-          <div className="flex flex-row justify-between items-center gap-4">
+          {/* <div className="flex flex-row justify-between items-center gap-4">
             <span className="self-start text-gray-500 text-sm mt-2">
               {t('product.showing')}{' '}
               {translatePaginationFrom(
@@ -74,7 +74,7 @@ export function FilterableProductGrid({
               totalItems={result.totalItems}
               appliedPaginationPage={appliedPaginationPage}
             />
-          </div>
+          </div> */}
         </div>
       ) : (
         <NoResultsHint

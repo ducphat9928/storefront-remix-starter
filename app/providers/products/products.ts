@@ -2,7 +2,10 @@ import gql from 'graphql-tag';
 import { QueryOptions, sdk } from '../../graphqlWrapper';
 import { SearchQueryVariables } from '~/generated/graphql';
 
-export function search(variables: SearchQueryVariables, options: QueryOptions) {
+export function search(
+  variables: SearchQueryVariables,
+  options?: QueryOptions,
+) {
   return sdk.search(variables, options);
 }
 
@@ -22,6 +25,7 @@ export const detailedProductFragment = gql`
     id
     name
     description
+    slug
     collections {
       id
       slug
@@ -58,6 +62,10 @@ export const detailedProductFragment = gql`
       sku
       stockLevel
       featuredAsset {
+        id
+        preview
+      }
+      assets {
         id
         preview
       }
@@ -99,6 +107,23 @@ gql`
   query search($input: SearchInput!) {
     search(input: $input) {
       totalItems
+      collections {
+        collection {
+          productVariants {
+            items {
+              name
+              priceWithTax
+              featuredAsset {
+                preview
+              }
+              product {
+                id
+                slug
+              }
+            }
+          }
+        }
+      }
       items {
         ...ListedProduct
       }

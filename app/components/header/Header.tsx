@@ -6,6 +6,8 @@ import { UserIcon } from '@heroicons/react/24/solid';
 import { useScrollingUp } from '~/utils/use-scrolling-up';
 import { classNames } from '~/utils/class-names';
 import { useTranslation } from 'react-i18next';
+import { SvgTree } from '../@svg/SvgTree';
+import { SvgMagazine } from '../@svg/SvgMagazine';
 
 export function Header({
   onCartIconClick,
@@ -22,43 +24,40 @@ export function Header({
   return (
     <header
       className={classNames(
-        isScrollingUp ? 'sticky top-0 z-10 animate-dropIn' : '',
-        'bg-green-500 shadow-xl transform hover:scale-105',
+        'bg-green-500 shadow-xl transform w-[100%] sticky ',
       )}
     >
-      <div className="max-w-6xl mx-auto p-4 flex items-center space-x-4">
-        <h1 className="text-white w-10">
-          <Link to="/">
-            <img
-              src="/cube-logo-small.webp"
-              width={40}
-              height={31}
-              alt={t('commmon.logoAlt')}
-            />
-          </Link>
-        </h1>
-        <div className="flex space-x-4 hidden sm:block">
-          {data.collections.map((collection) => (
-            <Link
-              className="text-sm md:text-base text-gray-200 hover:text-white"
-              to={'/collections/' + collection.slug}
-              prefetch="intent"
-              key={collection.id}
-            >
-              {collection.name}
-            </Link>
-          ))}
-        </div>
+      <div className="max-w-[90%] mx-auto p-2 flex items-center space-x-4">
+        <Link to="/">
+          <div className="flex items-center justify-between h-16 bg-green-600 p-4 rounded-lg">
+            <div className="flex items-center space-x-2">
+              <SvgTree />
+            </div>
+
+            <div className="flex flex-col items-start ml-4">
+              <div className="text-2xl font-bold text-white font-sans">
+                Krông Pa Nature
+              </div>
+              <div className="text-sm text-white font-sans mt-1">
+                Dược liệu - Đặc sản Krông Pa
+              </div>
+            </div>
+          </div>
+        </Link>
         <div className="flex-1 md:pr-8">
           <SearchBar></SearchBar>
         </div>
+        <div className="flex items-center gap-2 text-white text-base font-medium px-3 py-2 rounded h-9 hover:bg-green-400 hover:text-white transition-all duration-200 cursor-pointer">
+          <SvgMagazine />
+          <span className="font-sans">Tin tức</span>
+        </div>
+
         <div className="">
           <button
-            className="relative w-9 h-9 bg-white bg-opacity-20 rounded text-white p-1"
+            className="relative w-9 h-9 bg-white bg-opacity-20 rounded text-white p-1 hover:bg-green-400 transition-all duration-200"
             onClick={onCartIconClick}
-            aria-label="Open cart tray"
           >
-            <ShoppingBagIcon></ShoppingBagIcon>
+            <ShoppingBagIcon />
             {cartQuantity ? (
               <div className="absolute rounded-full -top-2 -right-2 bg-primary-600 min-w-6 min-h-6 flex items-center justify-center text-xs p-1">
                 {cartQuantity}
