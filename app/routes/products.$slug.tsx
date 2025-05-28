@@ -172,9 +172,9 @@ export default function ProductSlug() {
           {/* Product info */}
           <div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
             <div>
-              <div className="bg-green-500 text-white rounded-full shadow-md text-sm font-bold leading-5 m-0 mr-1 mb-1 px-3 py-1 inline-block">
+              {/* <div className="bg-green-500 text-white rounded-full shadow-md text-sm font-bold leading-5 m-0 mr-1 mb-1 px-3 py-1 inline-block">
                 Giá tốt nhất
-              </div>
+              </div> */}
               <h5 className="mt-2 text-[20px] leading-[28px] font-semibold py-[2px] pb-[7px] text-left block w-full capitalize text-[rgb(0,2,4)]">
                 {product.name}
               </h5>

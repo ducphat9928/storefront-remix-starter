@@ -18,6 +18,7 @@ gql`
       items {
         productVariants {
           items {
+            customFields
             price
             product {
               name

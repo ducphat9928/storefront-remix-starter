@@ -1,39 +1,55 @@
 import { CurrencyCode } from '~/generated/graphql';
 import { ProductCardProps } from './ProductCard';
 
-export function Price({
-  priceWithTax,
-  currencyCode,
-}: {
+type PriceProps = {
   priceWithTax?: number | ProductCardProps['priceWithTax'];
   currencyCode?: ProductCardProps['currencyCode'];
-}) {
-  if (priceWithTax == null || !currencyCode) {
-    return <></>;
-  }
+  className?: string;
+};
+
+export function Price({ priceWithTax, currencyCode, className }: PriceProps) {
+  if (priceWithTax == null || !currencyCode) return null;
+
   if (typeof priceWithTax === 'number') {
-    return <>{formatPrice(priceWithTax, currencyCode)}</>;
+    return (
+      <span className={className}>
+        {formatPrice(priceWithTax, currencyCode)}
+      </span>
+    );
   }
+
   if ('value' in priceWithTax) {
-    return <>{formatPrice(priceWithTax.value, currencyCode)}</>;
+    return (
+      <span className={className}>
+        {formatPrice(priceWithTax.value, currencyCode)}
+      </span>
+    );
   }
+
   if (priceWithTax.min === priceWithTax.max) {
-    return <>{formatPrice(priceWithTax.min, currencyCode)}</>;
+    return (
+      <span className={className}>
+        {formatPrice(priceWithTax.min, currencyCode)}
+      </span>
+    );
   }
+
   return (
-    <>
+    <span className={className}>
       {formatPrice(priceWithTax.min, currencyCode)} -{' '}
       {formatPrice(priceWithTax.max, currencyCode)}
-    </>
+    </span>
   );
 }
 
-export function formatPrice(value: number, currency: CurrencyCode) {
-  const wholeNumberValue = Math.floor(value / 100);
-  return new Intl.NumberFormat('en-US', {
+function formatPrice(value: number, currency: CurrencyCode): string {
+  const wholeNumber = Math.floor(value / 100);
+  const locale = currency === CurrencyCode.Vnd ? 'vi-VN' : 'en-US';
+
+  return new Intl.NumberFormat(locale, {
     style: 'currency',
     currency,
     minimumFractionDigits: 0,
     maximumFractionDigits: 0,
-  }).format(wholeNumberValue);
+  }).format(wholeNumber);
 }

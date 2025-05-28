@@ -6,6 +6,8 @@ import { LoaderArgs } from '@remix-run/server-runtime';
 import { useTranslation } from 'react-i18next';
 import { useState, useEffect } from 'react';
 import { Link } from '@remix-run/react';
+import { ProductCard } from '~/components/products/ProductCard';
+import { CurrencyCode } from '~/generated/graphql';
 
 export async function loader({ request }: LoaderArgs) {
   const collections = await getCollections(request, { take: 20 });
@@ -40,10 +42,10 @@ export default function Index() {
   }, []);
 
   return (
-    <div className="bg-white min-h-screen overflow-hidden pb-20 pl-20 pr-20">
-      <div className="relative bg-gray-900">
+    <div className="bg-white min-h-screen overflow-hidden pb-20 pl-40 pr-40 pt-[30px]">
+      <div className="relative bg-gray-900 overflow-hidden h-[500px] sm:h-[600px]">
         <div
-          className="absolute inset-0 h-full w-full flex transition-transform duration-1000 ease-in-out"
+          className="flex h-full transition-transform duration-1000 ease-in-out"
           style={{
             transform: `translateX(-${currentImageIndex * 100}%)`,
           }}
@@ -51,66 +53,84 @@ export default function Index() {
           {collections.map((collection, index) => (
             <div
               key={collection.id}
-              className="h-full w-full flex-shrink-0 relative"
+              className="flex-shrink-0 relative w-full h-full"
               style={{
                 opacity: index === currentImageIndex ? 1 : 0,
                 transition: 'opacity 1s ease-in-out',
               }}
             >
               <img
-                className="h-full w-full object-cover opacity-50"
+                className="w-full h-full"
                 src={collection.featuredAsset?.preview + '?w=1600'}
                 alt={`header-${index}`}
               />
+              {/* Optional overlay for better text contrast */}
+              <div className="absolute inset-0 bg-black bg-opacity-0"></div>
             </div>
           ))}
         </div>
 
-        <div className="relative flex flex-col items-center text-center text-white py-32 px-6 sm:py-48 lg:px-0">
-          {/* <h1 className="text-5xl font-extrabold tracking-tight sm:text-6xl bg-gradient-to-r from-yellow-500 to-red-500 bg-clip-text text-transparent">
-            {t('vendure.title')}
-          </h1>
-          <p className="mt-6 text-lg sm:text-xl max-w-3xl">
-            {t('vendure.intro')}{' '}
-            <a
-              href="https://www.vendure.io"
-              className="underline decoration-yellow-500 hover:decoration-yellow-300"
-            >
-              Vendure
-            </a>{' '}
-            &{' '}
-            <a
-              href="~/routes/__cart/index"
-              className="underline decoration-red-500 hover:decoration-red-300"
-            >
-              Remix
-            </a>
-          </p> */}
-          {/* <p className="mt-4 text-gray-300 flex items-center gap-2">
-            <BookOpenIcon className="w-5 h-5" />
-            <span>{t('common.readMore')}</span>
-            <a
-              href="https://www.vendure.io/blog/2022/05/lightning-fast-headless-commerce-with-vendure-and-remix"
-              className="text-yellow-500 hover:text-yellow-300"
-            >
-              {t('vendure.link')}
-            </a>
-          </p> */}
+        {/* Content (text, etc) */}
+        <div className="absolute inset-0 flex flex-col justify-center items-center text-center px-6 text-white z-10">
+          {/* ... Your centered text content here if any ... */}
+        </div>
 
-          <div className="absolute left-0 right-0 flex justify-between items-center px-6 py-4">
-            <button
-              onClick={handlePrev}
-              className="text-white bg-gray-800 p-2 rounded-full hover:bg-gray-700"
+        {/* Navigation Buttons */}
+        <div className="absolute top-1/2 left-0 right-0 flex justify-between px-4 -translate-y-1/2 z-20">
+          <button
+            onClick={handlePrev}
+            className="bg-gray-800 bg-opacity-70 hover:bg-opacity-90 text-white p-3 rounded-full shadow-lg transition"
+            aria-label="Previous Slide"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              Prev
-            </button>
-            <button
-              onClick={handleNext}
-              className="text-white bg-gray-800 p-2 rounded-full hover:bg-gray-700"
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M15 19l-7-7 7-7"
+              />
+            </svg>
+          </button>
+
+          <button
+            onClick={handleNext}
+            className="bg-gray-800 bg-opacity-70 hover:bg-opacity-90 text-white p-3 rounded-full shadow-lg transition"
+            aria-label="Next Slide"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-5 w-5"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
             >
-              Next
-            </button>
-          </div>
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M9 5l7 7-7 7"
+              />
+            </svg>
+          </button>
+        </div>
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex space-x-2 z-20">
+          {collections.map((_, index) => (
+            <button
+              key={index}
+              onClick={() => setCurrentImageIndex(index)}
+              className={`w-3 h-3 rounded-full transition ${
+                index === currentImageIndex
+                  ? 'bg-red-600'
+                  : 'bg-white opacity-60'
+              }`}
+            />
+          ))}
         </div>
       </div>
 
@@ -141,26 +161,21 @@ export default function Index() {
                   ]),
                 ).values(),
               ).map((variant) => (
-                <Link
-                  key={variant.product.slug}
-                  className="flex flex-col"
-                  prefetch="intent"
-                  to={`/products/${variant.product.slug}`}
-                >
-                  <div className="rounded-lg bg-white shadow-[0px_1px_11px_0px_rgba(0,_0,_0,_0.08)] p-2">
-                    <img
-                      className="w-full h-40 object-cover rounded-md"
-                      src={variant.product?.featuredAsset?.preview}
-                      alt={variant.product.name}
-                    />
-                    <h3 className="mt-2 text-[11px] font-bold max-h-[20px] min-h-[20px] min-w-[10px] uppercase text-[var(--color3E)] leading-[20px] overflow-hidden text-ellipsis line-clamp-1">
-                      {variant.product.name}
-                    </h3>
-                    <h2 className="mt-2 text-[20px] font-[var(--fontBold)] leading-[22px] text-[var(--color3E)] whitespace-nowrap">
-                      {variant.price} <span className="text-sm">₫</span>
-                    </h2>
-                  </div>
-                </Link>
+                <ProductCard
+                  productId={'2'} // ✅ Thêm dòng này
+                  productAsset={
+                    variant.product.featuredAsset
+                      ? {
+                          id: '3', // dùng id thật nếu có
+                          preview: variant.product.featuredAsset.preview,
+                        }
+                      : undefined
+                  }
+                  productName={variant.product.name}
+                  slug={variant.product.slug}
+                  priceWithTax={{ value: variant.price }}
+                  currencyCode={CurrencyCode.Vnd}
+                />
               ))}
             </div>
             <div className="mt-10 text-center">
@@ -168,12 +183,9 @@ export default function Index() {
                 to={'/collections/' + collection.slug}
                 prefetch="intent"
                 key={collection.id}
-                className="max-w-[300px] relative rounded-lg overflow-hidden hover:opacity-75 xl:w-auto"
+                className="inline-block border border-red-600 text-red-600 font-semibold rounded-lg px-6 py-2 hover:bg-red-600 hover:text-white transition"
               >
-                <p className="inline-block text-sm font-semibold text-primary-600 hover:text-primary-500">
-                  Xem thêm
-                  <span aria-hidden="true">&rarr;</span>
-                </p>
+                Xem Thêm
               </Link>
             </div>
           </div>

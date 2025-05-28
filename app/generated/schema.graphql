@@ -114,6 +114,15 @@ input BooleanOperators {
   isNull: Boolean
 }
 
+type BooleanStructFieldConfig implements StructField {
+  description: [LocalizedString!]
+  label: [LocalizedString!]
+  list: Boolean!
+  name: String!
+  type: String!
+  ui: JSON
+}
+
 type Channel implements Node {
   availableCurrencyCodes: [CurrencyCode!]!
   availableLanguageCodes: [LanguageCode!]
@@ -862,7 +871,7 @@ interface CustomField {
   ui: JSON
 }
 
-union CustomFieldConfig = BooleanCustomFieldConfig | DateTimeCustomFieldConfig | FloatCustomFieldConfig | IntCustomFieldConfig | LocaleStringCustomFieldConfig | LocaleTextCustomFieldConfig | RelationCustomFieldConfig | StringCustomFieldConfig | TextCustomFieldConfig
+union CustomFieldConfig = BooleanCustomFieldConfig | DateTimeCustomFieldConfig | FloatCustomFieldConfig | IntCustomFieldConfig | LocaleStringCustomFieldConfig | LocaleTextCustomFieldConfig | RelationCustomFieldConfig | StringCustomFieldConfig | StructCustomFieldConfig | TextCustomFieldConfig
 
 type Customer implements Node {
   addresses: [Address!]
@@ -980,6 +989,22 @@ type DateTimeCustomFieldConfig implements CustomField {
   ui: JSON
 }
 
+"""
+Expects the same validation formats as the `<input type="datetime-local">` HTML element.
+See https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/datetime-local#Additional_attributes
+"""
+type DateTimeStructFieldConfig implements StructField {
+  description: [LocalizedString!]
+  label: [LocalizedString!]
+  list: Boolean!
+  max: String
+  min: String
+  name: String!
+  step: Int
+  type: String!
+  ui: JSON
+}
+
 type DeletionResponse {
   message: String
   result: DeletionResult!
@@ -1027,6 +1052,7 @@ enum ErrorCode {
   NEGATIVE_QUANTITY_ERROR
   NOT_VERIFIED_ERROR
   NO_ACTIVE_ORDER_ERROR
+  ORDER_INTERCEPTOR_ERROR
   ORDER_LIMIT_ERROR
   ORDER_MODIFICATION_ERROR
   ORDER_PAYMENT_STATE_ERROR
@@ -1219,6 +1245,18 @@ type FloatCustomFieldConfig implements CustomField {
   ui: JSON
 }
 
+type FloatStructFieldConfig implements StructField {
+  description: [LocalizedString!]
+  label: [LocalizedString!]
+  list: Boolean!
+  max: Float
+  min: Float
+  name: String!
+  step: Float
+  type: String!
+  ui: JSON
+}
+
 type Fulfillment implements Node {
   createdAt: DateTime!
   customFields: JSON
@@ -1256,6 +1294,7 @@ type GuestCheckoutError implements ErrorResult {
 
 type HistoryEntry implements Node {
   createdAt: DateTime!
+  customFields: JSON
   data: JSON!
   id: ID!
   type: HistoryEntryType!
@@ -1399,6 +1438,18 @@ type IntCustomFieldConfig implements CustomField {
   nullable: Boolean
   readonly: Boolean
   requiresPermission: [Permission!]
+  step: Int
+  type: String!
+  ui: JSON
+}
+
+type IntStructFieldConfig implements StructField {
+  description: [LocalizedString!]
+  label: [LocalizedString!]
+  list: Boolean!
+  max: Int
+  min: Int
+  name: String!
   step: Int
   type: String!
   ui: JSON
@@ -1951,7 +2002,7 @@ scalar Money
 
 type Mutation {
   """
-  Adds an item to the order. If custom fields are defined on the OrderLine entity, a third argument 'customFields' will be available.
+  Adds an item to the Order. If custom fields are defined on the OrderLine entity, a third argument 'customFields' will be available.
   """
   addItemToOrder(productVariantId: ID!, quantity: Int!): UpdateOrderItemsResult!
 
@@ -2038,13 +2089,13 @@ type Mutation {
   """
   setCustomerForOrder(input: CreateCustomerInput!): SetCustomerForOrderResult!
 
-  """Sets the billing address for this order"""
+  """Sets the billing address for the active Order"""
   setOrderBillingAddress(input: CreateAddressInput!): ActiveOrderResult!
 
-  """Allows any custom fields to be set for the active order"""
+  """Allows any custom fields to be set for the active Order"""
   setOrderCustomFields(input: UpdateOrderInput!): ActiveOrderResult!
 
-  """Sets the shipping address for this order"""
+  """Sets the shipping address for the active Order"""
   setOrderShippingAddress(input: CreateAddressInput!): ActiveOrderResult!
 
   """
@@ -2059,6 +2110,16 @@ type Mutation {
   Transitions an Order to a new state. Valid next states can be found by querying `nextOrderStates`
   """
   transitionOrderToState(state: String!): TransitionOrderToStateResult
+
+  """
+  Unsets the billing address for the active Order. Available since version 3.1.0
+  """
+  unsetOrderBillingAddress: ActiveOrderResult!
+
+  """
+  Unsets the shipping address for the active Order. Available since version 3.1.0
+  """
+  unsetOrderShippingAddress: ActiveOrderResult!
 
   """Update an existing Customer"""
   updateCustomer(input: UpdateCustomerInput!): Customer!
@@ -2254,6 +2315,15 @@ input OrderFilterParameter {
   totalWithTax: NumberOperators
   type: StringOperators
   updatedAt: DateOperators
+}
+
+"""
+Returned when an order operation is rejected by an OrderInterceptor method.
+"""
+type OrderInterceptorError implements ErrorResult {
+  errorCode: ErrorCode!
+  interceptorError: String!
+  message: String!
 }
 
 """Returned when the maximum order size limit has been reached."""
@@ -2479,6 +2549,7 @@ type PasswordValidationError implements ErrorResult {
 type Payment implements Node {
   amount: Money!
   createdAt: DateTime!
+  customFields: JSON
   errorMessage: String
   id: ID!
   metadata: JSON
@@ -3134,6 +3205,22 @@ type ProvinceList implements PaginatedList {
   totalItems: Int!
 }
 
+type PublicPaymentMethod {
+  code: String!
+  description: String
+  id: ID!
+  name: String!
+  translations: [PaymentMethodTranslation!]!
+}
+
+type PublicShippingMethod {
+  code: String!
+  description: String
+  id: ID!
+  name: String!
+  translations: [ShippingMethodTranslation!]!
+}
+
 type Query {
   """The active Channel"""
   activeChannel: Channel!
@@ -3147,6 +3234,12 @@ type Query {
   query will once again return `null`.
   """
   activeOrder: Order
+
+  """Get active payment methods"""
+  activePaymentMethods: [PublicPaymentMethod]!
+
+  """Get active shipping methods"""
+  activeShippingMethods: [PublicShippingMethod]!
 
   """An array of supported Countries"""
   availableCountries: [Country!]!
@@ -3215,6 +3308,7 @@ union RefreshCustomerVerificationResult = NativeAuthStrategyError | Success
 type Refund implements Node {
   adjustment: Money!
   createdAt: DateTime!
+  customFields: JSON
   id: ID!
   items: Money!
   lines: [RefundLine!]!
@@ -3285,7 +3379,7 @@ type RelationCustomFieldConfig implements CustomField {
   ui: JSON
 }
 
-union RemoveOrderItemsResult = Order | OrderModificationError
+union RemoveOrderItemsResult = Order | OrderInterceptorError | OrderModificationError
 
 union RequestPasswordResetResult = NativeAuthStrategyError | Success
 
@@ -3394,6 +3488,7 @@ union SetCustomerForOrderResult = AlreadyLoggedInError | EmailAddressConflictErr
 union SetOrderShippingMethodResult = IneligibleShippingMethodError | NoActiveOrderError | Order | OrderModificationError
 
 type ShippingLine {
+  customFields: JSON
   discountedPrice: Money!
   discountedPriceWithTax: Money!
   discounts: [Discount!]!
@@ -3495,6 +3590,43 @@ input StringOperators {
   regex: String
 }
 
+type StringStructFieldConfig implements StructField {
+  description: [LocalizedString!]
+  label: [LocalizedString!]
+  length: Int
+  list: Boolean!
+  name: String!
+  options: [StringFieldOption!]
+  pattern: String
+  type: String!
+  ui: JSON
+}
+
+type StructCustomFieldConfig implements CustomField {
+  description: [LocalizedString!]
+  fields: [StructFieldConfig!]!
+  internal: Boolean
+  label: [LocalizedString!]
+  list: Boolean!
+  name: String!
+  nullable: Boolean
+  readonly: Boolean
+  requiresPermission: [Permission!]
+  type: String!
+  ui: JSON
+}
+
+interface StructField {
+  description: [LocalizedString!]
+  label: [LocalizedString!]
+  list: Boolean
+  name: String!
+  type: String!
+  ui: JSON
+}
+
+union StructFieldConfig = BooleanStructFieldConfig | DateTimeStructFieldConfig | FloatStructFieldConfig | IntStructFieldConfig | StringStructFieldConfig | TextStructFieldConfig
+
 """
 Indicates that an operation succeeded, where we do not want to return any more specific information.
 """
@@ -3571,6 +3703,15 @@ type TextCustomFieldConfig implements CustomField {
   ui: JSON
 }
 
+type TextStructFieldConfig implements StructField {
+  description: [LocalizedString!]
+  label: [LocalizedString!]
+  list: Boolean!
+  name: String!
+  type: String!
+  ui: JSON
+}
+
 union TransitionOrderToStateResult = Order | OrderStateTransitionError
 
 """
@@ -3612,7 +3753,7 @@ input UpdateOrderInput {
   customFields: JSON
 }
 
-union UpdateOrderItemsResult = InsufficientStockError | NegativeQuantityError | Order | OrderLimitError | OrderModificationError
+union UpdateOrderItemsResult = InsufficientStockError | NegativeQuantityError | Order | OrderInterceptorError | OrderLimitError | OrderModificationError
 
 """The `Upload` scalar type represents a file upload."""
 scalar Upload
