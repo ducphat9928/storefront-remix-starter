@@ -1,17 +1,9 @@
 import { FormEvent, useState } from 'react';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
-import {
-  Form,
-  useLoaderData,
-  useNavigate,
-  useOutletContext,
-} from '@remix-run/react';
+import { Form, useLoaderData, useNavigate, useOutletContext } from '@remix-run/react';
 import { OutletContext } from '~/types';
 import { DataFunctionArgs, json, redirect } from '@remix-run/server-runtime';
-import {
-  getAvailableCountries,
-  getEligibleShippingMethods,
-} from '~/providers/checkout/checkout';
+import { getAvailableCountries, getEligibleShippingMethods } from '~/providers/checkout/checkout';
 import { shippingFormDataIsValid } from '~/utils/validation';
 import { getSessionStorage } from '~/sessions';
 import { classNames } from '~/utils/class-names';
@@ -24,18 +16,13 @@ import { useTranslation } from 'react-i18next';
 
 export async function loader({ request }: DataFunctionArgs) {
   const session = await getSessionStorage().then((sessionStorage) =>
-    sessionStorage.getSession(request?.headers.get('Cookie')),
+    sessionStorage.getSession(request?.headers.get('Cookie'))
   );
 
   const activeOrder = await getActiveOrder({ request });
 
   //check if there is an active order if not redirect to homepage
-  if (
-    !session ||
-    !activeOrder ||
-    !activeOrder.active ||
-    activeOrder.lines.length === 0
-  ) {
+  if (!session || !activeOrder || !activeOrder.active || activeOrder.lines.length === 0) {
     return redirect('/');
   }
   const { availableCountries } = await getAvailableCountries({ request });
@@ -66,8 +53,7 @@ export default function CheckoutShipping() {
   const isSignedIn = !!activeCustomer?.id;
   const addresses = activeCustomer?.addresses ?? [];
   const defaultFullName =
-    shippingAddress?.fullName ??
-    (customer ? `${customer.firstName} ${customer.lastName}` : ``);
+    shippingAddress?.fullName ?? (customer ? `${customer.firstName} ${customer.lastName}` : ``);
   const canProceedToPayment =
     customer &&
     ((shippingAddress?.streetLine1 && shippingAddress?.postalCode) ||
@@ -77,17 +63,9 @@ export default function CheckoutShipping() {
 
   const submitCustomerForm = (event: FormEvent<HTMLFormElement>) => {
     const formData = new FormData(event.currentTarget);
-    const { emailAddress, firstName, lastName } = Object.fromEntries<any>(
-      formData.entries(),
-    );
+    const { emailAddress, firstName, lastName } = Object.fromEntries<any>(formData.entries());
     const isValid = event.currentTarget.checkValidity();
-    if (
-      customerFormChanged &&
-      isValid &&
-      emailAddress &&
-      firstName &&
-      lastName
-    ) {
+    if (customerFormChanged && isValid && emailAddress && firstName && lastName) {
       activeOrderFetcher.submit(formData, {
         method: 'post',
         action: '/api/active-order',
@@ -108,7 +86,7 @@ export default function CheckoutShipping() {
       setSelectedAddressIndex(index);
       const formData = new FormData();
       Object.keys(selectedAddress).forEach((key) =>
-        formData.append(key, (selectedAddress as any)[key]),
+        formData.append(key, (selectedAddress as any)[key])
       );
       formData.append('countryCode', selectedAddress.country.code);
       formData.append('action', 'setCheckoutShipping');
@@ -136,7 +114,7 @@ export default function CheckoutShipping() {
         {
           method: 'post',
           action: '/api/active-order',
-        },
+        }
       );
     }
   };
@@ -148,9 +126,7 @@ export default function CheckoutShipping() {
   return (
     <div>
       <div>
-        <h2 className="text-lg font-medium text-gray-900">
-          {t('checkout.detailsTitle')}
-        </h2>
+        <h2 className="text-lg font-medium text-gray-900">{t('checkout.detailsTitle')}</h2>
 
         {isSignedIn ? (
           <div>
@@ -169,10 +145,7 @@ export default function CheckoutShipping() {
           >
             <input type="hidden" name="action" value="setOrderCustomer" />
             <div className="mt-4">
-              <label
-                htmlFor="emailAddress"
-                className="block text-sm font-medium text-gray-700"
-              >
+              <label htmlFor="emailAddress" className="block text-sm font-medium text-gray-700">
                 {t('account.emailAddress')}
               </label>
               <div className="mt-1">
@@ -193,10 +166,7 @@ export default function CheckoutShipping() {
             </div>
             <div className="mt-4 grid grid-cols-1 gap-y-6 sm:grid-cols-2 sm:gap-x-4">
               <div>
-                <label
-                  htmlFor="firstName"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                   {t('account.firstName')}
                 </label>
                 <div className="mt-1">
@@ -212,10 +182,7 @@ export default function CheckoutShipping() {
               </div>
 
               <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                   {t('account.lastName')}
                 </label>
                 <div className="mt-1">
@@ -242,9 +209,7 @@ export default function CheckoutShipping() {
       >
         <input type="hidden" name="action" value="setCheckoutShipping" />
         <div className="mt-10 border-t border-gray-200 pt-10">
-          <h2 className="text-lg font-medium text-gray-900">
-            {t('checkout.shippingTitle')}
-          </h2>
+          <h2 className="text-lg font-medium text-gray-900">{t('checkout.shippingTitle')}</h2>
         </div>
         {isSignedIn && activeCustomer.addresses?.length ? (
           <div>
@@ -267,9 +232,7 @@ export default function CheckoutShipping() {
         <ShippingMethodSelector
           eligibleShippingMethods={eligibleShippingMethods}
           currencyCode={activeOrder?.currencyCode}
-          shippingMethodId={
-            activeOrder?.shippingLines[0]?.shippingMethod.id ?? ''
-          }
+          shippingMethodId={activeOrder?.shippingLines[0]?.shippingMethod.id ?? ''}
           onChange={submitSelectedShippingMethod}
         />
       </div>
@@ -279,10 +242,8 @@ export default function CheckoutShipping() {
         disabled={!canProceedToPayment}
         onClick={navigateToPayment}
         className={classNames(
-          canProceedToPayment
-            ? 'bg-primary-600 hover:bg-primary-700'
-            : 'bg-gray-400',
-          'flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500',
+          canProceedToPayment ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-400',
+          'flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'
         )}
       >
         <LockClosedIcon className="w-5 h-5"></LockClosedIcon>

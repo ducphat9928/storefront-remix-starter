@@ -2,17 +2,11 @@ import gql from 'graphql-tag';
 import { QueryOptions, sdk } from '../../graphqlWrapper';
 import { SearchQueryVariables } from '~/generated/graphql';
 
-export function search(
-  variables: SearchQueryVariables,
-  options?: QueryOptions,
-) {
+export function search(variables: SearchQueryVariables, options?: QueryOptions) {
   return sdk.search(variables, options);
 }
 
-export function searchFacetValues(
-  variables: SearchQueryVariables,
-  options: QueryOptions,
-) {
+export function searchFacetValues(variables: SearchQueryVariables, options: QueryOptions) {
   return sdk.searchFacetValues(variables, options);
 }
 
@@ -111,14 +105,14 @@ gql`
         collection {
           productVariants {
             items {
+              price
               name
               priceWithTax
               featuredAsset {
                 preview
               }
               product {
-                id
-                slug
+                ...DetailedProduct
               }
             }
           }

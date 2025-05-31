@@ -15,11 +15,7 @@ import {
 } from '@remix-run/react';
 import stylesheet from './tailwind.css';
 import { Header } from './components/header/Header';
-import {
-  DataFunctionArgs,
-  json,
-  LinksFunction,
-} from '@remix-run/server-runtime';
+import { DataFunctionArgs, json, LinksFunction } from '@remix-run/server-runtime';
 import { getCollections } from '~/providers/collections/collections';
 import { activeChannel } from '~/providers/channel/channel';
 import { APP_META_DESCRIPTION, APP_META_TITLE } from '~/constants';
@@ -31,7 +27,7 @@ import { useActiveOrder } from '~/utils/use-active-order';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import { getI18NextServer } from '~/i18next.server';
-
+import logo from './components/img/image.png';
 export const meta: MetaFunction = () => {
   return [{ title: APP_META_TITLE }, { description: APP_META_DESCRIPTION }];
 };
@@ -41,15 +37,10 @@ export const links: LinksFunction = () => [
   ...(cssBundleHref ? [{ rel: 'stylesheet', href: cssBundleHref }] : []),
 ];
 
-const devMode =
-  typeof process !== 'undefined' && process.env.NODE_ENV === 'development';
+const devMode = typeof process !== 'undefined' && process.env.NODE_ENV === 'development';
 
 // The root data does not change once loaded.
-export const shouldRevalidate: ShouldRevalidateFunction = ({
-  nextUrl,
-  currentUrl,
-  formAction,
-}) => {
+export const shouldRevalidate: ShouldRevalidateFunction = ({ nextUrl, currentUrl, formAction }) => {
   if (currentUrl.pathname === '/sign-in') {
     // just logged in
     return true;
@@ -75,12 +66,10 @@ export type RootLoaderData = {
 export async function loader({ request, params, context }: DataFunctionArgs) {
   const collections = await getCollections(request, { take: 20 });
   const topLevelCollections = collections.filter(
-    (collection) => collection.parent?.name === '__root_collection__',
+    (collection) => collection.parent?.name === '__root_collection__'
   );
   const activeCustomer = await getActiveCustomer({ request });
-  const locale = await getI18NextServer().then((i18next) =>
-    i18next.getLocale(request),
-  );
+  const locale = await getI18NextServer().then((i18next) => i18next.getLocale(request));
   const loaderData: RootLoaderData = {
     activeCustomer,
     activeChannel: await activeChannel({ request }),
@@ -97,13 +86,8 @@ export default function App() {
   const { collections } = loaderData;
   const { locale } = useLoaderData<typeof loader>();
   const { i18n } = useTranslation();
-  const {
-    activeOrderFetcher,
-    activeOrder,
-    adjustOrderLine,
-    removeItem,
-    refresh,
-  } = useActiveOrder();
+  const { activeOrderFetcher, activeOrder, adjustOrderLine, removeItem, refresh } =
+    useActiveOrder();
 
   useChangeLanguage(locale);
 
@@ -166,17 +150,13 @@ type DefaultSparseErrorPageProps = {
  * for your data dependant components in case your shop instance / CMS isnt responding.
  * See: https://remix.run/docs/en/main/route/error-boundary
  */
-function DefaultSparseErrorPage({
-  tagline,
-  headline,
-  description,
-}: DefaultSparseErrorPageProps) {
+function DefaultSparseErrorPage({ tagline, headline, description }: DefaultSparseErrorPageProps) {
   return (
     <html lang="en" id="app">
       <head>
         <meta charSet="utf-8" />
         <meta name="viewport" content="width=device-width,initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" type="image/png"></link>
+        <link rel="icon" href="/image.png" type="image/png"></link>
         <Meta />
         <Links />
       </head>
@@ -188,9 +168,7 @@ function DefaultSparseErrorPage({
           <h1 className="mt-2 font-bold text-gray-900 tracking-tight text-4xl sm:text-5xl">
             {headline}
           </h1>
-          <p className="mt-4 text-base text-gray-500 max-w-full break-words">
-            {description}
-          </p>
+          <p className="mt-4 text-base text-gray-500 max-w-full break-words">{description}</p>
           <div className="mt-6">
             <Link
               to="/"
@@ -223,13 +201,7 @@ export function ErrorBoundary() {
     description = error.data;
   }
 
-  return (
-    <DefaultSparseErrorPage
-      tagline={tagline}
-      headline={headline}
-      description={description}
-    />
-  );
+  return <DefaultSparseErrorPage tagline={tagline} headline={headline} description={description} />;
 }
 
 /**

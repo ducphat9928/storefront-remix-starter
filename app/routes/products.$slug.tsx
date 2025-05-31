@@ -15,7 +15,7 @@ import { Breadcrumbs } from '~/components/Breadcrumbs';
 import { APP_META_TITLE } from '~/constants';
 import { CartLoaderData } from '~/routes/api.active-order';
 import { getSessionStorage } from '~/sessions';
-import { ErrorCode, ErrorResult } from '~/generated/graphql';
+import { ErrorCode, ErrorResult, ProductVariant } from '~/generated/graphql';
 import Alert from '~/components/Alert';
 import { StockLevelLabel } from '~/components/products/StockLevelLabel';
 import TopReviews from '~/components/products/TopReviews';
@@ -26,13 +26,12 @@ import { SvgReturnItem } from '~/components/@svg/SvgReturnItem';
 import { SvgCart } from '~/components/@svg/SvgCart';
 import { ShoppingBagIcon } from '@heroicons/react/24/outline';
 import Tooltip from '~/components/Tooltip';
+import PaginatedProductGrid from '~/components/products/PaginatedProductGrid';
 
 export const meta: MetaFunction = ({ data }) => {
   return [
     {
-      title: data?.product?.name
-        ? `${data.product.name} - ${APP_META_TITLE}`
-        : APP_META_TITLE,
+      title: data?.product?.name ? `${data.product.name} - ${APP_META_TITLE}` : APP_META_TITLE,
     },
   ];
 };
@@ -53,9 +52,7 @@ export async function loader({ params, request }: DataFunctionArgs) {
     },
   });
   const sessionStorage = await getSessionStorage();
-  const session = await sessionStorage.getSession(
-    request?.headers.get('Cookie'),
-  );
+  const session = await sessionStorage.getSession(request?.headers.get('Cookie'));
   const error = session.get('activeOrderError');
   return json(
     { product: product!, error, searchByFacet },
@@ -63,7 +60,7 @@ export async function loader({ params, request }: DataFunctionArgs) {
       headers: {
         'Set-Cookie': await sessionStorage.commitSession(session),
       },
-    },
+    }
   );
 }
 
@@ -71,12 +68,10 @@ export const shouldRevalidate: ShouldRevalidateFunction = () => true;
 
 export default function ProductSlug() {
   const { product, error, searchByFacet } = useLoaderData<typeof loader>();
-  const [selectedVariantId, setSelectedVariantId] = useState(
-    product.variants[0]?.id || '',
-  );
-  const [featuredAsset, setFeaturedAsset] = useState(
-    product.variants[0]?.featuredAsset,
-  );
+  console.log(product, 'product');
+
+  const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id || '');
+  const [featuredAsset, setFeaturedAsset] = useState(product.variants[0]?.featuredAsset);
 
   const { activeOrderFetcher } = useOutletContext<{
     activeOrderFetcher: FetcherWithComponents<CartLoaderData>;
@@ -88,24 +83,14 @@ export default function ProductSlug() {
   if (!product) {
     return <div>{t('product.notFound')}</div>;
   }
-  const [isExpanded, setIsExpanded] = useState(false);
-
-  const truncatedDescription =
-    product.description.length > 300
-      ? product.description.slice(0, 300) + '...'
-      : product.description;
-
-  const findVariantById = (id: string) =>
-    product.variants.find((v) => v.id === id);
+  const findVariantById = (id: string) => product.variants.find((v) => v.id === id);
 
   const selectedVariant = findVariantById(selectedVariantId);
   if (!selectedVariant) {
     setSelectedVariantId(product.variants[0].id);
   }
-
   const qtyInCart =
-    activeOrder?.lines.find((l) => l.productVariant.id === selectedVariantId)
-      ?.quantity ?? 0;
+    activeOrder?.lines.find((l) => l.productVariant.id === selectedVariantId)?.quantity ?? 0;
 
   useEffect(() => {
     if (product.variants.length > 0) {
@@ -117,10 +102,7 @@ export default function ProductSlug() {
     <div>
       <div className="max-w-7xl mx-auto p-4">
         <Breadcrumbs
-          items={
-            product.collections[product.collections.length - 1]?.breadcrumbs ??
-            []
-          }
+          items={product.collections[product.collections.length - 1]?.breadcrumbs ?? []}
           nameProduct={product.name}
         ></Breadcrumbs>
         <div className="lg:grid lg:grid-cols-2 lg:gap-x-8 lg:items-start mt-4 md:mt-12">
@@ -128,10 +110,7 @@ export default function ProductSlug() {
             <span className="rounded-md overflow-hidden">
               <div className="w-full h-[400px] object-center object-cover rounded-lg w-[90%] ml-auto">
                 <img
-                  src={
-                    (featuredAsset?.preview || product.featuredAsset?.preview) +
-                    '?w=800'
-                  }
+                  src={(featuredAsset?.preview || product.featuredAsset?.preview) + '?w=800'}
                   alt={product.name}
                   className="w-full h-full object-cover rounded-lg"
                 />
@@ -148,9 +127,7 @@ export default function ProductSlug() {
                         <div
                           key={asset.id}
                           className={`flex justify-center items-center rounded-lg cursor-pointer w-[110px] h-[110px] bg-center bg-no-repeat bg-contain relative m-[5px_6px] shadow-[0_0_0_1px_var(--colorCC)] transition-all ${
-                            featuredAsset?.id === asset.id
-                              ? 'border-2 border-blue-500'
-                              : ''
+                            featuredAsset?.id === asset.id ? 'border-2 border-blue-500' : ''
                           }`}
                           onMouseEnter={() => {
                             setFeaturedAsset(asset);
@@ -172,15 +149,16 @@ export default function ProductSlug() {
           {/* Product info */}
           <div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
             <div>
-              {/* <div className="bg-green-500 text-white rounded-full shadow-md text-sm font-bold leading-5 m-0 mr-1 mb-1 px-3 py-1 inline-block">
+              <div className="bg-red-500 text-white rounded-full shadow-md text-sm font-bold leading-5 m-0 mr-1 mb-1 px-3 py-1 inline-block">
                 Giá tốt nhất
-              </div> */}
+              </div>
               <h5 className="mt-2 text-[20px] leading-[28px] font-semibold py-[2px] pb-[7px] text-left block w-full capitalize text-[rgb(0,2,4)]">
                 {product.name}
               </h5>
             </div>
             <activeOrderFetcher.Form method="post" action="/api/active-order">
               <input type="hidden" name="action" value="addItemToOrder" />
+              <input type="hidden" name="variantId" value={selectedVariantId} />
               <div className="mt-2 mb-4 flex flex-col sm:flex-row sm:items-center">
                 <p className="text-[var(--color20)] text-[24px] font-[var(--fontSemiBold)] leading-[32px] mr-4 whitespace-nowrap">
                   <Price
@@ -191,21 +169,15 @@ export default function ProductSlug() {
               </div>
 
               <div className="flex items-center  mb-2.5">
-                <div className="font-normal text-sm text-gray-800">
-                  Lựa chọn:
-                </div>
-                <div className="font-light text-sm text-gray-500 px-1">
-                  {selectedVariant?.name}
-                </div>
+                <div className="font-normal text-sm text-gray-800">Lựa chọn:</div>
+                <div className="font-light text-sm text-gray-500 px-1">{selectedVariant?.name}</div>
               </div>
               <div className="grid grid-cols-[repeat(auto-fill,_40px)] mb-2">
                 {product.variants.map((variant, index) => (
                   <Tooltip key={index} content={variant.name}>
                     <div
                       className={`rounded cursor-pointer flex h-9 mr-0.5 mt-1 min-w-[28px] p-[1px] relative transition-[opacity] w-9 ${
-                        selectedVariantId === variant.id
-                          ? 'border border-solid border-black'
-                          : ''
+                        selectedVariantId === variant.id ? 'border border-solid border-black' : ''
                       }`}
                       onClick={() => {
                         setSelectedVariantId(variant.id);
@@ -268,8 +240,7 @@ export default function ProductSlug() {
                 >
                   {qtyInCart ? (
                     <span className="flex items-center">
-                      <CheckIcon className="w-4 h-4 mr-1" /> {qtyInCart}{' '}
-                      {t('product.inCart')}
+                      <CheckIcon className="w-4 h-4 mr-1" /> {qtyInCart} {t('product.inCart')}
                     </span>
                   ) : (
                     <span className="flex items-center">
@@ -289,90 +260,47 @@ export default function ProductSlug() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto p-4">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">
-          {t('product.description')}
-        </h3>
+        <h3 className="text-xl font-bold text-gray-900 mb-4">{t('product.description')}</h3>
         <div>
           <div
-            className={`text-base text-gray-700 ${
-              isExpanded ? '' : 'truncate'
-            }`}
+            className={`text-base text-gray-700`}
             style={{
-              WebkitLineClamp: isExpanded ? 'unset' : 4,
               display: '-webkit-box',
               WebkitBoxOrient: 'vertical',
             }}
             dangerouslySetInnerHTML={{
-              __html: isExpanded ? truncatedDescription : product.description,
+              __html: product.description,
             }}
           />
-          <button
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-blue-500 mt-2"
-          >
-            {isExpanded ? t('product.seeLess') : t('product.seeMore')}
-          </button>
         </div>
       </div>
       <div className="max-w-7xl mx-auto p-4">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">
-          Sản phẩm liên quan
-        </h3>
-        {/* check */}
-        <div className="related-products-container flex overflow-x-auto space-x-4">
-          {searchByFacet.search.collections.map((collection, index) => {
-            const allProductIds = new Set(
-              searchByFacet.search.collections.flatMap((col) =>
-                col.collection.productVariants.items.map(
-                  (item) => item.product.id,
-                ),
-              ),
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Sản phẩm liên quan</h3> {/* check */}
+        <div className="related-products-container flex space-x-4">
+          {(() => {
+            const allVariants = searchByFacet.search.collections.flatMap(
+              (collectionWrapper) =>
+                (collectionWrapper?.collection?.productVariants?.items as ProductVariant[]) || []
             );
 
+            const uniqueVariantsMap = new Map<string, ProductVariant>();
+            for (const variant of allVariants) {
+              const productId = variant.product.id;
+              if (!uniqueVariantsMap.has(productId)) {
+                uniqueVariantsMap.set(productId, variant);
+              }
+            }
+            const uniqueVariants = Array.from(uniqueVariantsMap.values());
+
+            if (uniqueVariants.length === 0) return null;
+
             return (
-              <div
-                key={index}
-                className="related-products-container flex overflow-x-auto space-x-4"
-              >
-                {collection.collection.productVariants.items
-                  .filter(
-                    (variant, variantIndex, self) =>
-                      variant.product.slug !== product.slug &&
-                      self.findIndex(
-                        (v) => v.product.id === variant.product.id,
-                      ) === variantIndex &&
-                      allProductIds.has(variant.product.id) === false,
-                  )
-                  .map((variant, variantIndex) => (
-                    <Link
-                      key={variantIndex}
-                      className="flex flex-col"
-                      prefetch="intent"
-                      to={`/products/${variant.product.slug}`}
-                    >
-                      <div className="w-[250px] h-[350px] flex-shrink-0 bg-gray-50 rounded-lg overflow-hidden shadow-md">
-                        <img
-                          src={variant.featuredAsset?.preview}
-                          alt={variant.name || `Product ${index}`}
-                          className="w-full h-[200px] object-cover rounded-t-lg"
-                        />
-                        <div className="p-4 h-[150px] flex flex-col justify-between">
-                          <h4 className="text-lg font-semibold">
-                            {variant.name}
-                          </h4>
-                          <p className="text-gray-600">
-                            Price:{' '}
-                            {variant.priceWithTax
-                              ? `$${variant.priceWithTax}`
-                              : 'N/A'}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  ))}
-              </div>
+              <section className="w-full">
+                <div className="flex items-center justify-center mt-4 w-[30%] mx-auto"></div>
+                <PaginatedProductGrid variants={uniqueVariants} />
+              </section>
             );
-          })}
+          })()}
         </div>
       </div>
     </div>

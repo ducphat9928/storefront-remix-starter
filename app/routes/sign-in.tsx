@@ -34,15 +34,10 @@ export default function SignInPage() {
     <>
       <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="mt-6 text-center text-3xl text-gray-900">
-            {t('account.signInTitle')}
-          </h2>
+          <h2 className="mt-6 text-center text-3xl text-gray-900">{t('account.signInTitle')}</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             {t('common.or')}{' '}
-            <Link
-              to="/sign-up"
-              className="font-medium text-primary-600 hover:text-primary-500"
-            >
+            <Link to="/sign-up" className="font-medium text-primary-600 hover:text-primary-500">
               {t('account.register')}
             </Link>
           </p>
@@ -69,10 +64,7 @@ export default function SignInPage() {
                   value={searchParams.get('redirectTo') ?? undefined}
                 />
                 <div>
-                  <label
-                    htmlFor="email"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                     {t('account.emailAddress')}
                   </label>
                   <div className="mt-1">
@@ -90,10 +82,7 @@ export default function SignInPage() {
                 </div>
 
                 <div>
-                  <label
-                    htmlFor="password"
-                    className="block text-sm font-medium text-gray-700"
-                  >
+                  <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                     {t('account.password')}
                   </label>
                   <div className="mt-1">
@@ -119,19 +108,13 @@ export default function SignInPage() {
                       className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
                       defaultChecked
                     />
-                    <label
-                      htmlFor="rememberMe"
-                      className="ml-2 block text-sm text-gray-900"
-                    >
+                    <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-900">
                       {t('account.rememberMe')}
                     </label>
                   </div>
 
                   <div className="text-sm">
-                    <a
-                      href="#"
-                      className="font-medium text-primary-600 hover:text-primary-500"
-                    >
+                    <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
                       {t('account.forgotPassword')}
                     </a>
                   </div>
@@ -141,18 +124,13 @@ export default function SignInPage() {
                   <div className="rounded-md bg-red-50 p-4">
                     <div className="flex">
                       <div className="flex-shrink-0">
-                        <XCircleIcon
-                          className="h-5 w-5 text-red-400"
-                          aria-hidden="true"
-                        />
+                        <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
                       </div>
                       <div className="ml-3">
                         <h3 className="text-sm font-medium text-red-800">
                           {t('account.errorSignIn')}
                         </h3>
-                        <p className="text-sm text-red-700 mt-2">
-                          {login.data.message}
-                        </p>
+                        <p className="text-sm text-red-700 mt-2">{login.data.message}</p>
                       </div>
                     </div>
                   </div>
@@ -161,7 +139,7 @@ export default function SignInPage() {
                 <div>
                   <Button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                   >
                     <span className="flex gap-4 items-center">
                       {login.state !== 'idle' && (

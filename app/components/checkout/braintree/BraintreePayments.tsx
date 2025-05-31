@@ -34,10 +34,7 @@ export function BraintreeDropIn(props: {
         let request: Request;
         request = new Request('');
 
-        await addPaymentToOrder(
-          { method: 'braintree', metadata: result },
-          { request },
-        );
+        await addPaymentToOrder({ method: 'braintree', metadata: result }, { request });
 
         submit(formData, { method: 'post' });
       } catch (e) {
@@ -71,7 +68,7 @@ export function BraintreeDropIn(props: {
                 setEnablePaymentButton(false);
               });
             }
-          },
+          }
         );
 
       if (braintreeInstance) {
@@ -85,20 +82,15 @@ export function BraintreeDropIn(props: {
   }, [show]);
 
   return (
-    <div
-      style={{ display: `${show ? 'block' : 'none'}` }}
-      className={'w-full h-full'}
-    >
+    <div style={{ display: `${show ? 'block' : 'none'}` }} className={'w-full h-full'}>
       <div id={'braintree-drop-in-div'} />
 
       <input type="hidden" name="paymentMethodCode" value="braintree" />
       <button
         onClick={submitPayment}
         className={classNames(
-          enablePaymentButton && !processing
-            ? 'bg-primary-600 hover:bg-primary-700'
-            : 'bg-gray-400',
-          'flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500',
+          enablePaymentButton && !processing ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-400',
+          'flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'
         )}
         disabled={!braintreeInstance || !enablePaymentButton}
       >

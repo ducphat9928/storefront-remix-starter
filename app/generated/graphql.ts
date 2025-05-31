@@ -2,15 +2,9 @@ import { DocumentNode } from 'graphql';
 import gql from 'graphql-tag';
 export type Maybe<T> = T | null;
 export type InputMaybe<T> = Maybe<T>;
-export type Exact<T extends { [key: string]: unknown }> = {
-  [K in keyof T]: T[K];
-};
-export type MakeOptional<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]?: Maybe<T[SubKey]>;
-};
-export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & {
-  [SubKey in K]: Maybe<T[SubKey]>;
-};
+export type Exact<T extends { [key: string]: unknown }> = { [K in keyof T]: T[K] };
+export type MakeOptional<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]?: Maybe<T[SubKey]> };
+export type MakeMaybe<T, K extends keyof T> = Omit<T, K> & { [SubKey in K]: Maybe<T[SubKey]> };
 /** All built-in and custom scalars, mapped to their actual values */
 export type Scalars = {
   ID: string;
@@ -128,10 +122,7 @@ export type AuthenticationMethod = Node & {
   updatedAt: Scalars['DateTime'];
 };
 
-export type AuthenticationResult =
-  | CurrentUser
-  | InvalidCredentialsError
-  | NotVerifiedError;
+export type AuthenticationResult = CurrentUser | InvalidCredentialsError | NotVerifiedError;
 
 export type BooleanCustomFieldConfig = CustomField & {
   __typename?: 'BooleanCustomFieldConfig';
@@ -3015,9 +3006,7 @@ export type QuerySearchArgs = {
   input: SearchInput;
 };
 
-export type RefreshCustomerVerificationResult =
-  | NativeAuthStrategyError
-  | Success;
+export type RefreshCustomerVerificationResult = NativeAuthStrategyError | Success;
 
 export type Refund = Node & {
   __typename?: 'Refund';
@@ -3101,10 +3090,7 @@ export type RelationCustomFieldConfig = CustomField & {
   ui?: Maybe<Scalars['JSON']>;
 };
 
-export type RemoveOrderItemsResult =
-  | Order
-  | OrderInterceptorError
-  | OrderModificationError;
+export type RemoveOrderItemsResult = Order | OrderInterceptorError | OrderModificationError;
 
 export type RequestPasswordResetResult = NativeAuthStrategyError | Success;
 
@@ -3599,16 +3585,8 @@ export type LoginMutation = {
   __typename?: 'Mutation';
   login:
     | { __typename: 'CurrentUser'; id: string; identifier: string }
-    | {
-        __typename: 'InvalidCredentialsError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'NativeAuthStrategyError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename: 'InvalidCredentialsError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
     | { __typename: 'NotVerifiedError'; errorCode: ErrorCode; message: string };
 };
 
@@ -3626,21 +3604,9 @@ export type RegisterCustomerAccountMutationVariables = Exact<{
 export type RegisterCustomerAccountMutation = {
   __typename?: 'Mutation';
   registerCustomerAccount:
-    | {
-        __typename: 'MissingPasswordError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'NativeAuthStrategyError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'PasswordValidationError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename: 'MissingPasswordError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'PasswordValidationError'; errorCode: ErrorCode; message: string }
     | { __typename: 'Success'; success: boolean };
 };
 
@@ -3653,36 +3619,12 @@ export type VerifyCustomerAccountMutation = {
   __typename?: 'Mutation';
   verifyCustomerAccount:
     | { __typename: 'CurrentUser'; id: string; identifier: string }
-    | {
-        __typename: 'MissingPasswordError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'NativeAuthStrategyError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'PasswordAlreadySetError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'PasswordValidationError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'VerificationTokenExpiredError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'VerificationTokenInvalidError';
-        errorCode: ErrorCode;
-        message: string;
-      };
+    | { __typename: 'MissingPasswordError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'PasswordAlreadySetError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'PasswordValidationError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'VerificationTokenExpiredError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'VerificationTokenInvalidError'; errorCode: ErrorCode; message: string };
 };
 
 export type UpdateCustomerMutationVariables = Exact<{
@@ -3702,21 +3644,9 @@ export type RequestUpdateCustomerEmailAddressMutationVariables = Exact<{
 export type RequestUpdateCustomerEmailAddressMutation = {
   __typename?: 'Mutation';
   requestUpdateCustomerEmailAddress:
-    | {
-        __typename: 'EmailAddressConflictError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'InvalidCredentialsError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'NativeAuthStrategyError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename: 'EmailAddressConflictError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'InvalidCredentialsError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
     | { __typename: 'Success' };
 };
 
@@ -3727,21 +3657,9 @@ export type UpdateCustomerEmailAddressMutationVariables = Exact<{
 export type UpdateCustomerEmailAddressMutation = {
   __typename?: 'Mutation';
   updateCustomerEmailAddress:
-    | {
-        __typename: 'IdentifierChangeTokenExpiredError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'IdentifierChangeTokenInvalidError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'NativeAuthStrategyError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename: 'IdentifierChangeTokenExpiredError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'IdentifierChangeTokenInvalidError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
     | { __typename: 'Success' };
 };
 
@@ -3780,21 +3698,9 @@ export type UpdateCustomerPasswordMutationVariables = Exact<{
 export type UpdateCustomerPasswordMutation = {
   __typename?: 'Mutation';
   updateCustomerPassword:
-    | {
-        __typename: 'InvalidCredentialsError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'NativeAuthStrategyError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename: 'PasswordValidationError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename: 'InvalidCredentialsError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'NativeAuthStrategyError'; errorCode: ErrorCode; message: string }
+    | { __typename: 'PasswordValidationError'; errorCode: ErrorCode; message: string }
     | { __typename: 'Success'; success: boolean };
 };
 
@@ -3802,16 +3708,10 @@ export type ActiveChannelQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ActiveChannelQuery = {
   __typename?: 'Query';
-  activeChannel: {
-    __typename?: 'Channel';
-    id: string;
-    currencyCode: CurrencyCode;
-  };
+  activeChannel: { __typename?: 'Channel'; id: string; currencyCode: CurrencyCode };
 };
 
-export type EligibleShippingMethodsQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type EligibleShippingMethodsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type EligibleShippingMethodsQuery = {
   __typename?: 'Query';
@@ -3826,9 +3726,7 @@ export type EligibleShippingMethodsQuery = {
   }>;
 };
 
-export type EligiblePaymentMethodsQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type EligiblePaymentMethodsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type EligiblePaymentMethodsQuery = {
   __typename?: 'Query';
@@ -3845,21 +3743,13 @@ export type EligiblePaymentMethodsQuery = {
 
 export type NextOrderStatesQueryVariables = Exact<{ [key: string]: never }>;
 
-export type NextOrderStatesQuery = {
-  __typename?: 'Query';
-  nextOrderStates: Array<string>;
-};
+export type NextOrderStatesQuery = { __typename?: 'Query'; nextOrderStates: Array<string> };
 
 export type AvailableCountriesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type AvailableCountriesQuery = {
   __typename?: 'Query';
-  availableCountries: Array<{
-    __typename?: 'Country';
-    id: string;
-    name: string;
-    code: string;
-  }>;
+  availableCountries: Array<{ __typename?: 'Country'; id: string; name: string; code: string }>;
 };
 
 export type AddPaymentToOrderMutationVariables = Exact<{
@@ -3869,16 +3759,8 @@ export type AddPaymentToOrderMutationVariables = Exact<{
 export type AddPaymentToOrderMutation = {
   __typename?: 'Mutation';
   addPaymentToOrder:
-    | {
-        __typename?: 'IneligiblePaymentMethodError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'NoActiveOrderError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'IneligiblePaymentMethodError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'NoActiveOrderError'; errorCode: ErrorCode; message: string }
     | {
         __typename: 'Order';
         id: string;
@@ -3920,11 +3802,7 @@ export type AddPaymentToOrderMutation = {
         shippingLines: Array<{
           __typename?: 'ShippingLine';
           priceWithTax: number;
-          shippingMethod: {
-            __typename?: 'ShippingMethod';
-            id: string;
-            name: string;
-          };
+          shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
         }>;
         lines: Array<{
           __typename?: 'OrderLine';
@@ -3932,11 +3810,7 @@ export type AddPaymentToOrderMutation = {
           unitPriceWithTax: number;
           linePriceWithTax: number;
           quantity: number;
-          featuredAsset?: {
-            __typename?: 'Asset';
-            id: string;
-            preview: string;
-          } | null;
+          featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
           productVariant: {
             __typename?: 'ProductVariant';
             id: string;
@@ -3954,26 +3828,10 @@ export type AddPaymentToOrderMutation = {
           metadata?: any | null;
         }> | null;
       }
-    | {
-        __typename?: 'OrderPaymentStateError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'OrderStateTransitionError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'PaymentDeclinedError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'PaymentFailedError';
-        errorCode: ErrorCode;
-        message: string;
-      };
+    | { __typename?: 'OrderPaymentStateError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'OrderStateTransitionError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'PaymentDeclinedError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'PaymentFailedError'; errorCode: ErrorCode; message: string };
 };
 
 export type TransitionOrderToStateMutationVariables = Exact<{
@@ -4024,11 +3882,7 @@ export type TransitionOrderToStateMutation = {
         shippingLines: Array<{
           __typename?: 'ShippingLine';
           priceWithTax: number;
-          shippingMethod: {
-            __typename?: 'ShippingMethod';
-            id: string;
-            name: string;
-          };
+          shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
         }>;
         lines: Array<{
           __typename?: 'OrderLine';
@@ -4036,11 +3890,7 @@ export type TransitionOrderToStateMutation = {
           unitPriceWithTax: number;
           linePriceWithTax: number;
           quantity: number;
-          featuredAsset?: {
-            __typename?: 'Asset';
-            id: string;
-            preview: string;
-          } | null;
+          featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
           productVariant: {
             __typename?: 'ProductVariant';
             id: string;
@@ -4058,30 +3908,59 @@ export type TransitionOrderToStateMutation = {
           metadata?: any | null;
         }> | null;
       }
-    | {
-        __typename?: 'OrderStateTransitionError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'OrderStateTransitionError'; errorCode: ErrorCode; message: string }
     | null;
 };
 
-export type CreateStripePaymentIntentMutationVariables = Exact<{
-  [key: string]: never;
-}>;
+export type CreateStripePaymentIntentMutationVariables = Exact<{ [key: string]: never }>;
 
 export type CreateStripePaymentIntentMutation = {
   __typename?: 'Mutation';
   createStripePaymentIntent?: string | null;
 };
 
-export type GenerateBraintreeClientTokenQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type GenerateBraintreeClientTokenQueryVariables = Exact<{ [key: string]: never }>;
 
 export type GenerateBraintreeClientTokenQuery = {
   __typename?: 'Query';
   generateBraintreeClientToken?: string | null;
+};
+
+export type CollectionDetailsFragment = {
+  __typename?: 'Collection';
+  id: string;
+  name: string;
+  slug: string;
+  breadcrumbs: Array<{
+    __typename?: 'CollectionBreadcrumb';
+    id: string;
+    name: string;
+    slug: string;
+  }>;
+  parent?: { __typename?: 'Collection'; name: string } | null;
+  productVariants: {
+    __typename?: 'ProductVariantList';
+    items: Array<{
+      __typename?: 'ProductVariant';
+      id: string;
+      customFields?: any | null;
+      price: number;
+      product: {
+        __typename?: 'Product';
+        name: string;
+        slug: string;
+        featuredAsset?: { __typename?: 'Asset'; preview: string } | null;
+      };
+    }>;
+  };
+  children?: Array<{
+    __typename?: 'Collection';
+    id: string;
+    name: string;
+    slug: string;
+    featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+  }> | null;
+  featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
 };
 
 export type CollectionsQueryVariables = Exact<{
@@ -4097,10 +3976,18 @@ export type CollectionsQuery = {
       id: string;
       name: string;
       slug: string;
+      breadcrumbs: Array<{
+        __typename?: 'CollectionBreadcrumb';
+        id: string;
+        name: string;
+        slug: string;
+      }>;
+      parent?: { __typename?: 'Collection'; name: string } | null;
       productVariants: {
         __typename?: 'ProductVariantList';
         items: Array<{
           __typename?: 'ProductVariant';
+          id: string;
           customFields?: any | null;
           price: number;
           product: {
@@ -4111,12 +3998,14 @@ export type CollectionsQuery = {
           };
         }>;
       };
-      parent?: { __typename?: 'Collection'; name: string } | null;
-      featuredAsset?: {
-        __typename?: 'Asset';
+      children?: Array<{
+        __typename?: 'Collection';
         id: string;
-        preview: string;
-      } | null;
+        name: string;
+        slug: string;
+        featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+      }> | null;
+      featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
     }>;
   };
 };
@@ -4139,17 +4028,30 @@ export type CollectionQuery = {
       name: string;
       slug: string;
     }>;
+    parent?: { __typename?: 'Collection'; name: string } | null;
+    productVariants: {
+      __typename?: 'ProductVariantList';
+      items: Array<{
+        __typename?: 'ProductVariant';
+        id: string;
+        customFields?: any | null;
+        price: number;
+        product: {
+          __typename?: 'Product';
+          name: string;
+          slug: string;
+          featuredAsset?: { __typename?: 'Asset'; preview: string } | null;
+        };
+      }>;
+    };
     children?: Array<{
       __typename?: 'Collection';
       id: string;
       name: string;
       slug: string;
-      featuredAsset?: {
-        __typename?: 'Asset';
-        id: string;
-        preview: string;
-      } | null;
+      featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
     }> | null;
+    featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
   } | null;
 };
 
@@ -4165,9 +4067,7 @@ export type ActiveCustomerQuery = {
   } | null;
 };
 
-export type ActiveCustomerDetailsQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type ActiveCustomerDetailsQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ActiveCustomerDetailsQuery = {
   __typename?: 'Query';
@@ -4182,9 +4082,7 @@ export type ActiveCustomerDetailsQuery = {
   } | null;
 };
 
-export type ActiveCustomerAddressesQueryVariables = Exact<{
-  [key: string]: never;
-}>;
+export type ActiveCustomerAddressesQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ActiveCustomerAddressesQuery = {
   __typename?: 'Query';
@@ -4204,12 +4102,7 @@ export type ActiveCustomerAddressesQuery = {
       phoneNumber?: string | null;
       defaultShippingAddress?: boolean | null;
       defaultBillingAddress?: boolean | null;
-      country: {
-        __typename?: 'Country';
-        id: string;
-        code: string;
-        name: string;
-      };
+      country: { __typename?: 'Country'; id: string; code: string; name: string };
     }> | null;
   } | null;
 };
@@ -4236,20 +4129,10 @@ export type ActiveCustomerOrderListQuery = {
         total: number;
         totalWithTax: number;
         shippingWithTax: number;
-        shippingLines: Array<{
-          __typename?: 'ShippingLine';
-          priceWithTax: number;
-        }>;
-        taxSummary: Array<{
-          __typename?: 'OrderTaxSummary';
-          taxBase: number;
-          taxTotal: number;
-        }>;
+        shippingLines: Array<{ __typename?: 'ShippingLine'; priceWithTax: number }>;
+        taxSummary: Array<{ __typename?: 'OrderTaxSummary'; taxBase: number; taxTotal: number }>;
         discounts: Array<{ __typename?: 'Discount'; amountWithTax: number }>;
-        fulfillments?: Array<{
-          __typename?: 'Fulfillment';
-          trackingCode?: string | null;
-        }> | null;
+        fulfillments?: Array<{ __typename?: 'Fulfillment'; trackingCode?: string | null }> | null;
         lines: Array<{
           __typename?: 'OrderLine';
           quantity: number;
@@ -4258,11 +4141,7 @@ export type ActiveCustomerOrderListQuery = {
           fulfillmentLines?: Array<{
             __typename?: 'FulfillmentLine';
             quantity: number;
-            fulfillment: {
-              __typename?: 'Fulfillment';
-              state: string;
-              updatedAt: any;
-            };
+            fulfillment: { __typename?: 'Fulfillment'; state: string; updatedAt: any };
           }> | null;
           featuredAsset?: {
             __typename?: 'Asset';
@@ -4291,26 +4170,10 @@ export type SetCustomerForOrderMutationVariables = Exact<{
 export type SetCustomerForOrderMutation = {
   __typename?: 'Mutation';
   setCustomerForOrder:
-    | {
-        __typename?: 'AlreadyLoggedInError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'EmailAddressConflictError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'GuestCheckoutError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'NoActiveOrderError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'AlreadyLoggedInError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'EmailAddressConflictError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'GuestCheckoutError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'NoActiveOrderError'; errorCode: ErrorCode; message: string }
     | {
         __typename: 'Order';
         id: string;
@@ -4352,11 +4215,7 @@ export type SetCustomerForOrderMutation = {
         shippingLines: Array<{
           __typename?: 'ShippingLine';
           priceWithTax: number;
-          shippingMethod: {
-            __typename?: 'ShippingMethod';
-            id: string;
-            name: string;
-          };
+          shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
         }>;
         lines: Array<{
           __typename?: 'OrderLine';
@@ -4364,11 +4223,7 @@ export type SetCustomerForOrderMutation = {
           unitPriceWithTax: number;
           linePriceWithTax: number;
           quantity: number;
-          featuredAsset?: {
-            __typename?: 'Asset';
-            id: string;
-            preview: string;
-          } | null;
+          featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
           productVariant: {
             __typename?: 'ProductVariant';
             id: string;
@@ -4395,11 +4250,7 @@ export type SetOrderShippingAddressMutationVariables = Exact<{
 export type SetOrderShippingAddressMutation = {
   __typename?: 'Mutation';
   setOrderShippingAddress:
-    | {
-        __typename?: 'NoActiveOrderError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'NoActiveOrderError'; errorCode: ErrorCode; message: string }
     | {
         __typename: 'Order';
         id: string;
@@ -4441,11 +4292,7 @@ export type SetOrderShippingAddressMutation = {
         shippingLines: Array<{
           __typename?: 'ShippingLine';
           priceWithTax: number;
-          shippingMethod: {
-            __typename?: 'ShippingMethod';
-            id: string;
-            name: string;
-          };
+          shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
         }>;
         lines: Array<{
           __typename?: 'OrderLine';
@@ -4453,11 +4300,7 @@ export type SetOrderShippingAddressMutation = {
           unitPriceWithTax: number;
           linePriceWithTax: number;
           quantity: number;
-          featuredAsset?: {
-            __typename?: 'Asset';
-            id: string;
-            preview: string;
-          } | null;
+          featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
           productVariant: {
             __typename?: 'ProductVariant';
             id: string;
@@ -4484,16 +4327,8 @@ export type SetOrderShippingMethodMutationVariables = Exact<{
 export type SetOrderShippingMethodMutation = {
   __typename?: 'Mutation';
   setOrderShippingMethod:
-    | {
-        __typename?: 'IneligibleShippingMethodError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'NoActiveOrderError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'IneligibleShippingMethodError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'NoActiveOrderError'; errorCode: ErrorCode; message: string }
     | {
         __typename: 'Order';
         id: string;
@@ -4535,11 +4370,7 @@ export type SetOrderShippingMethodMutation = {
         shippingLines: Array<{
           __typename?: 'ShippingLine';
           priceWithTax: number;
-          shippingMethod: {
-            __typename?: 'ShippingMethod';
-            id: string;
-            name: string;
-          };
+          shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
         }>;
         lines: Array<{
           __typename?: 'OrderLine';
@@ -4547,11 +4378,7 @@ export type SetOrderShippingMethodMutation = {
           unitPriceWithTax: number;
           linePriceWithTax: number;
           quantity: number;
-          featuredAsset?: {
-            __typename?: 'Asset';
-            id: string;
-            preview: string;
-          } | null;
+          featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
           productVariant: {
             __typename?: 'ProductVariant';
             id: string;
@@ -4569,11 +4396,7 @@ export type SetOrderShippingMethodMutation = {
           metadata?: any | null;
         }> | null;
       }
-    | {
-        __typename?: 'OrderModificationError';
-        errorCode: ErrorCode;
-        message: string;
-      };
+    | { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
 };
 
 export type AddItemToOrderMutationVariables = Exact<{
@@ -4584,16 +4407,8 @@ export type AddItemToOrderMutationVariables = Exact<{
 export type AddItemToOrderMutation = {
   __typename?: 'Mutation';
   addItemToOrder:
-    | {
-        __typename?: 'InsufficientStockError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'NegativeQuantityError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'InsufficientStockError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'NegativeQuantityError'; errorCode: ErrorCode; message: string }
     | {
         __typename: 'Order';
         id: string;
@@ -4635,11 +4450,7 @@ export type AddItemToOrderMutation = {
         shippingLines: Array<{
           __typename?: 'ShippingLine';
           priceWithTax: number;
-          shippingMethod: {
-            __typename?: 'ShippingMethod';
-            id: string;
-            name: string;
-          };
+          shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
         }>;
         lines: Array<{
           __typename?: 'OrderLine';
@@ -4647,11 +4458,7 @@ export type AddItemToOrderMutation = {
           unitPriceWithTax: number;
           linePriceWithTax: number;
           quantity: number;
-          featuredAsset?: {
-            __typename?: 'Asset';
-            id: string;
-            preview: string;
-          } | null;
+          featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
           productVariant: {
             __typename?: 'ProductVariant';
             id: string;
@@ -4669,17 +4476,9 @@ export type AddItemToOrderMutation = {
           metadata?: any | null;
         }> | null;
       }
-    | {
-        __typename?: 'OrderInterceptorError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
     | { __typename?: 'OrderLimitError'; errorCode: ErrorCode; message: string }
-    | {
-        __typename?: 'OrderModificationError';
-        errorCode: ErrorCode;
-        message: string;
-      };
+    | { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
 };
 
 export type RemoveOrderLineMutationVariables = Exact<{
@@ -4730,11 +4529,7 @@ export type RemoveOrderLineMutation = {
         shippingLines: Array<{
           __typename?: 'ShippingLine';
           priceWithTax: number;
-          shippingMethod: {
-            __typename?: 'ShippingMethod';
-            id: string;
-            name: string;
-          };
+          shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
         }>;
         lines: Array<{
           __typename?: 'OrderLine';
@@ -4742,11 +4537,7 @@ export type RemoveOrderLineMutation = {
           unitPriceWithTax: number;
           linePriceWithTax: number;
           quantity: number;
-          featuredAsset?: {
-            __typename?: 'Asset';
-            id: string;
-            preview: string;
-          } | null;
+          featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
           productVariant: {
             __typename?: 'ProductVariant';
             id: string;
@@ -4764,16 +4555,8 @@ export type RemoveOrderLineMutation = {
           metadata?: any | null;
         }> | null;
       }
-    | {
-        __typename?: 'OrderInterceptorError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'OrderModificationError';
-        errorCode: ErrorCode;
-        message: string;
-      };
+    | { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
 };
 
 export type AdjustOrderLineMutationVariables = Exact<{
@@ -4784,16 +4567,8 @@ export type AdjustOrderLineMutationVariables = Exact<{
 export type AdjustOrderLineMutation = {
   __typename?: 'Mutation';
   adjustOrderLine:
-    | {
-        __typename?: 'InsufficientStockError';
-        errorCode: ErrorCode;
-        message: string;
-      }
-    | {
-        __typename?: 'NegativeQuantityError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'InsufficientStockError'; errorCode: ErrorCode; message: string }
+    | { __typename?: 'NegativeQuantityError'; errorCode: ErrorCode; message: string }
     | {
         __typename: 'Order';
         id: string;
@@ -4835,11 +4610,7 @@ export type AdjustOrderLineMutation = {
         shippingLines: Array<{
           __typename?: 'ShippingLine';
           priceWithTax: number;
-          shippingMethod: {
-            __typename?: 'ShippingMethod';
-            id: string;
-            name: string;
-          };
+          shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
         }>;
         lines: Array<{
           __typename?: 'OrderLine';
@@ -4847,11 +4618,7 @@ export type AdjustOrderLineMutation = {
           unitPriceWithTax: number;
           linePriceWithTax: number;
           quantity: number;
-          featuredAsset?: {
-            __typename?: 'Asset';
-            id: string;
-            preview: string;
-          } | null;
+          featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
           productVariant: {
             __typename?: 'ProductVariant';
             id: string;
@@ -4869,17 +4636,9 @@ export type AdjustOrderLineMutation = {
           metadata?: any | null;
         }> | null;
       }
-    | {
-        __typename?: 'OrderInterceptorError';
-        errorCode: ErrorCode;
-        message: string;
-      }
+    | { __typename?: 'OrderInterceptorError'; errorCode: ErrorCode; message: string }
     | { __typename?: 'OrderLimitError'; errorCode: ErrorCode; message: string }
-    | {
-        __typename?: 'OrderModificationError';
-        errorCode: ErrorCode;
-        message: string;
-      };
+    | { __typename?: 'OrderModificationError'; errorCode: ErrorCode; message: string };
 };
 
 export type OrderDetailFragment = {
@@ -4931,11 +4690,7 @@ export type OrderDetailFragment = {
     unitPriceWithTax: number;
     linePriceWithTax: number;
     quantity: number;
-    featuredAsset?: {
-      __typename?: 'Asset';
-      id: string;
-      preview: string;
-    } | null;
+    featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
     productVariant: {
       __typename?: 'ProductVariant';
       id: string;
@@ -4999,11 +4754,7 @@ export type ActiveOrderQuery = {
     shippingLines: Array<{
       __typename?: 'ShippingLine';
       priceWithTax: number;
-      shippingMethod: {
-        __typename?: 'ShippingMethod';
-        id: string;
-        name: string;
-      };
+      shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
     }>;
     lines: Array<{
       __typename?: 'OrderLine';
@@ -5011,11 +4762,7 @@ export type ActiveOrderQuery = {
       unitPriceWithTax: number;
       linePriceWithTax: number;
       quantity: number;
-      featuredAsset?: {
-        __typename?: 'Asset';
-        id: string;
-        preview: string;
-      } | null;
+      featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
       productVariant: {
         __typename?: 'ProductVariant';
         id: string;
@@ -5082,11 +4829,7 @@ export type OrderByCodeQuery = {
     shippingLines: Array<{
       __typename?: 'ShippingLine';
       priceWithTax: number;
-      shippingMethod: {
-        __typename?: 'ShippingMethod';
-        id: string;
-        name: string;
-      };
+      shippingMethod: { __typename?: 'ShippingMethod'; id: string; name: string };
     }>;
     lines: Array<{
       __typename?: 'OrderLine';
@@ -5094,11 +4837,7 @@ export type OrderByCodeQuery = {
       unitPriceWithTax: number;
       linePriceWithTax: number;
       quantity: number;
-      featuredAsset?: {
-        __typename?: 'Asset';
-        id: string;
-        preview: string;
-      } | null;
+      featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
       productVariant: {
         __typename?: 'ProductVariant';
         id: string;
@@ -5153,11 +4892,7 @@ export type DetailedProductFragment = {
     currencyCode: CurrencyCode;
     sku: string;
     stockLevel: string;
-    featuredAsset?: {
-      __typename?: 'Asset';
-      id: string;
-      preview: string;
-    } | null;
+    featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
     assets: Array<{ __typename?: 'Asset'; id: string; preview: string }>;
   }>;
 };
@@ -5194,11 +4929,7 @@ export type ProductQuery = {
       name: string;
       facet: { __typename?: 'Facet'; id: string; code: string; name: string };
     }>;
-    featuredAsset?: {
-      __typename?: 'Asset';
-      id: string;
-      preview: string;
-    } | null;
+    featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
     assets: Array<{ __typename?: 'Asset'; id: string; preview: string }>;
     variants: Array<{
       __typename?: 'ProductVariant';
@@ -5208,11 +4939,7 @@ export type ProductQuery = {
       currencyCode: CurrencyCode;
       sku: string;
       stockLevel: string;
-      featuredAsset?: {
-        __typename?: 'Asset';
-        id: string;
-        preview: string;
-      } | null;
+      featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
       assets: Array<{ __typename?: 'Asset'; id: string; preview: string }>;
     }>;
   } | null;
@@ -5224,11 +4951,7 @@ export type ListedProductFragment = {
   productName: string;
   slug: string;
   currencyCode: CurrencyCode;
-  productAsset?: {
-    __typename?: 'SearchResultAsset';
-    id: string;
-    preview: string;
-  } | null;
+  productAsset?: { __typename?: 'SearchResultAsset'; id: string; preview: string } | null;
   priceWithTax:
     | { __typename?: 'PriceRange'; min: number; max: number }
     | { __typename?: 'SinglePrice'; value: number };
@@ -5251,10 +4974,49 @@ export type SearchQuery = {
           __typename?: 'ProductVariantList';
           items: Array<{
             __typename?: 'ProductVariant';
+            price: number;
             name: string;
             priceWithTax: number;
             featuredAsset?: { __typename?: 'Asset'; preview: string } | null;
-            product: { __typename?: 'Product'; id: string; slug: string };
+            product: {
+              __typename?: 'Product';
+              id: string;
+              name: string;
+              description: string;
+              slug: string;
+              collections: Array<{
+                __typename?: 'Collection';
+                id: string;
+                slug: string;
+                name: string;
+                breadcrumbs: Array<{
+                  __typename?: 'CollectionBreadcrumb';
+                  id: string;
+                  name: string;
+                  slug: string;
+                }>;
+              }>;
+              facetValues: Array<{
+                __typename?: 'FacetValue';
+                id: string;
+                code: string;
+                name: string;
+                facet: { __typename?: 'Facet'; id: string; code: string; name: string };
+              }>;
+              featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+              assets: Array<{ __typename?: 'Asset'; id: string; preview: string }>;
+              variants: Array<{
+                __typename?: 'ProductVariant';
+                id: string;
+                name: string;
+                priceWithTax: number;
+                currencyCode: CurrencyCode;
+                sku: string;
+                stockLevel: string;
+                featuredAsset?: { __typename?: 'Asset'; id: string; preview: string } | null;
+                assets: Array<{ __typename?: 'Asset'; id: string; preview: string }>;
+              }>;
+            };
           }>;
         };
       };
@@ -5265,11 +5027,7 @@ export type SearchQuery = {
       productName: string;
       slug: string;
       currencyCode: CurrencyCode;
-      productAsset?: {
-        __typename?: 'SearchResultAsset';
-        id: string;
-        preview: string;
-      } | null;
+      productAsset?: { __typename?: 'SearchResultAsset'; id: string; preview: string } | null;
       priceWithTax:
         | { __typename?: 'PriceRange'; min: number; max: number }
         | { __typename?: 'SinglePrice'; value: number };
@@ -5309,6 +5067,48 @@ export type SearchFacetValuesQuery = {
   };
 };
 
+export const CollectionDetailsFragmentDoc = gql`
+  fragment CollectionDetails on Collection {
+    id
+    name
+    slug
+    breadcrumbs {
+      id
+      name
+      slug
+    }
+    parent {
+      name
+    }
+    productVariants {
+      items {
+        id
+        customFields
+        price
+        product {
+          name
+          slug
+          featuredAsset {
+            preview
+          }
+        }
+      }
+    }
+    children {
+      id
+      name
+      slug
+      featuredAsset {
+        id
+        preview
+      }
+    }
+    featuredAsset {
+      id
+      preview
+    }
+  }
+`;
 export const OrderDetailFragmentDoc = gql`
   fragment OrderDetail on Order {
     __typename
@@ -5512,14 +5312,8 @@ export const UpdateCustomerDocument = gql`
   }
 `;
 export const RequestUpdateCustomerEmailAddressDocument = gql`
-  mutation requestUpdateCustomerEmailAddress(
-    $password: String!
-    $newEmailAddress: String!
-  ) {
-    requestUpdateCustomerEmailAddress(
-      password: $password
-      newEmailAddress: $newEmailAddress
-    ) {
+  mutation requestUpdateCustomerEmailAddress($password: String!, $newEmailAddress: String!) {
+    requestUpdateCustomerEmailAddress(password: $password, newEmailAddress: $newEmailAddress) {
       __typename
       ... on ErrorResult {
         errorCode
@@ -5561,14 +5355,8 @@ export const DeleteCustomerAddressDocument = gql`
   }
 `;
 export const UpdateCustomerPasswordDocument = gql`
-  mutation updateCustomerPassword(
-    $currentPassword: String!
-    $newPassword: String!
-  ) {
-    updateCustomerPassword(
-      currentPassword: $currentPassword
-      newPassword: $newPassword
-    ) {
+  mutation updateCustomerPassword($currentPassword: String!, $newPassword: String!) {
+    updateCustomerPassword(currentPassword: $currentPassword, newPassword: $newPassword) {
       __typename
       ... on Success {
         success
@@ -5664,55 +5452,19 @@ export const CollectionsDocument = gql`
   query collections($options: CollectionListOptions) {
     collections(options: $options) {
       items {
-        productVariants {
-          items {
-            customFields
-            price
-            product {
-              name
-              slug
-              featuredAsset {
-                preview
-              }
-            }
-          }
-        }
-        id
-        name
-        slug
-        parent {
-          name
-        }
-        featuredAsset {
-          id
-          preview
-        }
+        ...CollectionDetails
       }
     }
   }
+  ${CollectionDetailsFragmentDoc}
 `;
 export const CollectionDocument = gql`
   query collection($slug: String, $id: ID) {
     collection(slug: $slug, id: $id) {
-      id
-      name
-      slug
-      breadcrumbs {
-        id
-        name
-        slug
-      }
-      children {
-        id
-        name
-        slug
-        featuredAsset {
-          id
-          preview
-        }
-      }
+      ...CollectionDetails
     }
   }
+  ${CollectionDetailsFragmentDoc}
 `;
 export const ActiveCustomerDocument = gql`
   query activeCustomer {
@@ -5923,14 +5675,14 @@ export const SearchDocument = gql`
         collection {
           productVariants {
             items {
+              price
               name
               priceWithTax
               featuredAsset {
                 preview
               }
               product {
-                id
-                slug
+                ...DetailedProduct
               }
             }
           }
@@ -5952,6 +5704,7 @@ export const SearchDocument = gql`
       }
     }
   }
+  ${DetailedProductFragmentDoc}
   ${ListedProductFragmentDoc}
 `;
 export const SearchFacetValuesDocument = gql`
@@ -5975,69 +5728,57 @@ export const SearchFacetValuesDocument = gql`
 export type Requester<C = {}, E = unknown> = <R, V>(
   doc: DocumentNode,
   vars?: V,
-  options?: C,
+  options?: C
 ) => Promise<R> | AsyncIterable<R>;
 export function getSdk<C, E>(requester: Requester<C, E>) {
   return {
-    login(
-      variables: LoginMutationVariables,
-      options?: C,
-    ): Promise<LoginMutation> {
+    login(variables: LoginMutationVariables, options?: C): Promise<LoginMutation> {
       return requester<LoginMutation, LoginMutationVariables>(
         LoginDocument,
         variables,
-        options,
+        options
       ) as Promise<LoginMutation>;
     },
-    logout(
-      variables?: LogoutMutationVariables,
-      options?: C,
-    ): Promise<LogoutMutation> {
+    logout(variables?: LogoutMutationVariables, options?: C): Promise<LogoutMutation> {
       return requester<LogoutMutation, LogoutMutationVariables>(
         LogoutDocument,
         variables,
-        options,
+        options
       ) as Promise<LogoutMutation>;
     },
     registerCustomerAccount(
       variables: RegisterCustomerAccountMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<RegisterCustomerAccountMutation> {
-      return requester<
-        RegisterCustomerAccountMutation,
-        RegisterCustomerAccountMutationVariables
-      >(
+      return requester<RegisterCustomerAccountMutation, RegisterCustomerAccountMutationVariables>(
         RegisterCustomerAccountDocument,
         variables,
-        options,
+        options
       ) as Promise<RegisterCustomerAccountMutation>;
     },
     verifyCustomerAccount(
       variables: VerifyCustomerAccountMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<VerifyCustomerAccountMutation> {
-      return requester<
-        VerifyCustomerAccountMutation,
-        VerifyCustomerAccountMutationVariables
-      >(
+      return requester<VerifyCustomerAccountMutation, VerifyCustomerAccountMutationVariables>(
         VerifyCustomerAccountDocument,
         variables,
-        options,
+        options
       ) as Promise<VerifyCustomerAccountMutation>;
     },
     updateCustomer(
       variables: UpdateCustomerMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<UpdateCustomerMutation> {
       return requester<UpdateCustomerMutation, UpdateCustomerMutationVariables>(
         UpdateCustomerDocument,
         variables,
-        options,
+        options
       ) as Promise<UpdateCustomerMutation>;
     },
     requestUpdateCustomerEmailAddress(
       variables: RequestUpdateCustomerEmailAddressMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<RequestUpdateCustomerEmailAddressMutation> {
       return requester<
         RequestUpdateCustomerEmailAddressMutation,
@@ -6045,12 +5786,12 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
       >(
         RequestUpdateCustomerEmailAddressDocument,
         variables,
-        options,
+        options
       ) as Promise<RequestUpdateCustomerEmailAddressMutation>;
     },
     updateCustomerEmailAddress(
       variables: UpdateCustomerEmailAddressMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<UpdateCustomerEmailAddressMutation> {
       return requester<
         UpdateCustomerEmailAddressMutation,
@@ -6058,149 +5799,122 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
       >(
         UpdateCustomerEmailAddressDocument,
         variables,
-        options,
+        options
       ) as Promise<UpdateCustomerEmailAddressMutation>;
     },
     updateCustomerAddress(
       variables: UpdateCustomerAddressMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<UpdateCustomerAddressMutation> {
-      return requester<
-        UpdateCustomerAddressMutation,
-        UpdateCustomerAddressMutationVariables
-      >(
+      return requester<UpdateCustomerAddressMutation, UpdateCustomerAddressMutationVariables>(
         UpdateCustomerAddressDocument,
         variables,
-        options,
+        options
       ) as Promise<UpdateCustomerAddressMutation>;
     },
     createCustomerAddress(
       variables: CreateCustomerAddressMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<CreateCustomerAddressMutation> {
-      return requester<
-        CreateCustomerAddressMutation,
-        CreateCustomerAddressMutationVariables
-      >(
+      return requester<CreateCustomerAddressMutation, CreateCustomerAddressMutationVariables>(
         CreateCustomerAddressDocument,
         variables,
-        options,
+        options
       ) as Promise<CreateCustomerAddressMutation>;
     },
     deleteCustomerAddress(
       variables: DeleteCustomerAddressMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<DeleteCustomerAddressMutation> {
-      return requester<
-        DeleteCustomerAddressMutation,
-        DeleteCustomerAddressMutationVariables
-      >(
+      return requester<DeleteCustomerAddressMutation, DeleteCustomerAddressMutationVariables>(
         DeleteCustomerAddressDocument,
         variables,
-        options,
+        options
       ) as Promise<DeleteCustomerAddressMutation>;
     },
     updateCustomerPassword(
       variables: UpdateCustomerPasswordMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<UpdateCustomerPasswordMutation> {
-      return requester<
-        UpdateCustomerPasswordMutation,
-        UpdateCustomerPasswordMutationVariables
-      >(
+      return requester<UpdateCustomerPasswordMutation, UpdateCustomerPasswordMutationVariables>(
         UpdateCustomerPasswordDocument,
         variables,
-        options,
+        options
       ) as Promise<UpdateCustomerPasswordMutation>;
     },
     activeChannel(
       variables?: ActiveChannelQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<ActiveChannelQuery> {
       return requester<ActiveChannelQuery, ActiveChannelQueryVariables>(
         ActiveChannelDocument,
         variables,
-        options,
+        options
       ) as Promise<ActiveChannelQuery>;
     },
     eligibleShippingMethods(
       variables?: EligibleShippingMethodsQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<EligibleShippingMethodsQuery> {
-      return requester<
-        EligibleShippingMethodsQuery,
-        EligibleShippingMethodsQueryVariables
-      >(
+      return requester<EligibleShippingMethodsQuery, EligibleShippingMethodsQueryVariables>(
         EligibleShippingMethodsDocument,
         variables,
-        options,
+        options
       ) as Promise<EligibleShippingMethodsQuery>;
     },
     eligiblePaymentMethods(
       variables?: EligiblePaymentMethodsQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<EligiblePaymentMethodsQuery> {
-      return requester<
-        EligiblePaymentMethodsQuery,
-        EligiblePaymentMethodsQueryVariables
-      >(
+      return requester<EligiblePaymentMethodsQuery, EligiblePaymentMethodsQueryVariables>(
         EligiblePaymentMethodsDocument,
         variables,
-        options,
+        options
       ) as Promise<EligiblePaymentMethodsQuery>;
     },
     nextOrderStates(
       variables?: NextOrderStatesQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<NextOrderStatesQuery> {
       return requester<NextOrderStatesQuery, NextOrderStatesQueryVariables>(
         NextOrderStatesDocument,
         variables,
-        options,
+        options
       ) as Promise<NextOrderStatesQuery>;
     },
     availableCountries(
       variables?: AvailableCountriesQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<AvailableCountriesQuery> {
-      return requester<
-        AvailableCountriesQuery,
-        AvailableCountriesQueryVariables
-      >(
+      return requester<AvailableCountriesQuery, AvailableCountriesQueryVariables>(
         AvailableCountriesDocument,
         variables,
-        options,
+        options
       ) as Promise<AvailableCountriesQuery>;
     },
     addPaymentToOrder(
       variables: AddPaymentToOrderMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<AddPaymentToOrderMutation> {
-      return requester<
-        AddPaymentToOrderMutation,
-        AddPaymentToOrderMutationVariables
-      >(
+      return requester<AddPaymentToOrderMutation, AddPaymentToOrderMutationVariables>(
         AddPaymentToOrderDocument,
         variables,
-        options,
+        options
       ) as Promise<AddPaymentToOrderMutation>;
     },
     transitionOrderToState(
       variables: TransitionOrderToStateMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<TransitionOrderToStateMutation> {
-      return requester<
-        TransitionOrderToStateMutation,
-        TransitionOrderToStateMutationVariables
-      >(
+      return requester<TransitionOrderToStateMutation, TransitionOrderToStateMutationVariables>(
         TransitionOrderToStateDocument,
         variables,
-        options,
+        options
       ) as Promise<TransitionOrderToStateMutation>;
     },
     createStripePaymentIntent(
       variables?: CreateStripePaymentIntentMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<CreateStripePaymentIntentMutation> {
       return requester<
         CreateStripePaymentIntentMutation,
@@ -6208,12 +5922,12 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
       >(
         CreateStripePaymentIntentDocument,
         variables,
-        options,
+        options
       ) as Promise<CreateStripePaymentIntentMutation>;
     },
     generateBraintreeClientToken(
       variables?: GenerateBraintreeClientTokenQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<GenerateBraintreeClientTokenQuery> {
       return requester<
         GenerateBraintreeClientTokenQuery,
@@ -6221,198 +5935,159 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
       >(
         GenerateBraintreeClientTokenDocument,
         variables,
-        options,
+        options
       ) as Promise<GenerateBraintreeClientTokenQuery>;
     },
-    collections(
-      variables?: CollectionsQueryVariables,
-      options?: C,
-    ): Promise<CollectionsQuery> {
+    collections(variables?: CollectionsQueryVariables, options?: C): Promise<CollectionsQuery> {
       return requester<CollectionsQuery, CollectionsQueryVariables>(
         CollectionsDocument,
         variables,
-        options,
+        options
       ) as Promise<CollectionsQuery>;
     },
-    collection(
-      variables?: CollectionQueryVariables,
-      options?: C,
-    ): Promise<CollectionQuery> {
+    collection(variables?: CollectionQueryVariables, options?: C): Promise<CollectionQuery> {
       return requester<CollectionQuery, CollectionQueryVariables>(
         CollectionDocument,
         variables,
-        options,
+        options
       ) as Promise<CollectionQuery>;
     },
     activeCustomer(
       variables?: ActiveCustomerQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<ActiveCustomerQuery> {
       return requester<ActiveCustomerQuery, ActiveCustomerQueryVariables>(
         ActiveCustomerDocument,
         variables,
-        options,
+        options
       ) as Promise<ActiveCustomerQuery>;
     },
     activeCustomerDetails(
       variables?: ActiveCustomerDetailsQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<ActiveCustomerDetailsQuery> {
-      return requester<
-        ActiveCustomerDetailsQuery,
-        ActiveCustomerDetailsQueryVariables
-      >(
+      return requester<ActiveCustomerDetailsQuery, ActiveCustomerDetailsQueryVariables>(
         ActiveCustomerDetailsDocument,
         variables,
-        options,
+        options
       ) as Promise<ActiveCustomerDetailsQuery>;
     },
     activeCustomerAddresses(
       variables?: ActiveCustomerAddressesQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<ActiveCustomerAddressesQuery> {
-      return requester<
-        ActiveCustomerAddressesQuery,
-        ActiveCustomerAddressesQueryVariables
-      >(
+      return requester<ActiveCustomerAddressesQuery, ActiveCustomerAddressesQueryVariables>(
         ActiveCustomerAddressesDocument,
         variables,
-        options,
+        options
       ) as Promise<ActiveCustomerAddressesQuery>;
     },
     activeCustomerOrderList(
       variables?: ActiveCustomerOrderListQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<ActiveCustomerOrderListQuery> {
-      return requester<
-        ActiveCustomerOrderListQuery,
-        ActiveCustomerOrderListQueryVariables
-      >(
+      return requester<ActiveCustomerOrderListQuery, ActiveCustomerOrderListQueryVariables>(
         ActiveCustomerOrderListDocument,
         variables,
-        options,
+        options
       ) as Promise<ActiveCustomerOrderListQuery>;
     },
     setCustomerForOrder(
       variables: SetCustomerForOrderMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<SetCustomerForOrderMutation> {
-      return requester<
-        SetCustomerForOrderMutation,
-        SetCustomerForOrderMutationVariables
-      >(
+      return requester<SetCustomerForOrderMutation, SetCustomerForOrderMutationVariables>(
         SetCustomerForOrderDocument,
         variables,
-        options,
+        options
       ) as Promise<SetCustomerForOrderMutation>;
     },
     setOrderShippingAddress(
       variables: SetOrderShippingAddressMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<SetOrderShippingAddressMutation> {
-      return requester<
-        SetOrderShippingAddressMutation,
-        SetOrderShippingAddressMutationVariables
-      >(
+      return requester<SetOrderShippingAddressMutation, SetOrderShippingAddressMutationVariables>(
         SetOrderShippingAddressDocument,
         variables,
-        options,
+        options
       ) as Promise<SetOrderShippingAddressMutation>;
     },
     setOrderShippingMethod(
       variables: SetOrderShippingMethodMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<SetOrderShippingMethodMutation> {
-      return requester<
-        SetOrderShippingMethodMutation,
-        SetOrderShippingMethodMutationVariables
-      >(
+      return requester<SetOrderShippingMethodMutation, SetOrderShippingMethodMutationVariables>(
         SetOrderShippingMethodDocument,
         variables,
-        options,
+        options
       ) as Promise<SetOrderShippingMethodMutation>;
     },
     addItemToOrder(
       variables: AddItemToOrderMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<AddItemToOrderMutation> {
       return requester<AddItemToOrderMutation, AddItemToOrderMutationVariables>(
         AddItemToOrderDocument,
         variables,
-        options,
+        options
       ) as Promise<AddItemToOrderMutation>;
     },
     removeOrderLine(
       variables: RemoveOrderLineMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<RemoveOrderLineMutation> {
-      return requester<
-        RemoveOrderLineMutation,
-        RemoveOrderLineMutationVariables
-      >(
+      return requester<RemoveOrderLineMutation, RemoveOrderLineMutationVariables>(
         RemoveOrderLineDocument,
         variables,
-        options,
+        options
       ) as Promise<RemoveOrderLineMutation>;
     },
     adjustOrderLine(
       variables: AdjustOrderLineMutationVariables,
-      options?: C,
+      options?: C
     ): Promise<AdjustOrderLineMutation> {
-      return requester<
-        AdjustOrderLineMutation,
-        AdjustOrderLineMutationVariables
-      >(
+      return requester<AdjustOrderLineMutation, AdjustOrderLineMutationVariables>(
         AdjustOrderLineDocument,
         variables,
-        options,
+        options
       ) as Promise<AdjustOrderLineMutation>;
     },
-    activeOrder(
-      variables?: ActiveOrderQueryVariables,
-      options?: C,
-    ): Promise<ActiveOrderQuery> {
+    activeOrder(variables?: ActiveOrderQueryVariables, options?: C): Promise<ActiveOrderQuery> {
       return requester<ActiveOrderQuery, ActiveOrderQueryVariables>(
         ActiveOrderDocument,
         variables,
-        options,
+        options
       ) as Promise<ActiveOrderQuery>;
     },
-    orderByCode(
-      variables: OrderByCodeQueryVariables,
-      options?: C,
-    ): Promise<OrderByCodeQuery> {
+    orderByCode(variables: OrderByCodeQueryVariables, options?: C): Promise<OrderByCodeQuery> {
       return requester<OrderByCodeQuery, OrderByCodeQueryVariables>(
         OrderByCodeDocument,
         variables,
-        options,
+        options
       ) as Promise<OrderByCodeQuery>;
     },
-    product(
-      variables?: ProductQueryVariables,
-      options?: C,
-    ): Promise<ProductQuery> {
+    product(variables?: ProductQueryVariables, options?: C): Promise<ProductQuery> {
       return requester<ProductQuery, ProductQueryVariables>(
         ProductDocument,
         variables,
-        options,
+        options
       ) as Promise<ProductQuery>;
     },
     search(variables: SearchQueryVariables, options?: C): Promise<SearchQuery> {
       return requester<SearchQuery, SearchQueryVariables>(
         SearchDocument,
         variables,
-        options,
+        options
       ) as Promise<SearchQuery>;
     },
     searchFacetValues(
       variables: SearchFacetValuesQueryVariables,
-      options?: C,
+      options?: C
     ): Promise<SearchFacetValuesQuery> {
       return requester<SearchFacetValuesQuery, SearchFacetValuesQueryVariables>(
         SearchFacetValuesDocument,
         variables,
-        options,
+        options
       ) as Promise<SearchFacetValuesQuery>;
     },
   };

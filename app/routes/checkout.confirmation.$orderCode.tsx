@@ -47,93 +47,78 @@ export default function CheckoutConfirmation() {
   };
 
   useEffect(() => {
-    if (orderErrored) {
-      retry();
-    }
+    if (orderErrored) retry();
   }, [order]);
 
   useEffect(() => {
-    if (
-      revalidator.state === 'idle' &&
-      orderErrored &&
-      retries <= maxRetries &&
-      retries > 1
-    ) {
+    if (revalidator.state === 'idle' && orderErrored && retries <= maxRetries && retries > 1) {
       retry();
     }
   }, [revalidator.state]);
 
-  if (orderNotFound) {
-    return (
-      <div>
-        <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-          {t('checkout.orderNotFound')}
-        </h2>
-      </div>
-    );
-  }
-
-  if (orderErrored && retriesExhausted) {
-    return (
-      <div>
-        <h2 className="text-3xl flex items-center space-x-2 sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-          <XCircleIcon className="text-red-600 w-8 h-8 sm:w-12 sm:h-12"></XCircleIcon>
-          <span>{t('checkout.orderErrorTitle')}</span>
-        </h2>
-        <p className="text-lg text-gray-700">
-          {t('checkout.orderErrorMessage')}
-        </p>
-      </div>
-    );
-  }
-
-  if (orderErrored) {
-    return (
-      <div>
-        <h2 className="text-3xl flex items-center space-x-2 sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-          {t('checkout.orderProcessing')}
-        </h2>
-      </div>
-    );
-  }
-
   return (
-    <div>
-      <h2 className="text-3xl flex items-center space-x-2 sm:text-5xl font-light tracking-tight text-gray-900 my-8">
-        <CheckCircleIcon className="text-green-600 w-8 h-8 sm:w-12 sm:h-12"></CheckCircleIcon>
-        <span>{t('order.summary')}</span>
-      </h2>
-      <p className="text-lg text-gray-700">
-        {t('checkout.orderSuccessMessage')}{' '}
-        <span className="font-bold">{order!.code}</span>
-      </p>
-      {order!.active && (
-        <div className="rounded-md bg-blue-50 p-4 my-8">
-          <div className="flex">
-            <div className="flex-shrink-0">
-              <InformationCircleIcon
-                className="h-5 w-5 text-blue-400"
-                aria-hidden="true"
-              />
-            </div>
-            <div className="ml-3 flex-1 md:flex md:justify-between">
-              <p className="text-sm text-blue-700">
-                {t('checkout.paymentMessage')}
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12 animate-fadeIn">
+      {orderNotFound && (
+        <div className="text-center text-gray-700">
+          <h2 className="text-3xl sm:text-5xl font-semibold mb-4">{t('checkout.orderNotFound')}</h2>
+          <p className="text-lg">{t('checkout.orderNotFoundMessage')}</p>
+        </div>
+      )}
+
+      {orderErrored && retriesExhausted && (
+        <div className="text-center">
+          <h2 className="text-3xl sm:text-5xl font-semibold flex items-center justify-center gap-3 text-red-600 mb-4">
+            <XCircleIcon className="w-10 h-10" />
+            {t('checkout.orderErrorTitle')}
+          </h2>
+          <p className="text-lg text-gray-700">{t('checkout.orderErrorMessage')}</p>
+        </div>
+      )}
+
+      {orderErrored && !retriesExhausted && (
+        <div className="text-center">
+          <h2 className="text-3xl sm:text-5xl font-light text-gray-900 my-8">
+            {t('checkout.orderProcessing')}
+          </h2>
+        </div>
+      )}
+
+      {order && (
+        <div className="bg-white shadow-lg rounded-xl p-6 sm:p-10 space-y-6">
+          <div className="flex items-center space-x-4">
+            <CheckCircleIcon className="w-10 h-10 text-green-500" />
+            <div>
+              <h2 className="text-3xl sm:text-4xl font-semibold text-gray-900">
+                {t('order.summary')}
+              </h2>
+              <p className="text-md text-gray-600">
+                {t('checkout.orderSuccessMessage')} <span className="font-bold">{order.code}</span>
               </p>
             </div>
           </div>
+
+          {order.active && (
+            <div className="bg-blue-50 border-l-4 border-blue-400 p-4 rounded-md">
+              <div className="flex items-start space-x-3">
+                <InformationCircleIcon className="h-5 w-5 text-blue-400 mt-1" />
+                <p className="text-sm text-blue-700">{t('checkout.paymentMessage')}</p>
+              </div>
+            </div>
+          )}
+
+          <div className="border-t pt-6">
+            <CartContents
+              orderLines={order.lines}
+              currencyCode={order.currencyCode}
+              editable={false}
+            />
+          </div>
+
+          <div className="border-t pt-6">
+            <CartTotals order={order as OrderDetailFragment} />
+          </div>
         </div>
       )}
-      <div className="mt-12">
-        <div className="mb-6">
-          <CartContents
-            orderLines={order!.lines}
-            currencyCode={order!.currencyCode}
-            editable={false}
-          />
-        </div>
-        <CartTotals order={order as OrderDetailFragment}></CartTotals>
-      </div>
     </div>
   );
 }

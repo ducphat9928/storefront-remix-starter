@@ -28,11 +28,7 @@ export function CartTray({
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="fixed inset-0 overflow-hidden z-20"
-        onClose={onClose}
-      >
+      <Dialog as="div" className="fixed inset-0 overflow-hidden z-20" onClose={onClose}>
         <div className="absolute inset-0 overflow-hidden">
           <Transition.Child
             as={Fragment}
@@ -69,9 +65,7 @@ export function CartTray({
                           className="-m-2 p-2 text-gray-400 hover:text-gray-500"
                           onClick={() => onClose(false)}
                         >
-                          <span className="sr-only">
-                            {t('common.closePanel')}
-                          </span>
+                          <span className="sr-only">{t('common.closePanel')}</span>
                           <XMarkIcon className="h-6 w-6" aria-hidden="true" />
                         </button>
                       </div>
@@ -107,14 +101,12 @@ export function CartTray({
                           )}
                         </p>
                       </div>
-                      <p className="mt-0.5 text-sm text-gray-500">
-                        {t('cart.shippingMessage')}
-                      </p>
+                      <p className="mt-0.5 text-sm text-gray-500">{t('cart.shippingMessage')}</p>
                       <div className="mt-6">
                         <Link
                           to="/checkout"
                           onClick={() => onClose(false)}
-                          className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-primary-600 hover:bg-primary-700"
+                          className="flex justify-center items-center px-6 py-3 border border-transparent rounded-md shadow-sm text-base font-medium text-white bg-red-600 hover:bg-red-700"
                         >
                           {t('cart.checkout')}
                         </Link>

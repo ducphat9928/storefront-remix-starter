@@ -1,6 +1,7 @@
 import { Link } from '@remix-run/react';
 import { Price } from './Price';
 import { SearchQuery } from '~/generated/graphql';
+import { SvgMagnifyingGlass } from '../@svg/SvgMagnifyingGlass';
 
 export type ProductCardProps = SearchQuery['search']['items'][number];
 
@@ -19,14 +20,16 @@ export function ProductCard({
     >
       <div className="relative overflow-hidden rounded-md">
         <img
-          className="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-105"
+          className={`w-full h-48 object-cover transform-gpu transition-transform duration-300 ease-in-out ${
+            productName ? 'group-hover:scale-105' : ''
+          }`}
           src={productAsset?.preview + '?w=300&h=400'}
           alt={productName}
         />
-        {/* Zoom Icon Center */}
+
         <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition bg-black/30">
           <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center text-xl font-bold text-black">
-            🔍
+            <SvgMagnifyingGlass />
           </div>
         </div>
       </div>
@@ -35,7 +38,7 @@ export function ProductCard({
         {productName}
       </div>
 
-      <div className="mt-1 text-[16px] font-bold text-green-600">
+      <div className="mt-1 text-[16px] font-bold">
         <Price priceWithTax={priceWithTax} currencyCode={currencyCode} />
       </div>
     </Link>

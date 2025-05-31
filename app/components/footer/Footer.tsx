@@ -16,12 +16,7 @@ const navigation = {
     { page: 'press', href: '#' },
   ],
 };
-
-export default function Footer({
-  collections,
-}: {
-  collections: RootLoaderData['collections'];
-}) {
+export default function Footer({ collections }: { collections: RootLoaderData['collections'] }) {
   const { t } = useTranslation();
 
   return (
@@ -29,98 +24,89 @@ export default function Footer({
       <h2 id="footer-heading" className="sr-only">
         {t('footer.title')}
       </h2>
-      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8 ">
+      <div className="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+        {/* Lưới 3 cột thay vì 4 */}
         <div className="xl:grid xl:grid-cols-3 xl:gap-8">
-          <div className="grid grid-cols-2 gap-8 xl:col-span-2">
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500 tracking-wider uppercase">
-                  Danh mục
-                </h3>
-                <ul role="list" className="mt-4 space-y-4">
-                  {collections.map((collection) => (
-                    <li key={collection.id}>
-                      <Link
-                        className="text-base text-gray-500 hover:text-gray-600"
-                        to={'/collections/' + collection.slug}
-                        prefetch="intent"
-                        key={collection.id}
-                      >
-                        {collection.name}
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-              {/* <div className="mt-12 md:mt-0">
-                <h3 className="text-sm font-semibold text-gray-500 tracking-wider uppercase">
-                  {t('footer.support')}
-                </h3>
-                <ul role="list" className="mt-4 space-y-4">
-                  {navigation.support.map(({ page, href }) => (
-                    <li key={page}>
-                      <a
-                        href={href}
-                        className="text-base text-gray-500 hover:text-gray-600"
-                      >
-                        {t(`navigation.support.${page}`)}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div> */}
-            </div>
-            <div className="md:grid md:grid-cols-2 md:gap-8">
-              <div>
-                <h3 className="text-sm font-semibold text-gray-500 tracking-wider uppercase">
-                  {t('account.company')}
-                </h3>
-                <ul role="list" className="mt-4 space-y-4">
-                  {navigation.company.map(({ page, href }) => (
-                    <li key={page}>
-                      <a
-                        href={href}
-                        className="text-base text-gray-500 hover:text-gray-600"
-                      >
-                        {t(`navigation.company.${page}`)}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-          {/* <div className="mt-8 xl:mt-0">
+          {/* Cột 1: Danh mục collections */}
+          <div>
             <h3 className="text-sm font-semibold text-gray-500 tracking-wider uppercase">
-              {t('footer.subscribeHeader')}
+              Danh mục
             </h3>
-            <p className="mt-4 text-base text-gray-500">
-              {t('footer.subscribeIntro')}
-            </p>
-            <form className="mt-4 sm:flex sm:max-w-md">
-              <label htmlFor="email-address" className="sr-only">
-                {t('acount.emailAddress')}
-              </label>
-              <input
-                type="email"
-                name="email-address"
-                id="email-address"
-                autoComplete="email"
-                required
-                className="appearance-none min-w-0 w-full bg-white border border-gray-300 rounded-md py-2 px-4 text-base text-gray-900 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-white focus:border-white focus:placeholder-gray-400"
-                placeholder={t('footer.emailPlaceholder')}
-              />
-              <div className="mt-3 rounded-md sm:mt-0 sm:ml-3 sm:flex-shrink-0">
-                <button
-                  type="submit"
-                  className="w-full bg-primary-500 border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-base font-medium text-white hover:bg-primary-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-800 focus:ring-primary-500"
+            <ul role="list" className="mt-4 space-y-4">
+              {collections.map((collection) => (
+                <li key={collection.id}>
+                  <Link
+                    className="text-base text-gray-500 hover:text-gray-600"
+                    to={'/collections/' + collection.slug}
+                    prefetch="intent"
+                  >
+                    {collection.name}
+                  </Link>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          {/* Cột 2: Giới thiệu & Thông tin liên hệ */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-500 tracking-wider uppercase">
+              Giới thiệu
+            </h3>
+            <ul role="list" className="mt-4 space-y-2 text-base text-gray-600">
+              <li>
+                <Link to="/about" className="hover:text-gray-800 font-medium text-gray-600">
+                  Giới thiệu
+                </Link>
+              </li>
+              <li>
+                📧 Email:{' '}
+                <a href="mailto:qualuuniem@gmail.com" className="hover:text-gray-800 font-medium">
+                  qualuuniem@gmail.com
+                </a>
+              </li>
+              <li>🕒 Thời gian làm việc: 8:00 – 20:00 (Chủ nhật nghỉ)</li>
+            </ul>
+          </div>
+
+          {/* Cột 3: Hotline & Zalo */}
+          <div>
+            <h3 className="text-sm font-semibold text-gray-500 tracking-wider uppercase">
+              Đặt hàng nhanh
+            </h3>
+            <ul className="mt-4 space-y-2 text-base text-gray-600">
+              <li>
+                📞 Hotline:{' '}
+                <a href="tel:0903582210" className="hover:text-gray-800 font-medium">
+                  0903 582 210
+                </a>
+              </li>
+              <li>
+                💬 Zalo:{' '}
+                <a
+                  href="https://zalo.me/0903582210"
+                  className="hover:text-gray-800 font-medium"
+                  target="_blank"
+                  rel="noopener noreferrer"
                 >
-                  {t('footer.subscribe')}
-                </button>
-              </div>
-            </form>
-          </div> */}
+                  0903 582 210
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 py-4 text-center text-sm text-gray-400">
+        © 2025–{' '}
+        <a
+          href="https://qualuuniem.com"
+          className="underline hover:text-gray-600"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          qualuuniem.com
+        </a>
+        . All Rights Reserved.
       </div>
     </footer>
   );

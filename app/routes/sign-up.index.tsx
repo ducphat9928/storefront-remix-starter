@@ -47,15 +47,10 @@ export default function SignUpPage() {
     <>
       <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
         <div className="sm:mx-auto sm:w-full sm:max-w-md">
-          <h2 className="mt-6 text-center text-3xl text-gray-900">
-            {t('account.create')}
-          </h2>
+          <h2 className="mt-6 text-center text-3xl text-gray-900">{t('account.create')}</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             {t('common.or')}{' '}
-            <Link
-              to="/sign-in"
-              className="font-medium text-primary-600 hover:text-primary-500"
-            >
+            <Link to="/sign-in" className="font-medium text-primary-600 hover:text-primary-500">
               {t('account.login')}
             </Link>
           </p>
@@ -73,10 +68,7 @@ export default function SignUpPage() {
                 value={searchParams.get('redirectTo') ?? undefined}
               />
               <div>
-                <label
-                  htmlFor="email"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="email" className="block text-sm font-medium text-gray-700">
                   {t('account.emailAddress')}
                 </label>
                 <div className="mt-1">
@@ -88,18 +80,13 @@ export default function SignUpPage() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                   />
                   {formErrors?.email && (
-                    <div className="text-xs text-red-700">
-                      {formErrors.email}
-                    </div>
+                    <div className="text-xs text-red-700">{formErrors.email}</div>
                   )}
                 </div>
               </div>
 
               <div>
-                <label
-                  htmlFor="firstName"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="firstName" className="block text-sm font-medium text-gray-700">
                   {t('account.firstName')}
                 </label>
                 <div className="mt-1">
@@ -114,10 +101,7 @@ export default function SignUpPage() {
               </div>
 
               <div>
-                <label
-                  htmlFor="lastName"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="lastName" className="block text-sm font-medium text-gray-700">
                   {t('account.lastName')}
                 </label>
                 <div className="mt-1">
@@ -132,10 +116,7 @@ export default function SignUpPage() {
               </div>
 
               <div>
-                <label
-                  htmlFor="password"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="password" className="block text-sm font-medium text-gray-700">
                   {t('account.password')}
                 </label>
                 <div className="mt-1">
@@ -147,17 +128,12 @@ export default function SignUpPage() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                   />
                   {formErrors?.password && (
-                    <div className="text-xs text-red-700">
-                      {formErrors.password}
-                    </div>
+                    <div className="text-xs text-red-700">{formErrors.password}</div>
                   )}
                 </div>
               </div>
               <div>
-                <label
-                  htmlFor="repeatPassword"
-                  className="block text-sm font-medium text-gray-700"
-                >
+                <label htmlFor="repeatPassword" className="block text-sm font-medium text-gray-700">
                   {t('account.repeatPassword')}
                 </label>
                 <div className="mt-1">
@@ -169,9 +145,7 @@ export default function SignUpPage() {
                     className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                   />
                   {formErrors?.repeatPassword && (
-                    <div className="text-xs text-red-700">
-                      {formErrors.repeatPassword}
-                    </div>
+                    <div className="text-xs text-red-700">{formErrors.repeatPassword}</div>
                   )}
                 </div>
               </div>
@@ -179,18 +153,13 @@ export default function SignUpPage() {
                 <div className="rounded-md bg-red-50 p-4">
                   <div className="flex">
                     <div className="flex-shrink-0">
-                      <XCircleIcon
-                        className="h-5 w-5 text-red-400"
-                        aria-hidden="true"
-                      />
+                      <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
                     </div>
                     <div className="ml-3">
                       <h3 className="text-sm font-medium text-red-800">
                         {t('account.createError')}
                       </h3>
-                      <p className="text-sm text-red-700 mt-2">
-                        {formErrors.form}
-                      </p>
+                      <p className="text-sm text-red-700 mt-2">{formErrors.form}</p>
                     </div>
                   </div>
                 </div>
@@ -199,7 +168,7 @@ export default function SignUpPage() {
               <div>
                 <button
                   type="submit"
-                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                  className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                 >
                   {t('account.signUp')}
                 </button>

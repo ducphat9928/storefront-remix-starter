@@ -16,22 +16,16 @@ import { sdk } from '../graphqlWrapper';
 export const meta: MetaFunction = ({ data }) => {
   return [
     {
-      title: data?.collection
-        ? `${data.collection?.name} - ${APP_META_TITLE}`
-        : APP_META_TITLE,
+      title: data?.collection ? `${data.collection?.name} - ${APP_META_TITLE}` : APP_META_TITLE,
     },
   ];
 };
 
 const paginationLimitMinimumDefault = 25;
-const allowedPaginationLimits = new Set<number>([
-  paginationLimitMinimumDefault,
-  50,
-  100,
-]);
+const allowedPaginationLimits = new Set<number>([paginationLimitMinimumDefault, 50, 100]);
 const { validator, filteredSearchLoader } = filteredSearchLoaderFromPagination(
   allowedPaginationLimits,
-  paginationLimitMinimumDefault,
+  paginationLimitMinimumDefault
 );
 
 export async function loader({ params, request, context }: DataFunctionArgs) {
@@ -67,20 +61,14 @@ export async function loader({ params, request, context }: DataFunctionArgs) {
 
 export default function CollectionSlug() {
   const loaderData = useLoaderData<typeof loader>();
-  const { collection, result, resultWithoutFacetValueFilters, facetValueIds } =
-    loaderData;
+  const { collection, result, resultWithoutFacetValueFilters, facetValueIds } = loaderData;
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const facetValuesTracker = useRef(new FacetFilterTracker());
-  facetValuesTracker.current.update(
-    result,
-    resultWithoutFacetValueFilters,
-    facetValueIds,
-  );
+  facetValuesTracker.current.update(result, resultWithoutFacetValueFilters, facetValueIds);
   const submit = useSubmit();
-  const { t } = useTranslation();
 
   return (
-    <div className="max-w-6xl mx-auto px-4">
+    <div className="bg-white min-h-screen overflow-hidden pb-20 pl-40 pr-40 pt-[30px]">
       <div className="flex justify-between items-center">
         <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-gray-900 my-8">
           {collection.name}
@@ -93,23 +81,6 @@ export default function CollectionSlug() {
       </div>
 
       <Breadcrumbs items={collection.breadcrumbs} nameProduct=""></Breadcrumbs>
-      {collection.children?.length ? (
-        <div className="max-w-2xl mx-auto py-16 sm:py-16 lg:max-w-none border-b mb-16">
-          <h2 className="text-2xl font-light text-gray-900">
-            {t('product.collections')}
-          </h2>
-          <div className="mt-6 grid max-w-xs sm:max-w-none mx-auto sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-4">
-            {collection.children.map((child) => (
-              <CollectionCard
-                key={child.id}
-                collection={child}
-              ></CollectionCard>
-            ))}
-          </div>
-        </div>
-      ) : (
-        ''
-      )}
 
       <ValidatedForm
         validator={withZod(validator)}

@@ -12,9 +12,7 @@ type LoaderReturnType = {
   error?: string;
 };
 
-export async function loader({
-  request,
-}: LoaderFunctionArgs): Promise<LoaderReturnType> {
+export async function loader({ request }: LoaderFunctionArgs): Promise<LoaderReturnType> {
   const url = new URL(request.url);
   const token = url.searchParams.get('token');
   const t = await getFixedT(request);
@@ -60,18 +58,13 @@ export default function VerifyEmailAddressChangeTokenPage() {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           {result.success ? (
-            <div className="rounded-md bg-green-100 p-4">
+            <div className="rounded-md bg-red-100 p-4">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <CheckCircleIcon
-                    className="h-5 w-5 text-green-600"
-                    aria-hidden="true"
-                  />
+                  <CheckCircleIcon className="h-5 w-5 text-red-600" aria-hidden="true" />
                 </div>
                 <div className="ml-3">
-                  <p className="text-sm text-green-700">
-                    {t('account.verifyEmailMessage')}
-                  </p>
+                  <p className="text-sm text-red-700">{t('account.verifyEmailMessage')}</p>
                 </div>
                 <form method="post">
                   <input
@@ -79,11 +72,7 @@ export default function VerifyEmailAddressChangeTokenPage() {
                     name="redirect"
                     value={searchParams.get('redirectTo') || '/'}
                   />
-                  <button
-                    ref={btnRef}
-                    type="submit"
-                    style={{ display: 'none ' }}
-                  />
+                  <button ref={btnRef} type="submit" style={{ display: 'none ' }} />
                 </form>
               </div>
             </div>
@@ -91,10 +80,7 @@ export default function VerifyEmailAddressChangeTokenPage() {
             <div className="rounded-md bg-red-50 p-4">
               <div className="flex">
                 <div className="flex-shrink-0">
-                  <XCircleIcon
-                    className="h-5 w-5 text-red-400"
-                    aria-hidden="true"
-                  />
+                  <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
                 </div>
                 <div className="ml-3">
                   <p className="text-sm text-red-700">{result.error}</p>

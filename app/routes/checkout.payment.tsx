@@ -19,17 +19,12 @@ import { useTranslation } from 'react-i18next';
 
 export async function loader({ params, request }: DataFunctionArgs) {
   const session = await getSessionStorage().then((sessionStorage) =>
-    sessionStorage.getSession(request?.headers.get('Cookie')),
+    sessionStorage.getSession(request?.headers.get('Cookie'))
   );
   const activeOrder = await getActiveOrder({ request });
 
   //check if there is an active order if not redirect to homepage
-  if (
-    !session ||
-    !activeOrder ||
-    !activeOrder.active ||
-    activeOrder.lines.length === 0
-  ) {
+  if (!session || !activeOrder || !activeOrder.active || activeOrder.lines.length === 0) {
     return redirect('/');
   }
 
@@ -45,8 +40,7 @@ export async function loader({ params, request }: DataFunctionArgs) {
       const stripePaymentIntentResult = await createStripePaymentIntent({
         request,
       });
-      stripePaymentIntent =
-        stripePaymentIntentResult.createStripePaymentIntent ?? undefined;
+      stripePaymentIntent = stripePaymentIntentResult.createStripePaymentIntent ?? undefined;
       stripePublishableKey = process.env.STRIPE_PUBLISHABLE_KEY;
     } catch (e: any) {
       stripeError = e.message;
@@ -55,15 +49,12 @@ export async function loader({ params, request }: DataFunctionArgs) {
 
   let brainTreeKey: string | undefined;
   let brainTreeError: string | undefined;
-  if (
-    eligiblePaymentMethods.find((method) => method.code.includes('braintree'))
-  ) {
+  if (eligiblePaymentMethods.find((method) => method.code.includes('braintree'))) {
     try {
       const generateBrainTreeTokenResult = await generateBraintreeClientToken({
         request,
       });
-      brainTreeKey =
-        generateBrainTreeTokenResult.generateBraintreeClientToken ?? '';
+      brainTreeKey = generateBrainTreeTokenResult.generateBraintreeClientToken ?? '';
     } catch (e: any) {
       brainTreeError = e.message;
     }
@@ -88,10 +79,7 @@ export async function action({ params, request }: DataFunctionArgs) {
       request,
     });
     if (nextOrderStates.includes('ArrangingPayment')) {
-      const transitionResult = await transitionOrderToState(
-        'ArrangingPayment',
-        { request },
-      );
+      const transitionResult = await transitionOrderToState('ArrangingPayment', { request });
       if (transitionResult.transitionOrderToState?.__typename !== 'Order') {
         throw new Response('Not Found', {
           status: 400,
@@ -102,12 +90,10 @@ export async function action({ params, request }: DataFunctionArgs) {
 
     const result = await addPaymentToOrder(
       { method: paymentMethodCode, metadata: { nonce: paymentNonce } },
-      { request },
+      { request }
     );
     if (result.addPaymentToOrder.__typename === 'Order') {
-      return redirect(
-        `/checkout/confirmation/${result.addPaymentToOrder.code}`,
-      );
+      return redirect(`/checkout/confirmation/${result.addPaymentToOrder.code}`);
     } else {
       throw new Response('Not Found', {
         status: 400,
@@ -127,60 +113,69 @@ export default function CheckoutPayment() {
     brainTreeError,
     error,
   } = useLoaderData<typeof loader>();
-  const { activeOrderFetcher, activeOrder } = useOutletContext<OutletContext>();
+  const { activeOrder } = useOutletContext<OutletContext>();
   const { t } = useTranslation();
 
   const paymentError = getPaymentError(error);
 
   return (
-    <div className="flex flex-col items-center divide-gray-200 divide-y">
-      {eligiblePaymentMethods.map((paymentMethod) =>
-        paymentMethod.code.includes('braintree') ? (
-          <div className="py-3 w-full" key={paymentMethod.id}>
-            {brainTreeError ? (
-              <div>
-                <p className="text-red-700 font-bold">
-                  {t('checkout.braintreeError')}
-                </p>
-                <p className="text-sm">{brainTreeError}</p>
-              </div>
-            ) : (
-              <BraintreeDropIn
-                fullAmount={activeOrder?.totalWithTax ?? 0}
-                currencyCode={
-                  activeOrder?.currencyCode ?? ('USD' as CurrencyCode)
-                }
-                show={true}
-                authorization={brainTreeKey!}
-              />
-            )}
+    <div className="w-full space-y-8">
+      <h2 className="text-xl font-semibold text-gray-800 mb-4">{t('checkout.choosePayment')}</h2>
+
+      {eligiblePaymentMethods.map((paymentMethod) => {
+        const key = paymentMethod.id;
+
+        // === BrainTree Payment UI ===
+        if (paymentMethod.code.includes('braintree')) {
+          return (
+            <div key={key} className="p-6 bg-white rounded-xl shadow border border-gray-100">
+              <h3 className="text-lg font-medium text-gray-700 mb-4">{paymentMethod.name}</h3>
+              {brainTreeError ? (
+                <div className="bg-red-100 p-4 rounded-md border border-red-300">
+                  <p className="text-red-700 font-semibold">{t('checkout.braintreeError')}</p>
+                  <p className="text-sm text-red-600 mt-1">{brainTreeError}</p>
+                </div>
+              ) : (
+                <BraintreeDropIn
+                  fullAmount={activeOrder?.totalWithTax ?? 0}
+                  currencyCode={activeOrder?.currencyCode ?? ('USD' as CurrencyCode)}
+                  show={true}
+                  authorization={brainTreeKey!}
+                />
+              )}
+            </div>
+          );
+        }
+
+        // === Stripe Payment UI ===
+        if (paymentMethod.code.includes('stripe')) {
+          return (
+            <div key={key} className="p-6 bg-white rounded-xl shadow border border-gray-100">
+              <h3 className="text-lg font-medium text-gray-700 mb-4">{paymentMethod.name}</h3>
+              {stripeError ? (
+                <div className="bg-red-100 p-4 rounded-md border border-red-300">
+                  <p className="text-red-700 font-semibold">{t('checkout.stripeError')}</p>
+                  <p className="text-sm text-red-600 mt-1">{stripeError}</p>
+                </div>
+              ) : (
+                <StripePayments
+                  orderCode={activeOrder?.code ?? ''}
+                  clientSecret={stripePaymentIntent!}
+                  publishableKey={stripePublishableKey!}
+                />
+              )}
+            </div>
+          );
+        }
+
+        // === Dummy / Other Payment UI ===
+        return (
+          <div key={key} className="p-6 bg-white rounded-xl shadow border border-gray-100">
+            <h3 className="text-lg font-medium text-gray-700 mb-4">{paymentMethod.name}</h3>
+            <DummyPayments paymentMethod={paymentMethod} paymentError={paymentError} />
           </div>
-        ) : paymentMethod.code.includes('stripe') ? (
-          <div className="py-12" key={paymentMethod.id}>
-            {stripeError ? (
-              <div>
-                <p className="text-red-700 font-bold">
-                  {t('checkout.stripeError')}
-                </p>
-                <p className="text-sm">{stripeError}</p>
-              </div>
-            ) : (
-              <StripePayments
-                orderCode={activeOrder?.code ?? ''}
-                clientSecret={stripePaymentIntent!}
-                publishableKey={stripePublishableKey!}
-              ></StripePayments>
-            )}
-          </div>
-        ) : (
-          <div className="py-12" key={paymentMethod.id}>
-            <DummyPayments
-              paymentMethod={paymentMethod}
-              paymentError={paymentError}
-            />
-          </div>
-        ),
-      )}
+        );
+      })}
     </div>
   );
 }

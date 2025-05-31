@@ -9,7 +9,7 @@ export function StockLevelLabel({ stockLevel }: { stockLevel?: string }) {
   switch (stockLevel as StockLevel) {
     case 'IN_STOCK':
       stockLevelLabel = t('product.inStock');
-      badgeClasses = 'bg-green-100 text-green-800';
+      badgeClasses = 'bg-red-100 text-red-800';
       break;
     case 'OUT_OF_STOCK':
       stockLevelLabel = t('product.outOfStock');
@@ -23,10 +23,7 @@ export function StockLevelLabel({ stockLevel }: { stockLevel?: string }) {
 
   return (
     <span
-      className={
-        'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ' +
-        badgeClasses
-      }
+      className={'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ' + badgeClasses}
     >
       {stockLevelLabel}
     </span>
