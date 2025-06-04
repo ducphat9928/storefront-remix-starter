@@ -9,9 +9,7 @@ import { Link } from '@remix-run/react';
 import { useTranslation } from 'react-i18next';
 
 type OrderHistoryItemProps = {
-  order?: NonNullable<
-    ActiveCustomerOrderListQuery['activeCustomer']
-  >['orders']['items'][number];
+  order?: NonNullable<ActiveCustomerOrderListQuery['activeCustomer']>['orders']['items'][number];
   isInitiallyExpanded?: boolean;
   areDetailsInitiallyExpanded?: boolean;
   className?: string;
@@ -25,7 +23,7 @@ export default function OrderHistoryItem({
 }: OrderHistoryItemProps) {
   const [isExpanded, setIsExpanded] = useState<boolean>(isInitiallyExpanded);
   const [areDetailsExpanded, setAreDetailsExpanded] = useState<boolean>(
-    areDetailsInitiallyExpanded,
+    areDetailsInitiallyExpanded
   );
   const [isLineCalcExpanded, setIsLineCalcExpanded] = useState<boolean>(false);
   const { t } = useTranslation();
@@ -44,10 +42,7 @@ export default function OrderHistoryItem({
           {/* Info - Date */}
           <div>
             <span className="block font-medium">{t('order.placedAt')}</span>
-            <span
-              className="text-gray-500"
-              title={new Date(order?.orderPlacedAt).toLocaleString()}
-            >
+            <span className="text-gray-500" title={new Date(order?.orderPlacedAt).toLocaleString()}>
               {order?.orderPlacedAt
                 ? new Date(order.orderPlacedAt).toLocaleDateString(undefined, {
                     day: 'numeric',
@@ -61,10 +56,7 @@ export default function OrderHistoryItem({
           <div>
             <span className="block font-medium">{t('order.totalSum')}</span>
             <span className="text-gray-500">
-              <Price
-                currencyCode={order?.currencyCode}
-                priceWithTax={order?.totalWithTax}
-              ></Price>
+              <Price currencyCode={order?.currencyCode} priceWithTax={order?.totalWithTax}></Price>
             </span>
           </div>
           {/* Info - Order number */}
@@ -91,9 +83,7 @@ export default function OrderHistoryItem({
               title={t('order.expand')}
             >
               <ChevronRightIcon
-                className={`w-5 h-5 transition-transform duration-100 ${
-                  isExpanded && 'rotate-90'
-                }`}
+                className={`w-5 h-5 transition-transform duration-100 ${isExpanded && 'rotate-90'}`}
               />
             </Button>
           </div>
@@ -123,7 +113,7 @@ export default function OrderHistoryItem({
                   {/* Product name */}
                   <Link
                     to={`/products/${line.productVariant.product.slug}`}
-                    className="text-black text-sm font-semibold line-clamp-3 md:line-clamp-2 max-w-md hover:text-black/50"
+                    className="text-gray text-sm font-semibold line-clamp-3 md:line-clamp-2 max-w-md hover:text-gray/50"
                     title={line.productVariant.name}
                   >
                     {line.productVariant.name}
@@ -135,9 +125,7 @@ export default function OrderHistoryItem({
                   >
                     {isLineCalcExpanded && (
                       <>
-                        <span title={t('common.quantity')}>
-                          {line.quantity}
-                        </span>
+                        <span title={t('common.quantity')}>{line.quantity}</span>
                         <span className="text-gray-300 select-none">×</span>
                         <span title="Price per unit">
                           <Price
@@ -157,26 +145,19 @@ export default function OrderHistoryItem({
                   </button>
                   {/* Shipment status */}
                   <span className="text-gray-500 text-xs mt-2 tracking-wide">
-                    {line.fulfillmentLines?.reduce(
-                      (acc, fLine) => acc + fLine.quantity,
-                      0,
-                    ) === 0
+                    {line.fulfillmentLines?.reduce((acc, fLine) => acc + fLine.quantity, 0) === 0
                       ? t('order.notShipped')
                       : `${line.fulfillmentLines?.reduce(
                           (acc, fLine) => acc + fLine.quantity,
-                          0,
-                        )} ${t('common.or')} ${line.quantity} ${t(
-                          'order.items.fulfilled',
-                        )}`}
+                          0
+                        )} ${t('common.or')} ${line.quantity} ${t('order.items.fulfilled')}`}
                     {line.fulfillmentLines
                       ?.filter((fLine) => fLine.quantity > 0)
                       .map((fLine, key) => (
                         <span
                           key={key}
                           className="block first:mt-2"
-                          title={new Date(
-                            fLine.fulfillment.updatedAt,
-                          ).toLocaleString()}
+                          title={new Date(fLine.fulfillment.updatedAt).toLocaleString()}
                         >
                           {fLine.fulfillment.state}:{' '}
                           {new Intl.DateTimeFormat(undefined, {
@@ -195,14 +176,11 @@ export default function OrderHistoryItem({
             {order?.fulfillments?.map((f, i) => (
               <Button
                 key={i}
-                onClickCapture={() =>
-                  alert(`${t('trackAlert')} "${f.trackingCode}"`)
-                }
+                onClickCapture={() => alert(`${t('trackAlert')} "${f.trackingCode}"`)}
                 className="text-xs"
               >
                 {/* Only show package number if there are more than one: Looks cleaner */}
-                {t('order.trackPackage')}{' '}
-                {order.fulfillments?.length == 1 ? '' : `#${i + 1}`}
+                {t('order.trackPackage')} {order.fulfillments?.length == 1 ? '' : `#${i + 1}`}
               </Button>
             ))}
             <Button
@@ -221,9 +199,7 @@ export default function OrderHistoryItem({
           {/* More details - Could be expanded with shipping adresses, payment option, etc. */}
           {areDetailsExpanded && (
             <div className="p-2 lg:p-3 grid grid-cols-2 gap-1 text-sm max-w-sm self-center md:self-end">
-              <h6 className="font-medium col-span-full">
-                {t('order.summary')}
-              </h6>
+              <h6 className="font-medium col-span-full">{t('order.summary')}</h6>
               <span>{t('order.items.subtotal')}</span>
               <span className="text-end">
                 <Price
@@ -236,10 +212,7 @@ export default function OrderHistoryItem({
               <span className="text-end">
                 <Price
                   currencyCode={order?.currencyCode}
-                  priceWithTax={order?.shippingLines.reduce(
-                    (acc, s) => acc + s.priceWithTax,
-                    0,
-                  )}
+                  priceWithTax={order?.shippingLines.reduce((acc, s) => acc + s.priceWithTax, 0)}
                 ></Price>
               </span>
 
@@ -247,10 +220,7 @@ export default function OrderHistoryItem({
               <span className="text-end">
                 <Price
                   currencyCode={order?.currencyCode}
-                  priceWithTax={order?.taxSummary.reduce(
-                    (acc, t) => acc + t.taxBase,
-                    0,
-                  )}
+                  priceWithTax={order?.taxSummary.reduce((acc, t) => acc + t.taxBase, 0)}
                 ></Price>
               </span>
 
@@ -258,10 +228,7 @@ export default function OrderHistoryItem({
               <span className="text-end">
                 <Price
                   currencyCode={order?.currencyCode}
-                  priceWithTax={order?.taxSummary.reduce(
-                    (acc, t) => acc + t.taxTotal,
-                    0,
-                  )}
+                  priceWithTax={order?.taxSummary.reduce((acc, t) => acc + t.taxTotal, 0)}
                 ></Price>
               </span>
 
@@ -272,10 +239,7 @@ export default function OrderHistoryItem({
                     currencyCode={order?.currencyCode}
                     priceWithTax={
                       order.totalWithTax -
-                      order?.discounts.reduce(
-                        (acc, curr) => acc + curr.amountWithTax,
-                        0,
-                      )
+                      order?.discounts.reduce((acc, curr) => acc + curr.amountWithTax, 0)
                     }
                   ></Price>
                 </span>
@@ -287,10 +251,7 @@ export default function OrderHistoryItem({
               <span className="text-end">
                 <Price
                   currencyCode={order?.currencyCode}
-                  priceWithTax={order?.discounts.reduce(
-                    (acc, curr) => acc + curr.amountWithTax,
-                    0,
-                  )}
+                  priceWithTax={order?.discounts.reduce((acc, curr) => acc + curr.amountWithTax, 0)}
                 ></Price>
               </span>
 

@@ -27,7 +27,8 @@ import { useActiveOrder } from '~/utils/use-active-order';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import { getI18NextServer } from '~/i18next.server';
-import logo from './components/img/image.png';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 export const meta: MetaFunction = () => {
   return [{ title: APP_META_TITLE }, { description: APP_META_DESCRIPTION }];
 };
@@ -88,12 +89,11 @@ export default function App() {
   const { i18n } = useTranslation();
   const { activeOrderFetcher, activeOrder, adjustOrderLine, removeItem, refresh } =
     useActiveOrder();
+  const [queryClient] = useState(() => new QueryClient());
 
   useChangeLanguage(locale);
 
   useEffect(() => {
-    // When the loader has run, this implies we should refresh the contents
-    // of the activeOrder as the user may have signed in or out.
     refresh();
   }, [loaderData]);
 
@@ -107,32 +107,33 @@ export default function App() {
         <Links />
       </head>
       <body>
-        <Header
-          onCartIconClick={() => setOpen(!open)}
-          cartQuantity={activeOrder?.totalQuantity ?? 0}
-        />
-        <main className="">
-          <Outlet
-            context={{
-              activeOrderFetcher,
-              activeOrder,
-              adjustOrderLine,
-              removeItem,
-            }}
+        <QueryClientProvider client={queryClient}>
+          <Header
+            onCartIconClick={() => setOpen(!open)}
+            cartQuantity={activeOrder?.totalQuantity ?? 0}
           />
-        </main>
-        <CartTray
-          open={open}
-          onClose={setOpen}
-          activeOrder={activeOrder}
-          adjustOrderLine={adjustOrderLine}
-          removeItem={removeItem}
-        />
-        <ScrollRestoration />
-        <Scripts />
-        <Footer collections={collections}></Footer>
-
-        {devMode && <LiveReload />}
+          <main>
+            <Outlet
+              context={{
+                activeOrderFetcher,
+                activeOrder,
+                adjustOrderLine,
+                removeItem,
+              }}
+            />
+          </main>
+          <CartTray
+            open={open}
+            onClose={setOpen}
+            activeOrder={activeOrder}
+            adjustOrderLine={adjustOrderLine}
+            removeItem={removeItem}
+          />
+          <ScrollRestoration />
+          <Scripts />
+          <Footer collections={collections} />
+          {devMode && <LiveReload />}
+        </QueryClientProvider>
       </body>
     </html>
   );

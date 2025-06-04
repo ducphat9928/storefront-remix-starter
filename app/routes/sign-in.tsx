@@ -13,7 +13,7 @@ export async function action({ params, request }: DataFunctionArgs) {
   const password = body.get('password');
   if (typeof email === 'string' && typeof password === 'string') {
     const rememberMe = !!body.get('rememberMe');
-    const redirectTo = (body.get('redirectTo') || '/account') as string;
+    const redirectTo = (body.get('redirectTo') || '/') as string;
     const result = await login(email, password, rememberMe, { request });
     if (result.__typename === 'CurrentUser') {
       return redirect(redirectTo, { headers: result._headers });
@@ -37,7 +37,7 @@ export default function SignInPage() {
           <h2 className="mt-6 text-center text-3xl text-gray-900">{t('account.signInTitle')}</h2>
           <p className="mt-2 text-center text-sm text-gray-600">
             {t('common.or')}{' '}
-            <Link to="/sign-up" className="font-medium text-primary-600 hover:text-primary-500">
+            <Link to="/sign-up" className="font-medium text-gray-600 hover:text-gray-500">
               {t('account.register')}
             </Link>
           </p>
@@ -45,7 +45,7 @@ export default function SignInPage() {
 
         <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
           <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
-            <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
+            {/* <div className="bg-yellow-50 border border-yellow-400 text-yellow-800 rounded p-4 text-center text-sm">
               <p>{t('vendure.demoCredentials')}</p>
               <p>
                 {t('account.emailAddress')}
@@ -55,9 +55,9 @@ export default function SignInPage() {
               <p>
                 {t('account.password')}: <span className="font-bold">test</span>
               </p>
-            </div>
+            </div> */}
             <login.Form method="post">
-              <fieldset disabled={login.state !== 'idle'} className="space-y-6">
+              <fieldset disabled={login.state !== 'idle'} className="space-y-5">
                 <input
                   type="hidden"
                   name="redirectTo"
@@ -105,7 +105,7 @@ export default function SignInPage() {
                       id="rememberMe"
                       name="rememberMe"
                       type="checkbox"
-                      className="h-4 w-4 text-primary-600 focus:ring-primary-500 border-gray-300 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
+                      className="h-4 w-4 text-gray-600 focus:ring-primary-500 border-gray-300 rounded disabled:bg-gray-300 disabled:cursor-not-allowed"
                       defaultChecked
                     />
                     <label htmlFor="rememberMe" className="ml-2 block text-sm text-gray-900">
@@ -114,23 +114,23 @@ export default function SignInPage() {
                   </div>
 
                   <div className="text-sm">
-                    <a href="#" className="font-medium text-primary-600 hover:text-primary-500">
+                    <a href="#" className="font-medium text-gray-600 hover:text-gray-500">
                       {t('account.forgotPassword')}
                     </a>
                   </div>
                 </div>
 
                 {login.data && login.state === 'idle' && (
-                  <div className="rounded-md bg-red-50 p-4">
+                  <div className="rounded-md bg-gray-50 p-4">
                     <div className="flex">
                       <div className="flex-shrink-0">
-                        <XCircleIcon className="h-5 w-5 text-red-400" aria-hidden="true" />
+                        <XCircleIcon className="h-5 w-5 text-gray-400" aria-hidden="true" />
                       </div>
                       <div className="ml-3">
-                        <h3 className="text-sm font-medium text-red-800">
+                        <h3 className="text-sm font-medium text-gray-800">
                           {t('account.errorSignIn')}
                         </h3>
-                        <p className="text-sm text-red-700 mt-2">{login.data.message}</p>
+                        <p className="text-sm text-gray-700 mt-2">{login.data.message}</p>
                       </div>
                     </div>
                   </div>
@@ -139,7 +139,7 @@ export default function SignInPage() {
                 <div>
                   <Button
                     type="submit"
-                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                    className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
                   >
                     <span className="flex gap-4 items-center">
                       {login.state !== 'idle' && (

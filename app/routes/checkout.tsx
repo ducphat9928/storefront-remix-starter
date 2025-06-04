@@ -1,5 +1,5 @@
 import { ChevronRightIcon } from '@heroicons/react/24/solid';
-import { Outlet, useLocation, useOutletContext } from '@remix-run/react';
+import { Outlet, useLocation, useNavigate, useOutletContext } from '@remix-run/react';
 import { CartContents } from '~/components/cart/CartContents';
 import { OutletContext } from '~/types';
 import { classNames } from '~/utils/class-names';
@@ -12,6 +12,7 @@ export default function Checkout() {
   const outletContext = useOutletContext<OutletContext>();
   const { activeOrder, adjustOrderLine, removeItem } = outletContext;
   const location = useLocation();
+  const navigate = useNavigate();
   const { t } = useTranslation();
 
   let state = 'shipping';
@@ -40,7 +41,7 @@ export default function Checkout() {
                 <span
                   className={classNames(
                     'font-medium',
-                    step === state ? 'text-red-600' : 'text-gray-500'
+                    step === state ? 'text-gray-600' : 'text-gray-500'
                   )}
                 >
                   {t(`checkout.steps.${step}`)}
@@ -57,25 +58,45 @@ export default function Checkout() {
           <div className={classNames(isConfirmationPage ? 'lg:col-span-12' : 'lg:col-span-7')}>
             <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
               <Outlet context={outletContext} />
+
+              <CartContents
+                orderLines={activeOrder?.lines ?? []}
+                currencyCode={activeOrder?.currencyCode!}
+                editable={state === 'shipping'}
+                removeItem={removeItem}
+                adjustOrderLine={adjustOrderLine}
+              />
+
+              {/* Action Buttons */}
             </div>
           </div>
 
-          {/* Order Summary */}
           {!isConfirmationPage && (
             <div className="mt-10 lg:mt-0 lg:col-span-5">
               <div className="bg-white p-6 rounded-xl shadow-sm border border-gray-100">
                 <h2 className="text-lg font-semibold text-gray-900 mb-4">{t('order.summary')}</h2>
 
-                <CartContents
-                  orderLines={activeOrder?.lines ?? []}
-                  currencyCode={activeOrder?.currencyCode!}
-                  editable={state === 'shipping'}
-                  removeItem={removeItem}
-                  adjustOrderLine={adjustOrderLine}
-                />
                 <div className="mt-4">
                   <CartTotals order={activeOrder} />
                 </div>
+                {state === 'shipping' && (
+                  <div className="mt-6 flex gap-5 justify-end">
+                    <button
+                      type="button"
+                      onClick={() => navigate('/')}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700"
+                    >
+                      {t('cart.continue_shopping', 'Mua thêm')}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => navigate('/checkout/payment')}
+                      className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-semibold rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700"
+                    >
+                      {t('cart.place_order', 'Đặt hàng')}
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           )}

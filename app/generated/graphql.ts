@@ -406,8 +406,14 @@ export type CreateAddressInput = {
   streetLine2?: InputMaybe<Scalars['String']>;
 };
 
+export type CreateCustomerCustomFieldsInput = {
+  avatarId?: InputMaybe<Scalars['ID']>;
+  dateOfBirth?: InputMaybe<Scalars['DateTime']>;
+  gender?: InputMaybe<Scalars['Int']>;
+};
+
 export type CreateCustomerInput = {
-  customFields?: InputMaybe<Scalars['JSON']>;
+  customFields?: InputMaybe<CreateCustomerCustomFieldsInput>;
   emailAddress: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
@@ -782,7 +788,7 @@ export type Customer = Node & {
   __typename?: 'Customer';
   addresses?: Maybe<Array<Address>>;
   createdAt: Scalars['DateTime'];
-  customFields?: Maybe<Scalars['JSON']>;
+  customFields?: Maybe<CustomerCustomFields>;
   emailAddress: Scalars['String'];
   firstName: Scalars['String'];
   id: Scalars['ID'];
@@ -798,12 +804,21 @@ export type CustomerOrdersArgs = {
   options?: InputMaybe<OrderListOptions>;
 };
 
+export type CustomerCustomFields = {
+  __typename?: 'CustomerCustomFields';
+  avatar?: Maybe<Asset>;
+  dateOfBirth?: Maybe<Scalars['DateTime']>;
+  gender?: Maybe<Scalars['Int']>;
+};
+
 export type CustomerFilterParameter = {
   _and?: InputMaybe<Array<CustomerFilterParameter>>;
   _or?: InputMaybe<Array<CustomerFilterParameter>>;
   createdAt?: InputMaybe<DateOperators>;
+  dateOfBirth?: InputMaybe<DateOperators>;
   emailAddress?: InputMaybe<StringOperators>;
   firstName?: InputMaybe<StringOperators>;
+  gender?: InputMaybe<NumberOperators>;
   id?: InputMaybe<IdOperators>;
   lastName?: InputMaybe<StringOperators>;
   phoneNumber?: InputMaybe<StringOperators>;
@@ -845,9 +860,12 @@ export type CustomerListOptions = {
 };
 
 export type CustomerSortParameter = {
+  avatar?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
+  dateOfBirth?: InputMaybe<SortOrder>;
   emailAddress?: InputMaybe<SortOrder>;
   firstName?: InputMaybe<SortOrder>;
+  gender?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   lastName?: InputMaybe<SortOrder>;
   phoneNumber?: InputMaybe<SortOrder>;
@@ -2038,7 +2056,7 @@ export type Order = Node & {
   couponCodes: Array<Scalars['String']>;
   createdAt: Scalars['DateTime'];
   currencyCode: CurrencyCode;
-  customFields?: Maybe<Scalars['JSON']>;
+  customFields?: Maybe<OrderCustomFields>;
   customer?: Maybe<Customer>;
   discounts: Array<Discount>;
   fulfillments?: Maybe<Array<Fulfillment>>;
@@ -2104,6 +2122,11 @@ export type OrderAddress = {
   streetLine2?: Maybe<Scalars['String']>;
 };
 
+export type OrderCustomFields = {
+  __typename?: 'OrderCustomFields';
+  note?: Maybe<Scalars['String']>;
+};
+
 export type OrderFilterParameter = {
   _and?: InputMaybe<Array<OrderFilterParameter>>;
   _or?: InputMaybe<Array<OrderFilterParameter>>;
@@ -2112,6 +2135,7 @@ export type OrderFilterParameter = {
   createdAt?: InputMaybe<DateOperators>;
   currencyCode?: InputMaybe<StringOperators>;
   id?: InputMaybe<IdOperators>;
+  note?: InputMaybe<StringOperators>;
   orderPlacedAt?: InputMaybe<DateOperators>;
   shipping?: InputMaybe<NumberOperators>;
   shippingWithTax?: InputMaybe<NumberOperators>;
@@ -2242,6 +2266,7 @@ export type OrderSortParameter = {
   code?: InputMaybe<SortOrder>;
   createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
+  note?: InputMaybe<SortOrder>;
   orderPlacedAt?: InputMaybe<SortOrder>;
   shipping?: InputMaybe<SortOrder>;
   shippingWithTax?: InputMaybe<SortOrder>;
@@ -3065,7 +3090,14 @@ export type RegisterCustomerAccountResult =
   | PasswordValidationError
   | Success;
 
+export type RegisterCustomerCustomFieldsInput = {
+  avatarId?: InputMaybe<Scalars['ID']>;
+  dateOfBirth?: InputMaybe<Scalars['DateTime']>;
+  gender?: InputMaybe<Scalars['Int']>;
+};
+
 export type RegisterCustomerInput = {
+  customFields?: InputMaybe<RegisterCustomerCustomFieldsInput>;
   emailAddress: Scalars['String'];
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
@@ -3130,6 +3162,7 @@ export type SearchInput = {
   collectionSlug?: InputMaybe<Scalars['String']>;
   facetValueFilters?: InputMaybe<Array<FacetValueFilterInput>>;
   groupByProduct?: InputMaybe<Scalars['Boolean']>;
+  inStock?: InputMaybe<Scalars['Boolean']>;
   skip?: InputMaybe<Scalars['Int']>;
   sort?: InputMaybe<SearchResultSortParameter>;
   take?: InputMaybe<Scalars['Int']>;
@@ -3143,22 +3176,10 @@ export type SearchReindexResponse = {
 
 export type SearchResponse = {
   __typename?: 'SearchResponse';
-  cacheIdentifier?: Maybe<SearchResponseCacheIdentifier>;
   collections: Array<CollectionResult>;
   facetValues: Array<FacetValueResult>;
   items: Array<SearchResult>;
   totalItems: Scalars['Int'];
-};
-
-/**
- * This type is here to allow us to easily purge the Stellate cache
- * of any search results where the collectionSlug is used. We cannot rely on
- * simply purging the SearchResult type, because in the case of an empty 'items'
- * array, Stellate cannot know that that particular query now needs to be purged.
- */
-export type SearchResponseCacheIdentifier = {
-  __typename?: 'SearchResponseCacheIdentifier';
-  collectionSlug?: Maybe<Scalars['String']>;
 };
 
 export type SearchResult = {
@@ -3169,6 +3190,7 @@ export type SearchResult = {
   description: Scalars['String'];
   facetIds: Array<Scalars['ID']>;
   facetValueIds: Array<Scalars['ID']>;
+  inStock: Scalars['Boolean'];
   price: SearchResultPrice;
   priceWithTax: SearchResultPrice;
   productAsset?: Maybe<SearchResultAsset>;
@@ -3491,6 +3513,12 @@ export type UpdateAddressInput = {
   streetLine2?: InputMaybe<Scalars['String']>;
 };
 
+export type UpdateCustomerCustomFieldsInput = {
+  avatarId?: InputMaybe<Scalars['ID']>;
+  dateOfBirth?: InputMaybe<Scalars['DateTime']>;
+  gender?: InputMaybe<Scalars['Int']>;
+};
+
 export type UpdateCustomerEmailAddressResult =
   | IdentifierChangeTokenExpiredError
   | IdentifierChangeTokenInvalidError
@@ -3498,7 +3526,7 @@ export type UpdateCustomerEmailAddressResult =
   | Success;
 
 export type UpdateCustomerInput = {
-  customFields?: InputMaybe<Scalars['JSON']>;
+  customFields?: InputMaybe<UpdateCustomerCustomFieldsInput>;
   firstName?: InputMaybe<Scalars['String']>;
   lastName?: InputMaybe<Scalars['String']>;
   phoneNumber?: InputMaybe<Scalars['String']>;
@@ -3511,8 +3539,12 @@ export type UpdateCustomerPasswordResult =
   | PasswordValidationError
   | Success;
 
+export type UpdateOrderCustomFieldsInput = {
+  note?: InputMaybe<Scalars['String']>;
+};
+
 export type UpdateOrderInput = {
-  customFields?: InputMaybe<Scalars['JSON']>;
+  customFields?: InputMaybe<UpdateOrderCustomFieldsInput>;
 };
 
 export type UpdateOrderItemsResult =
@@ -4076,9 +4108,14 @@ export type ActiveCustomerDetailsQuery = {
     id: string;
     title?: string | null;
     firstName: string;
-    lastName: string;
     phoneNumber?: string | null;
     emailAddress: string;
+    customFields?: {
+      __typename?: 'CustomerCustomFields';
+      gender?: number | null;
+      dateOfBirth?: any | null;
+      avatar?: { __typename?: 'Asset'; preview: string } | null;
+    } | null;
   } | null;
 };
 
@@ -5481,9 +5518,15 @@ export const ActiveCustomerDetailsDocument = gql`
       id
       title
       firstName
-      lastName
       phoneNumber
       emailAddress
+      customFields {
+        gender
+        dateOfBirth
+        avatar {
+          preview
+        }
+      }
     }
   }
 `;

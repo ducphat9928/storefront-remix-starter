@@ -131,9 +131,9 @@ export default function CheckoutPayment() {
             <div key={key} className="p-6 bg-white rounded-xl shadow border border-gray-100">
               <h3 className="text-lg font-medium text-gray-700 mb-4">{paymentMethod.name}</h3>
               {brainTreeError ? (
-                <div className="bg-red-100 p-4 rounded-md border border-red-300">
-                  <p className="text-red-700 font-semibold">{t('checkout.braintreeError')}</p>
-                  <p className="text-sm text-red-600 mt-1">{brainTreeError}</p>
+                <div className="bg-gray-100 p-4 rounded-md border border-gray-300">
+                  <p className="text-gray-700 font-semibold">{t('checkout.braintreeError')}</p>
+                  <p className="text-sm text-gray-600 mt-1">{brainTreeError}</p>
                 </div>
               ) : (
                 <BraintreeDropIn
@@ -153,9 +153,9 @@ export default function CheckoutPayment() {
             <div key={key} className="p-6 bg-white rounded-xl shadow border border-gray-100">
               <h3 className="text-lg font-medium text-gray-700 mb-4">{paymentMethod.name}</h3>
               {stripeError ? (
-                <div className="bg-red-100 p-4 rounded-md border border-red-300">
-                  <p className="text-red-700 font-semibold">{t('checkout.stripeError')}</p>
-                  <p className="text-sm text-red-600 mt-1">{stripeError}</p>
+                <div className="bg-gray-100 p-4 rounded-md border border-gray-300">
+                  <p className="text-gray-700 font-semibold">{t('checkout.stripeError')}</p>
+                  <p className="text-sm text-gray-600 mt-1">{stripeError}</p>
                 </div>
               ) : (
                 <StripePayments

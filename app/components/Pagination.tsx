@@ -37,7 +37,7 @@ export function Pagination({
             type="submit"
             value={appliedPaginationPage - 1}
             disabled={appliedPaginationPage <= 1 || isLoading}
-            className="p-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+            className="text-gray"
             aria-label="Trang trước"
           >
             <SvgPrevious />
@@ -50,7 +50,7 @@ export function Pagination({
             type="submit"
             value={appliedPaginationPage + 1}
             disabled={appliedPaginationPage * appliedPaginationLimit >= totalItems || isLoading}
-            className="p-2 border border-gray-300 rounded-md bg-white text-gray-700 hover:bg-gray-100 disabled:opacity-50"
+            className="text-gray"
             aria-label="Trang tiếp"
           >
             <SvgNext />

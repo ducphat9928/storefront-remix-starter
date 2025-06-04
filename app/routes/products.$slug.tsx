@@ -149,7 +149,7 @@ export default function ProductSlug() {
           {/* Product info */}
           <div className="mt-10 px-4 sm:px-0 sm:mt-16 lg:mt-0">
             <div>
-              <div className="bg-red-500 text-white rounded-full shadow-md text-sm font-bold leading-5 m-0 mr-1 mb-1 px-3 py-1 inline-block">
+              <div className="bg-gray-500 text-white rounded-full shadow-md text-sm font-bold leading-5 m-0 mr-1 mb-1 px-3 py-1 inline-block">
                 Giá tốt nhất
               </div>
               <h5 className="mt-2 text-[20px] leading-[28px] font-semibold py-[2px] pb-[7px] text-left block w-full capitalize text-[rgb(0,2,4)]">
@@ -233,8 +233,8 @@ export default function ProductSlug() {
               <div className="mt-4 flex sm:flex-col1 align-baseline">
                 <button
                   type="submit"
-                  className={`max-w-xs flex-1 bg-green-500 text-white h-11 
-    ${activeOrderFetcher.state !== 'idle' ? 'opacity-50' : 'hover:bg-green-600'}
+                  className={`max-w-xs flex-1 bg-gray-500 text-white h-11 
+    ${activeOrderFetcher.state !== 'idle' ? 'opacity-50' : 'hover:bg-gray-600'}
     transition-colors border border-transparent rounded-md py-2 px-4 flex items-center justify-center text-sm font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-50 focus:ring-green-500 sm:w-full`}
                   disabled={activeOrderFetcher.state !== 'idle'}
                 >

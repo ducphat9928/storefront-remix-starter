@@ -357,8 +357,14 @@ input CreateAddressInput {
   streetLine2: String
 }
 
+input CreateCustomerCustomFieldsInput {
+  avatarId: ID
+  dateOfBirth: DateTime
+  gender: Int
+}
+
 input CreateCustomerInput {
-  customFields: JSON
+  customFields: CreateCustomerCustomFieldsInput
   emailAddress: String!
   firstName: String!
   lastName: String!
@@ -876,7 +882,7 @@ union CustomFieldConfig = BooleanCustomFieldConfig | DateTimeCustomFieldConfig |
 type Customer implements Node {
   addresses: [Address!]
   createdAt: DateTime!
-  customFields: JSON
+  customFields: CustomerCustomFields
   emailAddress: String!
   firstName: String!
   id: ID!
@@ -888,12 +894,20 @@ type Customer implements Node {
   user: User
 }
 
+type CustomerCustomFields {
+  avatar: Asset
+  dateOfBirth: DateTime
+  gender: Int
+}
+
 input CustomerFilterParameter {
   _and: [CustomerFilterParameter!]
   _or: [CustomerFilterParameter!]
   createdAt: DateOperators
+  dateOfBirth: DateOperators
   emailAddress: StringOperators
   firstName: StringOperators
+  gender: NumberOperators
   id: IDOperators
   lastName: StringOperators
   phoneNumber: StringOperators
@@ -935,9 +949,12 @@ input CustomerListOptions {
 }
 
 input CustomerSortParameter {
+  avatar: SortOrder
   createdAt: SortOrder
+  dateOfBirth: SortOrder
   emailAddress: SortOrder
   firstName: SortOrder
+  gender: SortOrder
   id: SortOrder
   lastName: SortOrder
   phoneNumber: SortOrder
@@ -2223,7 +2240,7 @@ type Order implements Node {
   couponCodes: [String!]!
   createdAt: DateTime!
   currencyCode: CurrencyCode!
-  customFields: JSON
+  customFields: OrderCustomFields
   customer: Customer
   discounts: [Discount!]!
   fulfillments: [Fulfillment!]
@@ -2296,6 +2313,10 @@ type OrderAddress {
   streetLine2: String
 }
 
+type OrderCustomFields {
+  note: String
+}
+
 input OrderFilterParameter {
   _and: [OrderFilterParameter!]
   _or: [OrderFilterParameter!]
@@ -2304,6 +2325,7 @@ input OrderFilterParameter {
   createdAt: DateOperators
   currencyCode: StringOperators
   id: IDOperators
+  note: StringOperators
   orderPlacedAt: DateOperators
   shipping: NumberOperators
   shippingWithTax: NumberOperators
@@ -2461,6 +2483,7 @@ input OrderSortParameter {
   code: SortOrder
   createdAt: SortOrder
   id: SortOrder
+  note: SortOrder
   orderPlacedAt: SortOrder
   shipping: SortOrder
   shippingWithTax: SortOrder
@@ -3355,7 +3378,14 @@ type RegionTranslation {
 
 union RegisterCustomerAccountResult = MissingPasswordError | NativeAuthStrategyError | PasswordValidationError | Success
 
+input RegisterCustomerCustomFieldsInput {
+  avatarId: ID
+  dateOfBirth: DateTime
+  gender: Int
+}
+
 input RegisterCustomerInput {
+  customFields: RegisterCustomerCustomFieldsInput
   emailAddress: String!
   firstName: String
   lastName: String
@@ -3407,6 +3437,7 @@ input SearchInput {
   collectionSlug: String
   facetValueFilters: [FacetValueFilterInput!]
   groupByProduct: Boolean
+  inStock: Boolean
   skip: Int
   sort: SearchResultSortParameter
   take: Int
@@ -3418,21 +3449,10 @@ type SearchReindexResponse {
 }
 
 type SearchResponse {
-  cacheIdentifier: SearchResponseCacheIdentifier
   collections: [CollectionResult!]!
   facetValues: [FacetValueResult!]!
   items: [SearchResult!]!
   totalItems: Int!
-}
-
-"""
-This type is here to allow us to easily purge the Stellate cache
-of any search results where the collectionSlug is used. We cannot rely on
-simply purging the SearchResult type, because in the case of an empty 'items'
-array, Stellate cannot know that that particular query now needs to be purged.
-"""
-type SearchResponseCacheIdentifier {
-  collectionSlug: String
 }
 
 type SearchResult {
@@ -3442,6 +3462,7 @@ type SearchResult {
   description: String!
   facetIds: [ID!]!
   facetValueIds: [ID!]!
+  inStock: Boolean!
   price: SearchResultPrice!
   priceWithTax: SearchResultPrice!
   productAsset: SearchResultAsset
@@ -3737,10 +3758,16 @@ input UpdateAddressInput {
   streetLine2: String
 }
 
+input UpdateCustomerCustomFieldsInput {
+  avatarId: ID
+  dateOfBirth: DateTime
+  gender: Int
+}
+
 union UpdateCustomerEmailAddressResult = IdentifierChangeTokenExpiredError | IdentifierChangeTokenInvalidError | NativeAuthStrategyError | Success
 
 input UpdateCustomerInput {
-  customFields: JSON
+  customFields: UpdateCustomerCustomFieldsInput
   firstName: String
   lastName: String
   phoneNumber: String
@@ -3749,8 +3776,12 @@ input UpdateCustomerInput {
 
 union UpdateCustomerPasswordResult = InvalidCredentialsError | NativeAuthStrategyError | PasswordValidationError | Success
 
+input UpdateOrderCustomFieldsInput {
+  note: String
+}
+
 input UpdateOrderInput {
-  customFields: JSON
+  customFields: UpdateOrderCustomFieldsInput
 }
 
 union UpdateOrderItemsResult = InsufficientStockError | NegativeQuantityError | Order | OrderInterceptorError | OrderLimitError | OrderModificationError

@@ -53,6 +53,7 @@
     }
   },
   "account": {
+    "goHome": "Quay về trang chủ",
     "title": "Danh xưng",
     "firstName": "Tên",
     "lastName": "Họ",
@@ -73,7 +74,7 @@
     "details": "Chi tiết tài khoản",
     "purchaseHistory": "Lịch sử mua hàng",
     "addresses": "Địa chỉ",
-    "register": "đăng ký tài khoản mới",
+    "register": "đăng ký",
     "email": "Email",
     "emailAddress": "Địa chỉ email",
     "password": "Mật khẩu",

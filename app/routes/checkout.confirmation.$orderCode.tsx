@@ -67,7 +67,7 @@ export default function CheckoutConfirmation() {
 
       {orderErrored && retriesExhausted && (
         <div className="text-center">
-          <h2 className="text-3xl sm:text-5xl font-semibold flex items-center justify-center gap-3 text-red-600 mb-4">
+          <h2 className="text-3xl sm:text-5xl font-semibold flex items-center justify-center gap-3 text-gray-600 mb-4">
             <XCircleIcon className="w-10 h-10" />
             {t('checkout.orderErrorTitle')}
           </h2>

@@ -12,14 +12,14 @@ export default function SuccessPage() {
 
   return (
     <div className="flex flex-col justify-center py-12 sm:px-6 lg:px-8">
-      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md border-2 rounded-md border-red-600">
+      <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md border-2 rounded-md border-gray-600">
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10">
           <Form className="space-y-6" method="post">
             <div>
               <div className="flex justify-center">
                 <div className="flex-grow">
                   <CheckCircleIcon
-                    className="h-20 w-20 m-auto mb-2 text-red-600"
+                    className="h-20 w-20 m-auto mb-2 text-gray-600"
                     aria-hidden="true"
                   />
                 </div>
@@ -27,9 +27,9 @@ export default function SuccessPage() {
               <p className="text-center mb-5">{t('account.createdMessage')}</p>
               <button
                 type="submit"
-                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
+                className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500"
               >
-                {t('account.goHome')}
+                {t('common.goHome')}
               </button>
             </div>
           </Form>

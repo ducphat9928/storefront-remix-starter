@@ -39,7 +39,7 @@ export default function Index() {
 
   return (
     <>
-      <div className="bg-white min-h-screen overflow-hidden pb-20 pl-40 pr-40 pt-[30px]">
+      <div className="bg-white min-h-screen overflow-hidden pb-20 pl-20 pr-20">
         <div className="relative w-full">
           <div ref={sliderRef} className="keen-slider w-full h-[500px] sm:h-[600px]">
             {collections.map((collection) => (
@@ -97,7 +97,7 @@ export default function Index() {
                 <Link
                   to={'/collections/' + collection.slug}
                   prefetch="intent"
-                  className="inline-block border border-red-600 text-red-600 font-semibold rounded-lg px-6 py-2 hover:bg-red-600 hover:text-white transition"
+                  className="inline-block border border-gray-600 text-gray-600 font-semibold rounded-lg px-6 py-2 hover:bg-gray-600 hover:text-white transition"
                 >
                   Xem Thêm
                 </Link>
@@ -109,7 +109,7 @@ export default function Index() {
 
       <div
         className="fixed flex flex-col space-y-4"
-        style={{ bottom: '200px', right: 30, zIndex: 1000 }}
+        style={{ bottom: '50px', right: 20, zIndex: 10 }}
       >
         <a
           href="https://www.facebook.com/sharer/sharer.php?u=https://your-site.com"
@@ -118,7 +118,7 @@ export default function Index() {
           aria-label="Facebook"
           className="text-blue-600 hover:text-blue-800"
         >
-          <FaFacebook size={60} />
+          <FaFacebook size={50} />
         </a>
 
         <a
@@ -128,7 +128,7 @@ export default function Index() {
           aria-label="Zalo"
           className="text-[#0068FF] hover:text-[#004bbd]"
         >
-          <img width={60} src="https://www.inlogo.vn/images/zalo-icon.png" alt="" />
+          <img width={50} src="https://www.inlogo.vn/images/zalo-icon.png" alt="" />
         </a>
       </div>
     </>

@@ -12,11 +12,15 @@ type ModalProps = {
   afterOpen?: () => void;
 };
 
+type SectionProps = PropsWithChildren & {
+  className?: string;
+};
+
 const Modal: React.FC<PropsWithChildren<ModalProps>> & {
-  Title: React.FC<PropsWithChildren>;
-  Description: React.FC<PropsWithChildren>;
-  Body: React.FC<PropsWithChildren>;
-  Footer: React.FC<PropsWithChildren>;
+  Title: React.FC<SectionProps>;
+  Description: React.FC<SectionProps>;
+  Body: React.FC<SectionProps>;
+  Footer: React.FC<SectionProps>;
 } = ({ isOpen, close, size = 'medium', children, afterClose, afterOpen }) => {
   return (
     <Transition appear show={isOpen} as={Fragment}>
@@ -53,7 +57,7 @@ const Modal: React.FC<PropsWithChildren<ModalProps>> & {
                     'max-w-md': size === 'small',
                     'max-w-xl': size === 'medium',
                     'max-w-3xl': size === 'large',
-                  },
+                  }
                 )}
               >
                 <ModalProvider close={close}>{children}</ModalProvider>
@@ -66,38 +70,40 @@ const Modal: React.FC<PropsWithChildren<ModalProps>> & {
   );
 };
 
-const Title: React.FC<PropsWithChildren> = ({ children }) => {
+const Title: React.FC<SectionProps> = ({ children, className }) => {
   const { close } = useModal();
 
   return (
-    <Dialog.Title className="flex items-center justify-between">
+    <Dialog.Title className={clsx('flex items-center justify-between', className)}>
       <div className="text-large-semi">{children}</div>
       <div>
         <button onClick={close} type="button">
-          {/* <X size={20} /> */}
-          <XMarkIcon className="w-6 h-6"></XMarkIcon>
+          <XMarkIcon className="w-6 h-6" />
         </button>
       </div>
     </Dialog.Title>
   );
 };
 
-const Description: React.FC<PropsWithChildren> = ({ children }) => {
+const Description: React.FC<SectionProps> = ({ children, className }) => {
   return (
-    <Dialog.Description className="flex text-small-regular text-gray-700 items-center justify-center pt-2 pb-4 h-full">
+    <Dialog.Description
+      className={clsx(
+        'flex text-small-regular text-gray-700 items-center justify-center pt-2 pb-4 h-full',
+        className
+      )}
+    >
       {children}
     </Dialog.Description>
   );
 };
 
-const Body: React.FC<PropsWithChildren> = ({ children }) => {
-  return <div className="flex-1">{children}</div>;
+const Body: React.FC<SectionProps> = ({ children, className }) => {
+  return <div className={clsx('flex-1', className)}>{children}</div>;
 };
 
-const Footer: React.FC<PropsWithChildren> = ({ children }) => {
-  return (
-    <div className="flex items-center justify-end gap-x-4">{children}</div>
-  );
+const Footer: React.FC<SectionProps> = ({ children, className }) => {
+  return <div className={clsx('flex items-center justify-end gap-x-4', className)}>{children}</div>;
 };
 
 Modal.Title = Title;

@@ -22,7 +22,7 @@ export function SearchBar() {
         />
         <button
           type="submit"
-          className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-primary-600"
+          className="absolute inset-y-0 right-0 px-3 flex items-center text-gray-500 hover:text-gray-600"
         >
           <SvgMagnifyingGlass />
         </button>

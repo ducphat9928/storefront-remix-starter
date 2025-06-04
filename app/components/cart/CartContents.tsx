@@ -41,10 +41,7 @@ export function CartContents({
                     </Link>
                   </h3>
                   <p className="ml-4">
-                    <Price
-                      priceWithTax={line.linePriceWithTax}
-                      currencyCode={currencyCode}
-                    ></Price>
+                    <Price priceWithTax={line.linePriceWithTax} currencyCode={currencyCode}></Price>
                   </p>
                 </div>
               </div>
@@ -59,10 +56,7 @@ export function CartContents({
                       id={`quantity-${line.id}`}
                       name={`quantity-${line.id}`}
                       value={line.quantity}
-                      onChange={(e) =>
-                        adjustOrderLine &&
-                        adjustOrderLine(line.id, +e.target.value)
-                      }
+                      onChange={(e) => adjustOrderLine && adjustOrderLine(line.id, +e.target.value)}
                       className="max-w-full rounded-md border border-gray-300 py-1.5 text-base leading-5 font-medium text-gray-700 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-primary-500 focus:border-primary-500 sm:text-sm"
                     >
                       <option value={1}>1</option>
@@ -88,7 +82,7 @@ export function CartContents({
                       type="submit"
                       name="removeItem"
                       value={line.id}
-                      className="font-medium text-primary-600 hover:text-primary-500"
+                      className="font-medium text-gray-600 hover:text-gray-500"
                       onClick={() => removeItem && removeItem(line.id)}
                     >
                       {t('common.remove')}

@@ -32,45 +32,70 @@ export function Header({
 
   return (
     <>
+      {/* ✅ Top Header thêm mới */}
+
       <header
         className={classNames(
-          'bg-red-500 shadow-xl transform w-full sticky top-0 z-40',
-          'translate-y-0',
-          'transition-transform duration-300'
+          'bg-gray-500 shadow-xl transform w-full sticky top-0 z-40 transition-transform duration-300 translate-y-0'
         )}
+        style={{ position: 'inherit' }}
       >
         <div className="max-w-[85%] mx-auto p-2 flex items-center space-x-4">
           <Link to="/">
-            <img height={150} width={150} src={logo} alt="logo" />
+            <img height={80} width={80} src={logo} alt="logo" />
           </Link>
-
-          <button
-            className="flex items-center gap-x-2 px-3 py-2 bg-white bg-opacity-20 rounded text-white hover:bg-red-400 transition-all duration-200"
-            onClick={() => setMenuOpen(true)}
-            aria-label="Open menu"
-          >
-            <Bars3Icon className="w-6 h-6" />
-            <span className="text-sm font-medium">Danh mục</span>
-          </button>
 
           <div className="flex-1 md:pr-8 hidden md:block">
             <SearchBar />
           </div>
           <button
-            className="relative w-9 h-9 bg-white bg-opacity-20 rounded text-white p-1 hover:bg-green-400 transition-all duration-200"
+            className="relative w-9 h-9 bg-white bg-opacity-20 rounded text-white p-1 hover:bg-gray-400 transition-all duration-200"
             onClick={onCartIconClick}
           >
             <ShoppingBagIcon />
             {cartQuantity ? (
-              <div className="absolute rounded-full -top-2 -right-2 bg-red-600 min-w-6 min-h-6 flex items-center justify-center text-xs p-1">
+              <div className="absolute rounded-full -top-2 -right-2 bg-gray-600 min-w-6 min-h-6 flex items-center justify-center text-xs p-1">
                 {cartQuantity}
               </div>
             ) : null}
           </button>
         </div>
       </header>
+      <div className="bg-gray-100 text-sm text-gray-700 w-full py-2 px-4">
+        <div className="max-w-[85%] mx-auto flex items-center justify-between">
+          {/* Bên trái: Nút Danh mục */}
+          <div className="flex items-center gap-4">
+            <button
+              onClick={() => setMenuOpen(true)}
+              className="flex items-center gap-x-1 px-3 py-1 rounded hover:bg-gray-200 transition"
+              aria-label="Open menu"
+            >
+              <Bars3Icon className="w-5 h-5" />
+              <span className="text-sm font-medium">Danh mục</span>
+            </button>
 
-      {/* Mobile Menu */}
+            <span className="font-medium hidden sm:inline">📞 Hotline: 1900 1234</span>
+          </div>
+
+          <div className="flex items-center space-x-4">
+            <Link to="/about" className="hover:text-gray-600">
+              Giới thiệu
+            </Link>
+            {/* <Link to="/contact" className="hover:text-gray-600">
+              Liên hệ
+            </Link> */}
+            {isSignedIn ? (
+              <Link to="/account" className="hover:text-gray-600">
+                Tài khoản
+              </Link>
+            ) : (
+              <Link to="/sign-in" className="hover:text-gray-600">
+                Đăng nhập
+              </Link>
+            )}
+          </div>
+        </div>
+      </div>
       {isMenuOpen && (
         <>
           <div
@@ -81,7 +106,7 @@ export function Header({
 
           <div
             className={classNames(
-              'fixed top-0 left-0 bg-white w-80 h-full p-4 overflow-y-auto shadow-lg z-50 transform transition-transform duration-300',
+              'fixed top-0 left-0 bg-white w-80 h-full p-4 overflow-y-auto shadow-lg z-50 transition-transform duration-300 ease-in-out transform',
               isMenuOpen ? 'translate-x-0' : '-translate-x-full'
             )}
           >
@@ -97,7 +122,7 @@ export function Header({
                 <li key={collection?.id}>
                   <Link
                     to={`/collections/${collection?.slug || collection?.id}`}
-                    className="text-sm text-gray-700 hover:text-red-600"
+                    className="text-sm text-gray-700 hover:text-gray-600"
                     onClick={() => setMenuOpen(false)}
                   >
                     {collection?.name}

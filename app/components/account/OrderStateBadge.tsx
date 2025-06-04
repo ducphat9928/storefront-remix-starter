@@ -32,7 +32,7 @@ export function OrderStateBadge({ state }: { state?: string }) {
       colorClasses = 'bg-blue-100 text-blue-800';
       break;
     case 'Delivered':
-      colorClasses = 'bg-red-100 text-red-800';
+      colorClasses = 'bg-gray-100 text-gray-800';
       break;
     case 'PartiallyShipped':
     case 'PartiallyDelivered':
@@ -42,7 +42,7 @@ export function OrderStateBadge({ state }: { state?: string }) {
       colorClasses = 'bg-yellow-100 text-yellow-800';
       break;
     case 'Cancelled':
-      colorClasses = 'bg-red-100 text-red-800';
+      colorClasses = 'bg-gray-100 text-gray-800';
       break;
   }
 

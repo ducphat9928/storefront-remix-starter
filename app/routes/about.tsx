@@ -18,7 +18,7 @@ export default function AboutPage() {
 
   return (
     <main className="max-w-4xl mx-auto px-4 py-12 sm:px-6 lg:px-8 text-gray-800">
-      <h1 className="text-3xl font-bold text-primary-600 mb-6">Giới thiệu về Quà Lưu Niệm</h1>
+      <h1 className="text-3xl font-bold text-gray-600 mb-6">Giới thiệu về Quà Lưu Niệm</h1>
 
       <section className="space-y-6">
         <p>
@@ -42,7 +42,7 @@ export default function AboutPage() {
           sắc Việt.
         </p>
 
-        <h2 className="text-2xl font-semibold mt-8 text-primary-600">Thông tin liên hệ</h2>
+        <h2 className="text-2xl font-semibold mt-8 text-gray-600">Thông tin liên hệ</h2>
         <ul className="space-y-2 mt-4 text-base">
           <li>
             📍 <strong>Địa chỉ:</strong> (Cập nhật sau)

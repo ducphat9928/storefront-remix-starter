@@ -10,18 +10,44 @@ import { TabProps } from '~/components/tabs/Tab';
 import { TabsContainer } from '~/components/tabs/TabsContainer';
 import { getActiveCustomerDetails } from '~/providers/customer/customer';
 import { useTranslation } from 'react-i18next';
+import { AccountInfoPanel } from '~/components/customer/CustomerInfo';
+import { updateCustomer } from '~/providers/account/account';
 
 export async function loader({ request }: DataFunctionArgs) {
   const { activeCustomer } = await getActiveCustomerDetails({ request });
   if (!activeCustomer) {
     return redirect('/sign-in');
   }
-  return json({ activeCustomer });
+
+  // Lấy subset trường cần dùng
+  const customerForUI = {
+    id: activeCustomer.id,
+    firstName: activeCustomer.firstName,
+    phoneNumber: activeCustomer.phoneNumber ?? '',
+  };
+
+  return json({ activeCustomer: customerForUI });
+}
+
+export async function action({ request }: DataFunctionArgs) {
+  const formData = await request.formData();
+
+  const firstName = formData.get('firstName') as string;
+  const lastName = formData.get('lastName') as string;
+  const phoneNumber = formData.get('phone') as string;
+
+  // Gọi hàm cập nhật thông tin
+  try {
+    await updateCustomer({ firstName, lastName, phoneNumber }, { request });
+    return redirect('/account');
+  } catch (error) {
+    return json({ error: 'Cập nhật thông tin thất bại' }, { status: 400 });
+  }
 }
 
 export default function AccountDashboard() {
   const { activeCustomer } = useLoaderData<typeof loader>();
-  const { firstName, lastName } = activeCustomer!;
+  const { firstName } = activeCustomer!;
   const { t } = useTranslation();
 
   const tabs: TabProps[] = [
@@ -53,18 +79,15 @@ export default function AccountDashboard() {
         {t('account.myAccount')}
       </h2>
       <p className="text-gray-700 text-lg -mt-4">
-        {t('account.welcomeBack')}, {firstName} {lastName}
+        {t('account.welcomeBack')}, {firstName}
       </p>
       <Form method="post" action="/api/logout">
-        <button
-          type="submit"
-          className="underline text-primary-600 hover:text-primary-800"
-        >
+        <button type="submit" className="underline text-gray-600 hover:text-gray-800">
           {t('account.signOut')}
         </button>
       </Form>
       <TabsContainer tabs={tabs}>
-        <Outlet></Outlet>
+        <AccountInfoPanel customer={activeCustomer as any} />
       </TabsContainer>
     </div>
   );

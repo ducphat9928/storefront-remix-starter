@@ -34,8 +34,8 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({ variants })
         aria-label="Previous page"
         className={`
   absolute top-1/3 left-0 -translate-y-1/2 z-40
-  w-12 h-12 flex items-center justify-center
-  bg-black text-white border border-gray-700 rounded-md shadow-md
+  w-9 h-12 flex items-center justify-center
+  bg-[black] text-white border border-gray-700 rounded-md shadow-md
   transform transition-all duration-300
   opacity-0 invisible pointer-events-none -translate-x-full group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto group-hover:translate-x-0 hover:bg-gray-800
 `}
@@ -68,8 +68,8 @@ const PaginatedProductGrid: React.FC<PaginatedProductGridProps> = ({ variants })
         aria-label="Next page"
         className={`
           absolute top-1/3 right-0 -translate-y-1/2 z-40
-          w-12 h-12 flex items-center justify-center
-          bg-black text-white border border-gray-700 rounded-md shadow-md
+          w-9 h-12 flex items-center justify-center
+          bg-[black] text-white border border-gray-700 rounded-md shadow-md
           transform transition-all duration-300
           opacity-0 invisible pointer-events-none translate-x-full group-hover:opacity-100 group-hover:visible group-hover:pointer-events-auto group-hover:translate-x-0 hover:bg-gray-800
         `}

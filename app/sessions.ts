@@ -1,30 +1,39 @@
-import {
-  IS_CF_PAGES,
-  safeRequireNodeDependency,
-} from '~/utils/platform-adapter';
+import { IS_CF_PAGES, safeRequireNodeDependency } from '~/utils/platform-adapter';
 import { SessionStorage } from '@remix-run/server-runtime/dist/sessions';
 import { ErrorResult } from '~/generated/graphql';
 import { createCookieSessionStorage } from '@remix-run/cloudflare';
 import { CreateCookieSessionStorageFunction } from '@remix-run/server-runtime';
 
+let sessionStorage:
+  | SessionStorage<{ activeOrderError: ErrorResult } & Record<string, any>>
+  | undefined;
 async function getCookieSessionStorageFactory(): Promise<CreateCookieSessionStorageFunction> {
+  console.log('createCookieSessionStorage:', createCookieSessionStorage);
+
   if (IS_CF_PAGES) {
     return createCookieSessionStorage;
   } else {
-    return safeRequireNodeDependency('@remix-run/node').then(
-      (module) => module.createCookieSessionStorage,
-    );
+    const module = await safeRequireNodeDependency('@remix-run/node');
+    console.log('module:', module);
+
+    // Kiểm tra luôn
+    if (typeof module.createCookieSessionStorage === 'function') {
+      return module.createCookieSessionStorage;
+    }
+
+    throw new Error('createCookieSessionStorage not found in @remix-run/node');
   }
 }
-let sessionStorage: SessionStorage<
-  { activeOrderError: ErrorResult } & Record<string, any>
->;
 
-export async function getSessionStorage() {
+export async function getSessionStorage(): Promise<
+  SessionStorage<{ activeOrderError: ErrorResult } & Record<string, any>>
+> {
   if (sessionStorage) {
     return sessionStorage;
   }
+
   const factory = await getCookieSessionStorageFactory();
+  console.log('factory:', factory);
   sessionStorage = factory({
     cookie: {
       name: 'vendure_remix_session',
@@ -34,5 +43,6 @@ export async function getSessionStorage() {
       secrets: ['awdbhbjahdbaw'],
     },
   });
+
   return sessionStorage;
 }

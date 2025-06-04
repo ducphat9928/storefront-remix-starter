@@ -2,10 +2,7 @@ import { RadioGroup } from '@headlessui/react';
 import { classNames } from '~/utils/class-names';
 import { Price } from '~/components/products/Price';
 import { CheckCircleIcon } from '@heroicons/react/24/solid';
-import {
-  CurrencyCode,
-  EligibleShippingMethodsQuery,
-} from '~/generated/graphql';
+import { CurrencyCode, EligibleShippingMethodsQuery } from '~/generated/graphql';
 import { useTranslation } from 'react-i18next';
 
 export function ShippingMethodSelector({
@@ -36,7 +33,7 @@ export function ShippingMethodSelector({
               classNames(
                 checked ? 'border-transparent' : 'border-gray-300',
                 active ? 'ring-2 ring-primary-500' : '',
-                'relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none',
+                'relative bg-white border rounded-lg shadow-sm p-4 flex cursor-pointer focus:outline-none'
               )
             }
           >
@@ -44,10 +41,7 @@ export function ShippingMethodSelector({
               <>
                 <span className="flex-1 flex">
                   <span className="flex flex-col">
-                    <RadioGroup.Label
-                      as="span"
-                      className="block text-sm font-medium text-gray-900"
-                    >
+                    <RadioGroup.Label as="span" className="block text-sm font-medium text-gray-900">
                       {shippingMethod.name}
                     </RadioGroup.Label>
                     <RadioGroup.Description
@@ -62,16 +56,13 @@ export function ShippingMethodSelector({
                   </span>
                 </span>
                 {checked ? (
-                  <CheckCircleIcon
-                    className="h-5 w-5 text-primary-600"
-                    aria-hidden="true"
-                  />
+                  <CheckCircleIcon className="h-5 w-5 text-gray-600" aria-hidden="true" />
                 ) : null}
                 <span
                   className={classNames(
                     active ? 'border' : 'border-2',
                     checked ? 'border-primary-500' : 'border-transparent',
-                    'absolute -inset-px rounded-lg pointer-events-none',
+                    'absolute -inset-px rounded-lg pointer-events-none'
                   )}
                   aria-hidden="true"
                 />

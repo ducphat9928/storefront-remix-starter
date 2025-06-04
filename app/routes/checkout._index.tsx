@@ -159,7 +159,7 @@ export default function CheckoutShipping() {
                 />
               </div>
               {error?.errorCode === 'EMAIL_ADDRESS_CONFLICT_ERROR' && (
-                <p className="mt-2 text-sm text-red-600" id="email-error">
+                <p className="mt-2 text-sm text-gray-600" id="email-error">
                   {error.message}
                 </p>
               )}
@@ -242,7 +242,7 @@ export default function CheckoutShipping() {
         disabled={!canProceedToPayment}
         onClick={navigateToPayment}
         className={classNames(
-          canProceedToPayment ? 'bg-red-600 hover:bg-red-700' : 'bg-gray-400',
+          canProceedToPayment ? 'bg-gray-600 hover:bg-gray-700' : 'bg-gray-400',
           'flex w-full items-center justify-center space-x-2 mt-24 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500'
         )}
       >
