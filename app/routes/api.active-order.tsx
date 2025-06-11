@@ -37,9 +37,7 @@ export async function action({ request, params }: DataFunctionArgs) {
   switch (formAction) {
     case 'setCheckoutShipping':
       if (shippingFormDataIsValid(body)) {
-        const shippingFormData = Object.fromEntries<any>(
-          body.entries(),
-        ) as CreateAddressInput;
+        const shippingFormData = Object.fromEntries<any>(body.entries()) as CreateAddressInput;
         const result = await setOrderShippingAddress(
           {
             city: shippingFormData.city,
@@ -53,7 +51,7 @@ export async function action({ request, params }: DataFunctionArgs) {
             streetLine1: shippingFormData.streetLine1,
             streetLine2: shippingFormData.streetLine2,
           },
-          { request },
+          { request }
         );
         if (result.setOrderShippingAddress.__typename === 'Order') {
           activeOrder = result.setOrderShippingAddress;
@@ -63,16 +61,14 @@ export async function action({ request, params }: DataFunctionArgs) {
       }
       break;
     case 'setOrderCustomer': {
-      const customerData = Object.fromEntries<any>(
-        body.entries(),
-      ) as CreateCustomerInput;
+      const customerData = Object.fromEntries<any>(body.entries()) as CreateCustomerInput;
       const result = await setCustomerForOrder(
         {
           emailAddress: customerData.emailAddress,
           firstName: customerData.firstName,
           lastName: customerData.lastName,
         },
-        { request },
+        { request }
       );
       if (result.setCustomerForOrder.__typename === 'Order') {
         activeOrder = result.setCustomerForOrder;
@@ -123,13 +119,10 @@ export async function action({ request, params }: DataFunctionArgs) {
       break;
     }
     case 'addItemToOrder': {
-      console.log(body);
       const variantId = body.get('variantId')?.toString();
       const quantity = Number(body.get('quantity')?.toString() ?? 1);
       if (!variantId || !(quantity > 0)) {
-        throw new Error(
-          `Invalid input: variantId ${variantId}, quantity ${quantity}`,
-        );
+        throw new Error(`Invalid input: variantId ${variantId}, quantity ${quantity}`);
       }
       const result = await addItemToOrder(variantId, quantity, {
         request,
@@ -148,9 +141,7 @@ export async function action({ request, params }: DataFunctionArgs) {
   }
   let headers: ResponseInit['headers'] = {};
   const sessionStorage = await getSessionStorage();
-  const session = await sessionStorage.getSession(
-    request?.headers.get('Cookie'),
-  );
+  const session = await sessionStorage.getSession(request?.headers.get('Cookie'));
   session.flash('activeOrderError', error);
   headers = {
     'Set-Cookie': await sessionStorage.commitSession(session),
@@ -159,6 +150,6 @@ export async function action({ request, params }: DataFunctionArgs) {
     { activeOrder: activeOrder || (await getActiveOrder({ request })) },
     {
       headers,
-    },
+    }
   );
 }

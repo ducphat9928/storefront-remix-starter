@@ -18,7 +18,7 @@ import { Header } from './components/header/Header';
 import { DataFunctionArgs, json, LinksFunction } from '@remix-run/server-runtime';
 import { getCollections } from '~/providers/collections/collections';
 import { activeChannel } from '~/providers/channel/channel';
-import { APP_META_DESCRIPTION, APP_META_TITLE } from '~/constants';
+import { APP_META_DESCRIPTION, APP_META_TITLE, TimeDuration } from '~/constants';
 import { useEffect, useState } from 'react';
 import { CartTray } from '~/components/cart/CartTray';
 import { getActiveCustomer } from '~/providers/customer/customer';
@@ -27,11 +27,20 @@ import { useActiveOrder } from '~/utils/use-active-order';
 import { useChangeLanguage } from 'remix-i18next';
 import { useTranslation } from 'react-i18next';
 import { getI18NextServer } from '~/i18next.server';
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { DefaultOptions, QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import { Toaster } from 'react-hot-toast';
+import { CartLoaderData } from './routes/api.active-order';
 
 export const meta: MetaFunction = () => {
   return [{ title: APP_META_TITLE }, { description: APP_META_DESCRIPTION }];
 };
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      gcTime: TimeDuration.SixHour,
+    },
+  },
+});
 
 export const links: LinksFunction = () => [
   { rel: 'stylesheet', href: stylesheet },
@@ -129,10 +138,12 @@ export default function App() {
             adjustOrderLine={adjustOrderLine}
             removeItem={removeItem}
           />
+          <Footer collections={collections} />
           <ScrollRestoration />
           <Scripts />
-          <Footer collections={collections} />
           {devMode && <LiveReload />}
+
+          <Toaster position="top-right" />
         </QueryClientProvider>
       </body>
     </html>

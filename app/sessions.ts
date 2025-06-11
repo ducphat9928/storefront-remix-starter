@@ -8,13 +8,10 @@ let sessionStorage:
   | SessionStorage<{ activeOrderError: ErrorResult } & Record<string, any>>
   | undefined;
 async function getCookieSessionStorageFactory(): Promise<CreateCookieSessionStorageFunction> {
-  console.log('createCookieSessionStorage:', createCookieSessionStorage);
-
   if (IS_CF_PAGES) {
     return createCookieSessionStorage;
   } else {
     const module = await safeRequireNodeDependency('@remix-run/node');
-    console.log('module:', module);
 
     // Kiểm tra luôn
     if (typeof module.createCookieSessionStorage === 'function') {
@@ -33,7 +30,6 @@ export async function getSessionStorage(): Promise<
   }
 
   const factory = await getCookieSessionStorageFactory();
-  console.log('factory:', factory);
   sessionStorage = factory({
     cookie: {
       name: 'vendure_remix_session',

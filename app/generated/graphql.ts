@@ -84,6 +84,7 @@ export type Asset = Node & {
   __typename?: 'Asset';
   createdAt: Scalars['DateTime'];
   customFields?: Maybe<Scalars['JSON']>;
+  customPreview?: Maybe<Scalars['String']>;
   fileSize: Scalars['Int'];
   focalPoint?: Maybe<Coordinate>;
   height: Scalars['Int'];
@@ -795,6 +796,7 @@ export type Customer = Node & {
   lastName: Scalars['String'];
   orders: OrderList;
   phoneNumber?: Maybe<Scalars['String']>;
+  setting: CustomerSetting;
   title?: Maybe<Scalars['String']>;
   updatedAt: Scalars['DateTime'];
   user?: Maybe<User>;
@@ -857,6 +859,13 @@ export type CustomerListOptions = {
   sort?: InputMaybe<CustomerSortParameter>;
   /** Takes n results, for use in pagination */
   take?: InputMaybe<Scalars['Int']>;
+};
+
+export type CustomerSetting = {
+  __typename?: 'CustomerSetting';
+  email: Scalars['Boolean'];
+  notification: Scalars['Boolean'];
+  sms: Scalars['Boolean'];
 };
 
 export type CustomerSortParameter = {
@@ -1776,6 +1785,8 @@ export type Mutation = {
   createStripePaymentIntent?: Maybe<Scalars['String']>;
   /** Delete an existing Address */
   deleteCustomerAddress: Success;
+  deleteMe: DeletionResponse;
+  exitEmail?: Maybe<Success>;
   /**
    * Authenticates the user using the native authentication strategy. This mutation is an alias for authenticate({ native: { ... }})
    *
@@ -1821,8 +1832,11 @@ export type Mutation = {
   requestUpdateCustomerEmailAddress: RequestUpdateCustomerEmailAddressResult;
   /** Resets a Customer's password based on the provided token */
   resetPassword: ResetPasswordResult;
+  setCustomerAvatar?: Maybe<Asset>;
   /** Set the Customer for the Order. Required only if the Customer is not currently logged in */
   setCustomerForOrder: SetCustomerForOrderResult;
+  setEmail?: Maybe<Success>;
+  setNoti?: Maybe<Success>;
   /** Sets the billing address for the active Order */
   setOrderBillingAddress: ActiveOrderResult;
   /** Allows any custom fields to be set for the active Order */
@@ -1836,6 +1850,7 @@ export type Mutation = {
    * shipping method will apply to.
    */
   setOrderShippingMethod: SetOrderShippingMethodResult;
+  setSms?: Maybe<Success>;
   /** Transitions an Order to a new state. Valid next states can be found by querying `nextOrderStates` */
   transitionOrderToState?: Maybe<TransitionOrderToStateResult>;
   /** Unsets the billing address for the active Order. Available since version 3.1.0 */
@@ -1893,6 +1908,10 @@ export type MutationDeleteCustomerAddressArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationExitEmailArgs = {
+  email: Scalars['String'];
+};
+
 export type MutationLoginArgs = {
   password: Scalars['String'];
   rememberMe?: InputMaybe<Scalars['Boolean']>;
@@ -1929,8 +1948,20 @@ export type MutationResetPasswordArgs = {
   token: Scalars['String'];
 };
 
+export type MutationSetCustomerAvatarArgs = {
+  file?: InputMaybe<Scalars['Upload']>;
+};
+
 export type MutationSetCustomerForOrderArgs = {
   input: CreateCustomerInput;
+};
+
+export type MutationSetEmailArgs = {
+  status: Scalars['Boolean'];
+};
+
+export type MutationSetNotiArgs = {
+  status: Scalars['Boolean'];
 };
 
 export type MutationSetOrderBillingAddressArgs = {
@@ -1947,6 +1978,10 @@ export type MutationSetOrderShippingAddressArgs = {
 
 export type MutationSetOrderShippingMethodArgs = {
   shippingMethodId: Array<Scalars['ID']>;
+};
+
+export type MutationSetSmsArgs = {
+  status: Scalars['Boolean'];
 };
 
 export type MutationTransitionOrderToStateArgs = {
@@ -3736,6 +3771,28 @@ export type UpdateCustomerPasswordMutation = {
     | { __typename: 'Success'; success: boolean };
 };
 
+export type SetCustomerAvatarMutationVariables = Exact<{
+  file: Scalars['Upload'];
+}>;
+
+export type SetCustomerAvatarMutation = {
+  __typename?: 'Mutation';
+  setCustomerAvatar?: {
+    __typename: 'Asset';
+    id: string;
+    source: string;
+    createdAt: any;
+    updatedAt: any;
+    name: string;
+    type: AssetType;
+    fileSize: number;
+    mimeType: string;
+    width: number;
+    height: number;
+    preview: string;
+  } | null;
+};
+
 export type ActiveChannelQueryVariables = Exact<{ [key: string]: never }>;
 
 export type ActiveChannelQuery = {
@@ -5405,6 +5462,24 @@ export const UpdateCustomerPasswordDocument = gql`
     }
   }
 `;
+export const SetCustomerAvatarDocument = gql`
+  mutation SetCustomerAvatar($file: Upload!) {
+    setCustomerAvatar(file: $file) {
+      id
+      source
+      createdAt
+      updatedAt
+      name
+      type
+      fileSize
+      mimeType
+      width
+      height
+      preview
+      __typename
+    }
+  }
+`;
 export const ActiveChannelDocument = gql`
   query activeChannel {
     activeChannel {
@@ -5884,6 +5959,16 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         variables,
         options
       ) as Promise<UpdateCustomerPasswordMutation>;
+    },
+    SetCustomerAvatar(
+      variables: SetCustomerAvatarMutationVariables,
+      options?: C
+    ): Promise<SetCustomerAvatarMutation> {
+      return requester<SetCustomerAvatarMutation, SetCustomerAvatarMutationVariables>(
+        SetCustomerAvatarDocument,
+        variables,
+        options
+      ) as Promise<SetCustomerAvatarMutation>;
     },
     activeChannel(
       variables?: ActiveChannelQueryVariables,

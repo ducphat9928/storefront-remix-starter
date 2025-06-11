@@ -1,4 +1,4 @@
-import { useLoaderData, useNavigation, useSubmit } from '@remix-run/react';
+import { useLoaderData, useNavigation, useSubmit, NavLink } from '@remix-run/react';
 import { DataFunctionArgs, json, redirect } from '@remix-run/server-runtime';
 import OrderHistoryItem from '~/components/account/OrderHistoryItem';
 import { getActiveCustomerOrderList } from '~/providers/customer/customer';
@@ -12,38 +12,32 @@ import {
   paginationValidationSchema,
 } from '~/utils/pagination';
 import { useTranslation } from 'react-i18next';
+import {
+  HashtagIcon,
+  MapPinIcon,
+  ShoppingBagIcon,
+  UserCircleIcon,
+} from '@heroicons/react/24/outline';
+import AccountTabs from '~/components/TabProfile';
 
 const paginationLimitMinimumDefault = 10;
-const allowedPaginationLimits = new Set<number>([
-  paginationLimitMinimumDefault,
-  20,
-  30,
-]);
-const orderPaginationSchema = paginationValidationSchema(
-  allowedPaginationLimits,
-);
+const allowedPaginationLimits = new Set<number>([paginationLimitMinimumDefault, 20, 30]);
+const orderPaginationSchema = paginationValidationSchema(allowedPaginationLimits);
 
 export async function loader({ request }: DataFunctionArgs) {
   const url = new URL(request.url);
-  // Careful params are user controllable data - never blindly trust it!
-  // Use the .default fallbacks in case that params are undefined i.e. `null`
   const limit = url.searchParams.get('limit') ?? paginationLimitMinimumDefault;
   const page = url.searchParams.get('page') ?? 1;
 
-  // Validate, if we fail we redirect to default params
-  // We could provide error information but under normal usage this shouldnt happen because
-  // we also validate on client side, which means we should only land here if the user
-  // opens a manually modified or no longer supported url
   const zodResult = orderPaginationSchema.safeParse({ limit, page });
   if (!zodResult.success) {
     url.search = '';
     return redirect(url.href);
   }
 
-  // From here on data is safe - Construct the options for vendure
   const orderListOptions: OrderListOptions = {
     take: zodResult.data.limit,
-    skip: (zodResult.data.page - 1) * zodResult.data.limit, // Page is one-base-indexed so we gotta decrement first
+    skip: (zodResult.data.page - 1) * zodResult.data.limit,
     sort: { createdAt: SortOrder.Desc },
     filter: { active: { eq: false } },
   };
@@ -59,72 +53,97 @@ export async function loader({ request }: DataFunctionArgs) {
   });
 }
 
+function Tab({ to, Icon, text }: { to: string; Icon: React.FC<any>; text: string }) {
+  return (
+    <NavLink
+      to={to}
+      className={({ isActive }) =>
+        `flex items-center gap-2 px-4 py-2 border-b-2 transition-colors
+         ${
+           isActive
+             ? 'border-green-600 text-green-700 font-semibold'
+             : 'border-transparent text-gray-600 hover:text-green-600 hover:border-green-400'
+         }`
+      }
+      end
+    >
+      <Icon className="h-5 w-5" />
+      <span>{text}</span>
+    </NavLink>
+  );
+}
+
 export default function AccountHistory() {
+  const { t } = useTranslation();
   const { orderList, appliedPaginationLimit, appliedPaginationPage } =
     useLoaderData<typeof loader>();
   const submit = useSubmit();
   const navigation = useNavigation();
-  const { t } = useTranslation();
-  const showingOrdersFrom = translatePaginationFrom(
-    appliedPaginationPage,
-    appliedPaginationLimit,
-  );
+
+  const showingOrdersFrom = translatePaginationFrom(appliedPaginationPage, appliedPaginationLimit);
   const showingOrdersTo = translatePaginationTo(
     appliedPaginationPage,
     appliedPaginationLimit,
-    orderList.items.length,
+    orderList.items.length
   );
 
   return (
-    <div className="pt-10 relative">
-      {/* Loading-Overlay */}
-      {navigation.state !== 'idle' && (
-        <div className="absolute top-0 left-0 w-full h-full z-100 bg-white bg-opacity-75"></div>
-      )}
-
-      {orderList.items.length === 0 && (
-        <div className="py-16 text-3xl text-center italic text-gray-300 select-none flex justify-center items-center">
-          {orderList.totalItems === 0
-            ? t('order.historyEmpty')
-            : t('order.historyEnd')}
-        </div>
-      )}
-      {/* The actual orders */}
-      {orderList.items?.map((item) => (
-        <OrderHistoryItem
-          key={item.code}
-          // @ts-ignore
-          order={item}
-          isInitiallyExpanded={true}
-          className="mb-10"
-        />
-      ))}
-
-      {/* Pagination */}
-      <div className="flex flex-row justify-between items-center gap-4">
-        <span className="self-start text-gray-500 text-sm ml-4 lg:ml-6 mt-2">
-          Showing orders {showingOrdersFrom} to {showingOrdersTo} of{' '}
-          {orderList.totalItems}
-        </span>
-
-        <ValidatedForm
-          validator={withZod(
-            paginationValidationSchema(allowedPaginationLimits),
+    <div className="max-w-6xl xl:mx-auto px-4">
+      {/* Tabs */}
+      <AccountTabs>
+        <div className="relative min-h-[300px]">
+          {/* Loading overlay */}
+          {navigation.state !== 'idle' && (
+            <div className="absolute inset-0 bg-white bg-opacity-70 z-10 flex items-center justify-center">
+              <span className="text-green-600 font-semibold animate-pulse">{t('loading')}...</span>
+            </div>
           )}
-          method="get"
-          onChange={(e) =>
-            submit(e.currentTarget, { preventScrollReset: true })
-          }
-          preventScrollReset
-        >
-          <Pagination
-            appliedPaginationLimit={appliedPaginationLimit}
-            allowedPaginationLimits={allowedPaginationLimits}
-            totalItems={orderList.totalItems}
-            appliedPaginationPage={appliedPaginationPage}
-          />
-        </ValidatedForm>
-      </div>
+
+          {/* Purchase history content */}
+          {orderList.items.length === 0 ? (
+            <div className="py-16 text-center text-gray-400 italic select-none">
+              {orderList.totalItems === 0 ? t('order.historyEmpty') : t('order.historyEnd')}
+            </div>
+          ) : (
+            <>
+              {orderList.items.map((item) => (
+                <OrderHistoryItem
+                  key={item.code}
+                  // @ts-ignore
+                  order={item}
+                  isInitiallyExpanded={true}
+                  className="mb-8"
+                />
+              ))}
+
+              <div className="flex justify-between items-center mt-6 text-gray-600 text-sm">
+                <div>
+                  {t('order.showingOrders', {
+                    from: showingOrdersFrom,
+                    to: showingOrdersTo,
+                    total: orderList.totalItems,
+                  })}
+                </div>
+                <ValidatedForm
+                  validator={withZod(paginationValidationSchema(allowedPaginationLimits))}
+                  method="get"
+                  onChange={(e) => submit(e.currentTarget, { preventScrollReset: true })}
+                  preventScrollReset
+                >
+                  <Pagination
+                    appliedPaginationLimit={appliedPaginationLimit}
+                    allowedPaginationLimits={allowedPaginationLimits}
+                    totalItems={orderList.totalItems}
+                    appliedPaginationPage={appliedPaginationPage}
+                  />
+                </ValidatedForm>
+              </div>
+            </>
+          )}
+        </div>
+      </AccountTabs>
+
+      {/* Content area */}
     </div>
   );
 }

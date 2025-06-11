@@ -20,15 +20,11 @@ type EditAddressProps = {
   isActive?: boolean;
 };
 
-export default function EditAddressCard({
-  address,
-  isActive = false,
-}: EditAddressProps) {
+export default function EditAddressCard({ address, isActive = false }: EditAddressProps) {
   const setShipping = useFetcher();
   const setBilling = useFetcher();
   const deleteAddress = useFetcher<ErrorResult>();
-  const [isDeleteModalVisible, setDeleteModalVisible] =
-    useState<boolean>(false);
+  const [isDeleteModalVisible, setDeleteModalVisible] = useState<boolean>(false);
   const { t } = useTranslation();
 
   return (
@@ -36,9 +32,7 @@ export default function EditAddressCard({
       {/* Note: Only allow closing when it isnt loading to prevent accidental closing via outside-click */}
       <Modal
         isOpen={isDeleteModalVisible}
-        close={() =>
-          setDeleteModalVisible(deleteAddress.state === 'idle' ? false : true)
-        }
+        close={() => setDeleteModalVisible(deleteAddress.state === 'idle' ? false : true)}
       >
         <deleteAddress.Form method="post" preventScrollReset>
           <Modal.Title>{t('address.deleteModal.title')}</Modal.Title>
@@ -49,9 +43,7 @@ export default function EditAddressCard({
               {deleteAddress.data && (
                 <ErrorMessage
                   heading={t('address.deleteModal.error')}
-                  message={
-                    deleteAddress.data?.message ?? t('common.defaultError')
-                  }
+                  message={deleteAddress.data?.message ?? t('common.defaultError')}
                 />
               )}
             </div>
@@ -81,7 +73,7 @@ export default function EditAddressCard({
           'border border-gray-200 p-5 min-h-[220px] h-full w-full flex flex-col justify-between gap-8 transition-colors',
           {
             'border-gray-900': isActive,
-          },
+          }
         )}
       >
         <div className="flex justify-between">
@@ -89,9 +81,7 @@ export default function EditAddressCard({
           <div className="flex flex-col">
             <span className="text-left text-base-semi">{address.fullName}</span>
             {address.company && (
-              <span className="text-small-regular text-gray-700">
-                {address.company}
-              </span>
+              <span className="text-small-regular text-gray-700">{address.company}</span>
             )}
             <div className="flex flex-col text-left text-base-regular mt-2">
               <span>
@@ -108,21 +98,17 @@ export default function EditAddressCard({
             </div>
           </div>
           {/* Default Shipping/Billing Section */}
-          {(address.defaultShippingAddress ||
-            address.defaultBillingAddress) && (
+          {(address.defaultShippingAddress || address.defaultBillingAddress) && (
             <div className="text-end text-gray-500 uppercase tracking-wider">
-              <span className="block text-sm font-medium">
-                {t('common.default')}
-              </span>
+              <span className="block text-sm font-medium">{t('common.default')}</span>
               <span className="block text-xs mt-1">
                 {address.defaultShippingAddress && t('common.shipping')}
-                {address.defaultShippingAddress &&
-                  address.defaultBillingAddress && (
-                    <>
-                      <br />
-                      &amp;&nbsp;
-                    </>
-                  )}
+                {address.defaultShippingAddress && address.defaultBillingAddress && (
+                  <>
+                    <br />
+                    &amp;&nbsp;
+                  </>
+                )}
                 {address.defaultBillingAddress && t('common.billing')}
               </span>
             </div>
@@ -155,8 +141,7 @@ export default function EditAddressCard({
               {t('common.remove')}
             </button>
           </div>
-          {(!address.defaultShippingAddress ||
-            !address.defaultBillingAddress) && (
+          {(!address.defaultShippingAddress || !address.defaultBillingAddress) && (
             <div>
               <span className="text-gray-500 flex gap-4">
                 {/* Default shipping */}
@@ -181,7 +166,7 @@ export default function EditAddressCard({
                   </setShipping.Form>
                 )}
 
-                {!address.defaultBillingAddress && (
+                {/* {!address.defaultBillingAddress && (
                   <setBilling.Form method="post">
                     <input type="hidden" name="id" value={address.id} />
                     <button
@@ -200,7 +185,7 @@ export default function EditAddressCard({
                       {t('common.billing')}
                     </button>
                   </setBilling.Form>
-                )}
+                )} */}
               </span>
             </div>
           )}

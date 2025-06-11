@@ -6,6 +6,8 @@ import { XCircleIcon } from '@heroicons/react/24/solid';
 import { Button } from '~/components/Button';
 import { ArrowPathIcon } from '@heroicons/react/24/solid';
 import { useTranslation } from 'react-i18next';
+import { setLocalStorage } from '~/utils/auth';
+import { LocalStorageKey } from '~/constants';
 
 export async function action({ params, request }: DataFunctionArgs) {
   const body = await request.formData();
@@ -16,6 +18,7 @@ export async function action({ params, request }: DataFunctionArgs) {
     const redirectTo = (body.get('redirectTo') || '/') as string;
     const result = await login(email, password, rememberMe, { request });
     if (result.__typename === 'CurrentUser') {
+      setLocalStorage(LocalStorageKey.IsLoign, true);
       return redirect(redirectTo, { headers: result._headers });
     } else {
       return json(result, {
@@ -74,7 +77,7 @@ export default function SignInPage() {
                       type="email"
                       autoComplete="email"
                       required
-                      defaultValue="test@vendure.io"
+                      defaultValue=""
                       placeholder={t('account.emailAddress')}
                       className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm disabled:text-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed"
                     />
@@ -93,7 +96,7 @@ export default function SignInPage() {
                       autoComplete="current-password"
                       required
                       placeholder={t('account.password')}
-                      defaultValue="test"
+                      defaultValue=""
                       className="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-primary-500 focus:border-primary-500 sm:text-sm disabled:text-gray-400 disabled:bg-gray-200 disabled:cursor-not-allowed"
                     />
                   </div>

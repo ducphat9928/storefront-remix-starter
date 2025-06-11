@@ -23,6 +23,10 @@ export const login = async (
   }));
 };
 
+export async function setCustomerAvatar(file: File, options: QueryOptions) {
+  return sdk.SetCustomerAvatar({ file }, options).then((res) => res.setCustomerAvatar);
+}
+
 export const logout = async (
   options: QueryOptions
 ): Promise<WithHeaders<LogoutMutation['logout']>> => {
@@ -214,6 +218,25 @@ gql`
         errorCode
         message
       }
+    }
+  }
+`;
+
+gql`
+  mutation SetCustomerAvatar($file: Upload!) {
+    setCustomerAvatar(file: $file) {
+      id
+      source
+      createdAt
+      updatedAt
+      name
+      type
+      fileSize
+      mimeType
+      width
+      height
+      preview
+      __typename
     }
   }
 `;

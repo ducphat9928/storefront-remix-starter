@@ -13,9 +13,7 @@ import Modal from '~/components/modal/Modal';
 import { HighlightedButton } from '~/components/HighlightedButton';
 import { Address } from '~/generated/graphql';
 import useToggleState from '~/utils/use-toggle-state';
-import CustomerAddressForm, {
-  validator,
-} from '~/components/account/CustomerAddressForm';
+import CustomerAddressForm, { validator } from '~/components/account/CustomerAddressForm';
 import { updateCustomerAddress } from '~/providers/account/account';
 import { getAvailableCountries } from '~/providers/checkout/checkout';
 import { getActiveCustomerAddresses } from '~/providers/customer/customer';
@@ -23,9 +21,7 @@ import { useTranslation } from 'react-i18next';
 
 export async function loader({ request, params }: DataFunctionArgs) {
   const { activeCustomer } = await getActiveCustomerAddresses({ request });
-  const address = activeCustomer?.addresses?.find(
-    (address) => address.id === params.addressId,
-  );
+  const address = activeCustomer?.addresses?.find((address) => address.id === params.addressId);
 
   if (!address) {
     return redirect('/account/addresses');
@@ -49,16 +45,16 @@ export async function action({ request, params }: DataFunctionArgs) {
     {
       id: params.addressId!,
       city: data.city,
-      company: data.company,
-      countryCode: data.countryCode,
+      company: '',
+      countryCode: '',
       fullName: data.fullName,
       phoneNumber: data.phone,
-      postalCode: data.postalCode,
+      postalCode: '',
       province: data.province,
       streetLine1: data.streetLine1,
       streetLine2: data.streetLine2,
     },
-    { request },
+    { request }
   );
 
   return json({

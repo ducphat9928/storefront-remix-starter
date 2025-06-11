@@ -52,6 +52,7 @@ union ApplyCouponCodeResult = CouponCodeExpiredError | CouponCodeInvalidError | 
 type Asset implements Node {
   createdAt: DateTime!
   customFields: JSON
+  customPreview: String
   fileSize: Int!
   focalPoint: Coordinate
   height: Int!
@@ -889,6 +890,7 @@ type Customer implements Node {
   lastName: String!
   orders(options: OrderListOptions): OrderList!
   phoneNumber: String
+  setting: CustomerSetting!
   title: String
   updatedAt: DateTime!
   user: User
@@ -946,6 +948,12 @@ input CustomerListOptions {
 
   """Takes n results, for use in pagination"""
   take: Int
+}
+
+type CustomerSetting {
+  email: Boolean!
+  notification: Boolean!
+  sms: Boolean!
 }
 
 input CustomerSortParameter {
@@ -2043,6 +2051,8 @@ type Mutation {
 
   """Delete an existing Address"""
   deleteCustomerAddress(id: ID!): Success!
+  deleteMe: DeletionResponse!
+  exitEmail(email: String!): Success
 
   """
   Authenticates the user using the native authentication strategy. This mutation is an alias for authenticate({ native: { ... }})
@@ -2100,11 +2110,14 @@ type Mutation {
 
   """Resets a Customer's password based on the provided token"""
   resetPassword(password: String!, token: String!): ResetPasswordResult!
+  setCustomerAvatar(file: Upload): Asset
 
   """
   Set the Customer for the Order. Required only if the Customer is not currently logged in
   """
   setCustomerForOrder(input: CreateCustomerInput!): SetCustomerForOrderResult!
+  setEmail(status: Boolean!): Success
+  setNoti(status: Boolean!): Success
 
   """Sets the billing address for the active Order"""
   setOrderBillingAddress(input: CreateAddressInput!): ActiveOrderResult!
@@ -2122,6 +2135,7 @@ type Mutation {
   shipping method will apply to.
   """
   setOrderShippingMethod(shippingMethodId: [ID!]!): SetOrderShippingMethodResult!
+  setSms(status: Boolean!): Success
 
   """
   Transitions an Order to a new state. Valid next states can be found by querying `nextOrderStates`

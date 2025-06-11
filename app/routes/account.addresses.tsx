@@ -3,13 +3,11 @@ import { ActionFunctionArgs, json } from '@remix-run/server-runtime';
 import AddAddressCard from '~/components/account/AddAddressCard';
 import EditAddressCard from '~/components/account/EditAddressCard';
 import { Address, ErrorCode, ErrorResult } from '~/generated/graphql';
-import {
-  deleteCustomerAddress,
-  updateCustomerAddress,
-} from '~/providers/account/account';
+import { deleteCustomerAddress, updateCustomerAddress } from '~/providers/account/account';
 import { getActiveCustomerAddresses } from '~/providers/customer/customer';
 import { getFixedT } from '~/i18next.server';
 import { LoaderFunctionArgs } from '@remix-run/router';
+import AccountTabs from '~/components/TabProfile';
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const res = await getActiveCustomerAddresses({ request });
@@ -23,16 +21,13 @@ export async function action({ request }: ActionFunctionArgs) {
   const _action = formData.get('_action');
   const t = await getFixedT(request);
 
-  // Verify that id is set
   if (!id || id.length === 0) {
     return json<ErrorResult>(
       {
-        errorCode: ErrorCode.IdentifierChangeTokenInvalidError, // TODO: I dont think this error is 100% appropriate - decide later
+        errorCode: ErrorCode.IdentifierChangeTokenInvalidError,
         message: t('address.idError'),
       },
-      {
-        status: 400, // Bad request
-      },
+      { status: 400 }
     );
   }
 
@@ -56,9 +51,7 @@ export async function action({ request }: ActionFunctionArgs) {
       message: t('common.unknowError'),
       errorCode: ErrorCode.UnknownError,
     },
-    {
-      status: 400,
-    },
+    { status: 400 }
   );
 }
 
@@ -67,16 +60,23 @@ export default function AccountAddresses() {
 
   return (
     <>
-      <Outlet></Outlet>
-      <div className="w-full">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 flex-1 mt-4">
-          <AddAddressCard />
-          {activeCustomerAddresses?.addresses!.map((address) => {
-            return (
-              <EditAddressCard address={address as Address} key={address.id} />
-            );
-          })}
-        </div>
+      <Outlet />
+      <div className="max-w-6xl mx-auto px-4 md:px-6">
+        <AccountTabs>
+          <div className="my-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6">
+            <AddAddressCard />
+
+            {activeCustomerAddresses?.addresses!.length === 0 ? (
+              <div className="col-span-full text-gray-500 text-center py-12 border rounded-lg">
+                No addresses found.
+              </div>
+            ) : (
+              activeCustomerAddresses?.addresses!.map((address) => (
+                <EditAddressCard address={address as Address} key={address.id} />
+              ))
+            )}
+          </div>
+        </AccountTabs>
       </div>
     </>
   );

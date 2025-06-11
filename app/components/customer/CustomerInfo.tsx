@@ -8,7 +8,7 @@ interface AccountInfoPanelProps {
 
 export function AccountInfoPanel({ customer }: AccountInfoPanelProps) {
   const { t } = useTranslation();
-  const { firstName, lastName, phoneNumber } = customer;
+  const { firstName, lastName, phoneNumber, customFields } = customer;
 
   return (
     <div className="py-6">
@@ -28,6 +28,7 @@ export function AccountInfoPanel({ customer }: AccountInfoPanelProps) {
           />
         </div>
 
+        {/* Last Name */}
         <div>
           <label className="block text-sm text-gray-600 mb-1" htmlFor="lastName">
             {t('account.lastName')}
@@ -41,6 +42,7 @@ export function AccountInfoPanel({ customer }: AccountInfoPanelProps) {
           />
         </div>
 
+        {/* Phone Number */}
         <div>
           <label className="block text-sm text-gray-600 mb-1" htmlFor="phone">
             {t('account.phone')}
@@ -52,6 +54,55 @@ export function AccountInfoPanel({ customer }: AccountInfoPanelProps) {
             defaultValue={phoneNumber ?? ''}
             className="w-full border border-gray-300 rounded-md p-2"
           />
+        </div>
+
+        {/* Avatar ID */}
+        <div>
+          <label className="block text-sm text-gray-600 mb-1" htmlFor="avatarId">
+            {t('account.avatarId')}
+          </label>
+          <input
+            id="avatarId"
+            name="avatarId"
+            type="text"
+            defaultValue={customFields?.avatar?.preview ?? ''}
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+
+        {/* Date of Birth */}
+        <div>
+          <label className="block text-sm text-gray-600 mb-1" htmlFor="dateOfBirth">
+            {t('account.dateOfBirth')}
+          </label>
+          <input
+            id="dateOfBirth"
+            name="dateOfBirth"
+            type="date"
+            defaultValue={
+              customFields?.dateOfBirth
+                ? new Date(customFields.dateOfBirth).toISOString().split('T')[0]
+                : ''
+            }
+            className="w-full border border-gray-300 rounded-md p-2"
+          />
+        </div>
+
+        {/* Gender */}
+        <div>
+          <label className="block text-sm text-gray-600 mb-1" htmlFor="gender">
+            {t('account.gender')}
+          </label>
+          <select
+            id="gender"
+            name="gender"
+            defaultValue={customFields?.gender != null ? customFields.gender.toString() : ''}
+            className="w-full border border-gray-300 rounded-md p-2"
+          >
+            <option value="">{t('account.selectGender')}</option>
+            <option value="0">{t('account.male')}</option>
+            <option value="1">{t('account.female')}</option>
+          </select>
         </div>
 
         <button

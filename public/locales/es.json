@@ -52,6 +52,9 @@
     }
   },
   "account": {
+    "phone": "Số điện thoại",
+    "dateOfBirth": "Sinh nhật",
+    "gender": "Giới tính",
     "title": "Título",
     "firstName": "Nombre de pila",
     "lastName": "Apellido",

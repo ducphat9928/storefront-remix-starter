@@ -12,9 +12,7 @@ import { Button } from '~/components/Button';
 import Modal from '~/components/modal/Modal';
 import { HighlightedButton } from '~/components/HighlightedButton';
 import useToggleState from '~/utils/use-toggle-state';
-import CustomerAddressForm, {
-  validator,
-} from '~/components/account/CustomerAddressForm';
+import CustomerAddressForm, { validator } from '~/components/account/CustomerAddressForm';
 import { createCustomerAddress } from '~/providers/account/account';
 import { getAvailableCountries } from '~/providers/checkout/checkout';
 import { useTranslation } from 'react-i18next';
@@ -26,32 +24,31 @@ export async function loader({ request, params }: DataFunctionArgs) {
 }
 
 export async function action({ request, params }: DataFunctionArgs) {
-  const body = await request.formData();
+  const formData = await request.formData();
 
-  const result = await validator.validate(body);
+  const result = await validator.validate(formData);
   if (result.error) {
     return validationError(result.error);
   }
 
-  const { data } = result;
+  const data = result.data;
+
   await createCustomerAddress(
     {
       city: data.city,
-      company: data.company,
-      countryCode: data.countryCode,
+      company: '',
+      countryCode: 'vi',
       fullName: data.fullName,
       phoneNumber: data.phone,
-      postalCode: data.postalCode,
+      postalCode: '',
       province: data.province,
       streetLine1: data.streetLine1,
       streetLine2: data.streetLine2,
     },
-    { request },
+    { request }
   );
 
-  return json({
-    saved: true,
-  });
+  return json({ saved: true });
 }
 
 export default function NewAddress() {
@@ -59,7 +56,7 @@ export default function NewAddress() {
   const navigation = useNavigation();
   const actionData = useActionData<typeof action>();
   const navigate = useNavigate();
-  const { state, close } = useToggleState(true);
+  const { state: isOpen, close } = useToggleState(true);
   const { t } = useTranslation();
 
   const formRef = useRef<HTMLFormElement>(null);
@@ -69,10 +66,12 @@ export default function NewAddress() {
     if (actionData?.saved) {
       close();
     }
-  }, [actionData]);
+  }, [actionData, close]);
 
   const submitForm = () => {
-    submit(formRef.current);
+    if (formRef.current) {
+      submit(formRef.current, { method: 'post' });
+    }
   };
 
   const afterClose = () => {
@@ -81,14 +80,14 @@ export default function NewAddress() {
 
   return (
     <div>
-      <Modal isOpen={state} close={close} afterClose={afterClose}>
+      <Modal isOpen={isOpen} close={close} afterClose={afterClose}>
         <Modal.Title>{t('address.new')}</Modal.Title>
         <Modal.Body>
           <CustomerAddressForm
             availableCountries={availableCountries}
             formRef={formRef}
             submit={submitForm}
-          ></CustomerAddressForm>
+          />
         </Modal.Body>
         <Modal.Footer>
           <Button type="button" onClick={close}>
@@ -96,7 +95,7 @@ export default function NewAddress() {
           </Button>
           <HighlightedButton
             isSubmitting={navigation.state === 'submitting'}
-            type="submit"
+            type="button" // type=button để tránh submit mặc định
             onClick={submitForm}
           >
             {t('common.save')}

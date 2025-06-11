@@ -68,7 +68,6 @@ export const shouldRevalidate: ShouldRevalidateFunction = () => true;
 
 export default function ProductSlug() {
   const { product, error, searchByFacet } = useLoaderData<typeof loader>();
-  console.log(product, 'product');
 
   const [selectedVariantId, setSelectedVariantId] = useState(product.variants[0]?.id || '');
   const [featuredAsset, setFeaturedAsset] = useState(product.variants[0]?.featuredAsset);

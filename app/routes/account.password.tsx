@@ -11,26 +11,21 @@ import { HighlightedButton } from '~/components/HighlightedButton';
 import { Input } from '~/components/Input';
 import { SuccessMessage } from '~/components/SuccessMessage';
 import { updateCustomerPassword } from '~/providers/account/account';
-import {
-  isErrorResult,
-  isValidationErrorResponseData,
-} from '~/utils/validation-helper';
+import { isErrorResult, isValidationErrorResponseData } from '~/utils/validation-helper';
 import { useTranslation } from 'react-i18next';
+import AccountTabs from '~/components/TabProfile';
 
 export const validator = withZod(
   z
     .object({
-      currentPassword: z.string().min(1, { message: 'Password is required' }),
-      newPassword: z.string().min(1, { message: 'Password is required' }),
-      confirmPassword: z.string().min(1, { message: 'Password is required' }),
+      currentPassword: z.string().min(1, { message: 'Nhập mật khẩu cũ' }),
+      newPassword: z.string().min(1, { message: 'Nhập mật khẩu mới' }),
+      confirmPassword: z.string().min(1, { message: 'Nhập lại mật khẩu mới' }),
     })
-    .refine(
-      ({ newPassword, confirmPassword }) => newPassword === confirmPassword,
-      {
-        path: ['confirmPassword'],
-        message: 'Passwords must match',
-      },
-    ),
+    .refine(({ newPassword, confirmPassword }) => newPassword === confirmPassword, {
+      path: ['confirmPassword'],
+      message: 'Passwords must match',
+    })
 );
 
 export async function action({ request }: DataFunctionArgs) {
@@ -43,10 +38,7 @@ export async function action({ request }: DataFunctionArgs) {
 
   const { currentPassword, newPassword } = result.data;
 
-  const res = await updateCustomerPassword(
-    { currentPassword, newPassword },
-    { request },
-  );
+  const res = await updateCustomerPassword({ currentPassword, newPassword }, { request });
 
   if (res.__typename !== 'Success') {
     return json(res, { status: 401 });
@@ -56,43 +48,40 @@ export async function action({ request }: DataFunctionArgs) {
 }
 
 export default function AccountPassword() {
-  const [editing, setEditing] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
   const [errorMessage, setErrorMessage] = useState<string>();
   const actionDataHook = useActionData<typeof action>();
-  const { state } = useNavigation();
   const formRef = useRef<HTMLFormElement>(null);
   const { t } = useTranslation();
 
   useEffect(() => {
-    if (isValidationErrorResponseData(actionDataHook)) {
-      // no additional handling
-      return;
-    }
+    if (isValidationErrorResponseData(actionDataHook)) return;
 
     if (isErrorResult(actionDataHook)) {
-      // set error message
       setErrorMessage(actionDataHook.message);
       setIsSaved(false);
       return;
     }
 
     if (actionDataHook?.success) {
-      // show success message and reset form
       setErrorMessage(undefined);
       setIsSaved(true);
-      setEditing(false);
       formRef.current?.reset();
     }
   }, [actionDataHook]);
 
   return (
-    <ValidatedForm validator={validator} method="post" formRef={formRef}>
-      <div className="p-4 space-y-4">
-        {editing && (
-          <>
-            <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-              <div>
+    <div className="max-w-6xl mx-auto px-4 md:px-6">
+      <ValidatedForm
+        validator={validator}
+        method="post"
+        formRef={formRef}
+        className="w-full max-w-2xl mx-auto"
+      >
+        <div className="rounded-xl space-y-6">
+          <AccountTabs>
+            <>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
                   required
                   label={t('account.currentPassword')}
@@ -100,17 +89,13 @@ export default function AccountPassword() {
                   type="password"
                 />
               </div>
-            </div>
-            <div className="gap-4 grid grid-cols-1 md:grid-cols-2">
-              <div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Input
                   required
                   label={t('account.newPassword')}
                   name="newPassword"
                   type="password"
                 />
-              </div>
-              <div>
                 <Input
                   required
                   label={t('account.confirmPassword')}
@@ -118,41 +103,25 @@ export default function AccountPassword() {
                   type="password"
                 />
               </div>
-            </div>
-          </>
-        )}
-        {isSaved && (
-          <SuccessMessage
-            heading={t('account.pwdSuccessHeading')}
-            message={t('account.pwdSuccessMessage')}
-          />
-        )}
-        {errorMessage && (
-          <ErrorMessage
-            heading={t('account.pwdErrorMessage')}
-            message={errorMessage}
-          />
-        )}
-        {editing ? (
-          <div className="flex gap-3">
-            <HighlightedButton
-              type="submit"
-              isSubmitting={state === 'submitting'}
-            >
-              {t('account.savePassword')}
-            </HighlightedButton>
-            <Button type="reset" onClick={() => setEditing(false)}>
-              {t('common.cancel')}
-            </Button>
+            </>
+          </AccountTabs>
+
+          {isSaved && (
+            <SuccessMessage
+              heading={t('account.pwdSuccessHeading')}
+              message={t('account.pwdSuccessMessage')}
+            />
+          )}
+
+          {errorMessage && (
+            <ErrorMessage heading={t('account.pwdErrorMessage')} message={errorMessage} />
+          )}
+
+          <div className="flex justify-end pt-2 pb-2">
+            <HighlightedButton type="submit">{t('account.savePassword')}</HighlightedButton>
           </div>
-        ) : (
-          <>
-            <HighlightedButton type="button" onClick={() => setEditing(true)}>
-              <PencilIcon className="w-4 h-4" /> {t('account.changePassword')}
-            </HighlightedButton>
-          </>
-        )}
-      </div>
-    </ValidatedForm>
+        </div>
+      </ValidatedForm>
+    </div>
   );
 }

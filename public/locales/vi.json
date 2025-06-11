@@ -1,6 +1,7 @@
 {
   "common": {
     "or": "Hoặc",
+    "update": "Cập nhật",
     "readMore": "Đọc thêm:",
     "tokenError": "Thiếu mã xác thực!",
     "shopByCategory": "Mua theo danh mục",
@@ -37,8 +38,8 @@
     "new": "Địa chỉ mới",
     "edit": "Chỉnh sửa địa chỉ",
     "company": "Công ty",
-    "streetLine1": "Địa chỉ",
-    "streetLine2": "Căn hộ, tầng, v.v.",
+    "streetLine1": "Phường/xã",
+    "streetLine2": "Địa chỉ",
     "city": "Thành phố",
     "country": "Quốc gia",
     "selectCountry": "Chọn quốc gia...",
@@ -53,6 +54,12 @@
     }
   },
   "account": {
+    "genderMale": "Nam",
+    "genderFemale": "Nữ",
+    "genderOther": "Khác",
+    "phone": "Số điện thoại",
+    "dateOfBirth": "Sinh nhật",
+    "gender": "Giới tính",
     "goHome": "Quay về trang chủ",
     "title": "Danh xưng",
     "firstName": "Tên",
