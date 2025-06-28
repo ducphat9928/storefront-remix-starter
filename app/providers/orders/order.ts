@@ -3,28 +3,22 @@ import { QueryOptions, sdk } from '../../graphqlWrapper';
 import { CreateAddressInput, CreateCustomerInput } from '~/generated/graphql';
 
 export function getActiveOrder(options: QueryOptions) {
-  return sdk
-    .activeOrder(undefined, options)
-    .then(({ activeOrder }) => activeOrder);
+  return sdk.activeOrder(undefined, options).then(({ activeOrder }) => activeOrder);
 }
 
 export function getOrderByCode(code: string, options: QueryOptions) {
-  return sdk
-    .orderByCode({ code }, options)
-    .then(({ orderByCode }) => orderByCode);
+  return sdk.orderByCode({ code }, options).then(({ orderByCode }) => orderByCode);
 }
-
-export function addItemToOrder(
-  productVariantId: string,
-  quantity: number,
-  options: QueryOptions,
-) {
+export function activeShippingMethods(options: QueryOptions) {
+  return sdk.activeShippingMethods(undefined, options);
+}
+export function addItemToOrder(productVariantId: string, quantity: number, options: QueryOptions) {
   return sdk.addItemToOrder(
     {
       productVariantId,
       quantity,
     },
-    options,
+    options
   );
 }
 
@@ -32,32 +26,19 @@ export function removeOrderLine(lineId: string, options: QueryOptions) {
   return sdk.removeOrderLine({ orderLineId: lineId }, options);
 }
 
-export function adjustOrderLine(
-  lineId: string,
-  quantity: number,
-  options: QueryOptions,
-) {
+export function adjustOrderLine(lineId: string, quantity: number, options: QueryOptions) {
   return sdk.adjustOrderLine({ orderLineId: lineId, quantity }, options);
 }
 
-export function setCustomerForOrder(
-  input: CreateCustomerInput,
-  options: QueryOptions,
-) {
+export function setCustomerForOrder(input: CreateCustomerInput, options: QueryOptions) {
   return sdk.setCustomerForOrder({ input }, options);
 }
 
-export function setOrderShippingAddress(
-  input: CreateAddressInput,
-  options: QueryOptions,
-) {
+export function setOrderShippingAddress(input: CreateAddressInput, options: QueryOptions) {
   return sdk.setOrderShippingAddress({ input }, options);
 }
 
-export function setOrderShippingMethod(
-  shippingMethodId: string,
-  options: QueryOptions,
-) {
+export function setOrderShippingMethod(shippingMethodId: string, options: QueryOptions) {
   return sdk.setOrderShippingMethod({ shippingMethodId }, options);
 }
 
@@ -69,6 +50,17 @@ gql`
         errorCode
         message
       }
+    }
+  }
+`;
+
+gql`
+  query activeShippingMethods {
+    activeShippingMethods {
+      id
+      code
+      name
+      description
     }
   }
 `;

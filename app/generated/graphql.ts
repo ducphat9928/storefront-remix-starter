@@ -4337,6 +4337,19 @@ export type SetCustomerForOrderMutation = {
       };
 };
 
+export type ActiveShippingMethodsQueryVariables = Exact<{ [key: string]: never }>;
+
+export type ActiveShippingMethodsQuery = {
+  __typename?: 'Query';
+  activeShippingMethods: Array<{
+    __typename?: 'PublicShippingMethod';
+    id: string;
+    code: string;
+    name: string;
+    description?: string | null;
+  } | null>;
+};
+
 export type SetOrderShippingAddressMutationVariables = Exact<{
   input: CreateAddressInput;
 }>;
@@ -5701,6 +5714,16 @@ export const SetCustomerForOrderDocument = gql`
   }
   ${OrderDetailFragmentDoc}
 `;
+export const ActiveShippingMethodsDocument = gql`
+  query activeShippingMethods {
+    activeShippingMethods {
+      id
+      code
+      name
+      description
+    }
+  }
+`;
 export const SetOrderShippingAddressDocument = gql`
   mutation setOrderShippingAddress($input: CreateAddressInput!) {
     setOrderShippingAddress(input: $input) {
@@ -6129,6 +6152,16 @@ export function getSdk<C, E>(requester: Requester<C, E>) {
         variables,
         options
       ) as Promise<SetCustomerForOrderMutation>;
+    },
+    activeShippingMethods(
+      variables?: ActiveShippingMethodsQueryVariables,
+      options?: C
+    ): Promise<ActiveShippingMethodsQuery> {
+      return requester<ActiveShippingMethodsQuery, ActiveShippingMethodsQueryVariables>(
+        ActiveShippingMethodsDocument,
+        variables,
+        options
+      ) as Promise<ActiveShippingMethodsQuery>;
     },
     setOrderShippingAddress(
       variables: SetOrderShippingAddressMutationVariables,

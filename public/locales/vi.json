@@ -135,7 +135,7 @@
     "shippingTitle": "Thông tin giao hàng",
     "goToPayment": "Tiếp tục đến thanh toán",
     "steps": {
-      "shipping": "Giao hàng",
+      "shipping": "Mặc định",
       "payment": "Thanh toán",
       "confirmation": "Xác nhận"
     }

@@ -36,6 +36,8 @@ export async function action({ request, params }: DataFunctionArgs) {
   };
   switch (formAction) {
     case 'setCheckoutShipping':
+      console.log(body, 'ducphat');
+
       if (shippingFormDataIsValid(body)) {
         const shippingFormData = Object.fromEntries<any>(body.entries()) as CreateAddressInput;
         const result = await setOrderShippingAddress(
