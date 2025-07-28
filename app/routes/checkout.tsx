@@ -37,6 +37,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Checkout() {
   const { activeOrder, adjustOrderLine, removeItem } = useOutletContext<OutletContext>();
+  const [selectedAddressId, setSelectedAddressId] = useState<string | undefined>();
   const { activeCustomerAddresses, getAllActive } = useLoaderData<typeof loader>();
   const location = useLocation();
   const navigate = useNavigate();
@@ -51,6 +52,9 @@ export default function Checkout() {
     ? 'payment'
     : 'shipping';
 
+  const handleSelectAddress = (id: string) => {
+    setSelectedAddressId(id);
+  };
   const isConfirmationPage = state === 'confirmation';
 
   // Auto set default shipping method nếu chưa có
@@ -118,9 +122,12 @@ export default function Checkout() {
                 ) : (
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {activeCustomerAddresses?.addresses?.map((address) => (
-                      <div key={address.id}>
-                        <EditAddressCard address={address as Address} />
-                      </div>
+                      <EditAddressCard
+                        key={address.id}
+                        address={address as Address}
+                        selectedShippingAddressId={selectedAddressId}
+                        onSelectShippingAddress={handleSelectAddress}
+                      />
                     ))}
                   </div>
                 )}

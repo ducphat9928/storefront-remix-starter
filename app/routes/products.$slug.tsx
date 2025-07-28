@@ -274,7 +274,7 @@ export default function ProductSlug() {
         </div>
       </div>
       <div className="max-w-7xl mx-auto p-4">
-        <h3 className="text-xl font-bold text-gray-900 mb-4">Sản phẩm liên quan</h3> {/* check */}
+        <h3 className="text-xl font-bold text-gray-900 mb-4">Các sản phẩm khác</h3>
         <div className="related-products-container flex space-x-4">
           {(() => {
             const allVariants = searchByFacet.search.collections.flatMap(
@@ -289,7 +289,8 @@ export default function ProductSlug() {
                 uniqueVariantsMap.set(productId, variant);
               }
             }
-            const uniqueVariants = Array.from(uniqueVariantsMap.values());
+
+            const uniqueVariants = Array.from(uniqueVariantsMap.values()).slice(0, 15);
 
             if (uniqueVariants.length === 0) return null;
 

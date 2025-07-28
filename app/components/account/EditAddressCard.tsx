@@ -81,7 +81,6 @@ export default function EditAddressCard({
         </deleteAddressFetcher.Form>
       </Modal>
 
-      {/* Card địa chỉ */}
       <div
         className={clsx(
           'group relative border p-5 min-h-[220px] flex flex-col justify-between transition duration-300 hover:shadow-md',
@@ -92,50 +91,45 @@ export default function EditAddressCard({
           }
         )}
       >
-        {/* Radio chọn giao hàng */}
-        <setShippingFetcher.Form method="post" action="/api/active-order">
-          <div className="absolute top-4 right-4 flex items-center gap-2">
+        {/* Hàng đầu: radio + shipping button */}
+        <div className="flex justify-between items-center mb-4">
+          {/* Radio chọn giao hàng */}
+          <setShippingFetcher.Form method="post" action="/api/active-order">
             <input
               type="radio"
               name="selectedAddress"
               value={address.id}
-              checked={isSelectedLocal}
-              onChange={(e) => {
+              checked={selectedShippingAddressId === address.id}
+              onChange={() => {
                 onSelectShippingAddress?.(address.id);
                 setIsSelectedLocal(true);
-                setShippingFetcher.submit(e.currentTarget.form);
+                setShippingFetcher.submit(
+                  {
+                    action: 'setCheckoutShipping',
+                    fullName: address.fullName ?? '',
+                    streetLine1: address.streetLine1 ?? '',
+                    streetLine2: address.streetLine2 ?? '',
+                    city: address.city ?? '',
+                    province: address.province ?? '',
+                    postalCode: '700000',
+                    countryCode: 'VN',
+                    phoneNumber: address.phoneNumber ?? '',
+                    defaultShippingAddress: String(!!address.defaultShippingAddress),
+                    defaultBillingAddress: String(!!address.defaultBillingAddress),
+                  },
+                  { method: 'post', action: '/api/active-order' }
+                );
               }}
-              className="accent-blue-600"
+              className="accent-blue-600 w-5 h-5 cursor-pointer"
             />
-            <input type="hidden" name="action" value="setCheckoutShipping" />
-            <input type="hidden" name="fullName" value={address.fullName ?? ''} />
-            <input type="hidden" name="streetLine1" value={address.streetLine1 ?? ''} />
-            <input type="hidden" name="streetLine2" value={address.streetLine2 ?? ''} />
-            <input type="hidden" name="city" value={address.city ?? ''} />
-            <input type="hidden" name="province" value={address.province ?? ''} />
-            <input type="hidden" name="postalCode" value="700000" />
-            <input type="hidden" name="countryCode" value="VN" />
-            <input type="hidden" name="phoneNumber" value={address.phoneNumber ?? ''} />
-            <input
-              type="hidden"
-              name="defaultShippingAddress"
-              value={String(!!address.defaultShippingAddress)}
-            />
-            <input
-              type="hidden"
-              name="defaultBillingAddress"
-              value={String(!!address.defaultBillingAddress)}
-            />
-          </div>
-        </setShippingFetcher.Form>
+          </setShippingFetcher.Form>
+        </div>
 
         {/* Nội dung địa chỉ */}
-        <div className="mt-8 flex flex-col">
+        <div className="flex flex-col gap-1">
           <span className="text-left text-base-semi">{address.fullName}</span>
-          {address.company && (
-            <span className="text-small-regular text-gray-700">{address.company}</span>
-          )}
-          <div className="flex flex-wrap items-center text-left text-base-regular mt-2 gap-x-1">
+          {address.company && <span className="text-sm text-gray-700">{address.company}</span>}
+          <div className="flex flex-wrap items-center text-left text-base mt-1 gap-x-1">
             {address.streetLine2 && <span>{address.streetLine2},</span>}
             <span>{address.streetLine1},</span>
             <span>{address.postalCode},</span>
@@ -144,14 +138,36 @@ export default function EditAddressCard({
             <span>Việt Nam</span>
           </div>
           {address.defaultShippingAddress && (
-            <div className="text-end text-gray-500 uppercase tracking-wider mt-2 text-xs">
-              Mặc định
+            <div className="text-end text-gray-500 uppercase tracking-wider mt-1 text-xs">
+              {t('address.default')}
             </div>
           )}
         </div>
 
         {/* Action buttons */}
         <div className="absolute bottom-4 right-0 flex flex-col gap-2 bg-gray-200 p-2 opacity-0 translate-x-4 group-hover:opacity-100 group-hover:translate-x-0 transition duration-300 shadow-md rounded">
+          {/* Nút set giao hàng */}
+          {!address.defaultShippingAddress && (
+            <setDefaultFetcher.Form method="post" action="/account/addresses">
+              <input type="hidden" name="id" value={address.id} />
+              <button
+                name="_action"
+                value="setDefaultShipping"
+                type="submit"
+                className="text-gray-700 flex items-center gap-2 hover:text-green-600 w-full text-left"
+                disabled={setDefaultFetcher.state !== 'idle'}
+              >
+                {setDefaultFetcher.state === 'idle' ? (
+                  <TruckIcon className="w-4 h-4" />
+                ) : (
+                  <ArrowPathIcon className="w-4 h-4 animate-spin" />
+                )}
+                {t('common.shipping')}
+              </button>
+            </setDefaultFetcher.Form>
+          )}
+
+          {/* Nút chỉnh sửa */}
           <Link
             role="button"
             preventScrollReset
@@ -162,6 +178,7 @@ export default function EditAddressCard({
             {t('common.edit')}
           </Link>
 
+          {/* Nút xóa */}
           <button
             type="button"
             className="text-gray-700 flex items-center gap-x-2 hover:text-red-600"
@@ -176,27 +193,6 @@ export default function EditAddressCard({
             {t('common.remove')}
           </button>
         </div>
-
-        {/* Nút set mặc định */}
-        {!address.defaultShippingAddress && !isSelectedLocal && (
-          <setDefaultFetcher.Form method="post" action="/account/addresses">
-            <input type="hidden" name="id" value={address.id} />
-            <button
-              name="_action"
-              value="setDefaultShipping"
-              type="submit"
-              className="text-gray-700 flex items-center gap-2 hover:text-green-600 absolute bottom-4 left-4"
-              disabled={setDefaultFetcher.state !== 'idle'}
-            >
-              {setDefaultFetcher.state === 'idle' ? (
-                <TruckIcon className="w-5 h-5" />
-              ) : (
-                <ArrowPathIcon className="w-5 h-5 animate-spin" />
-              )}
-              {t('common.shipping')}
-            </button>
-          </setDefaultFetcher.Form>
-        )}
       </div>
     </>
   );
